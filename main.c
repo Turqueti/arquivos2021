@@ -2,22 +2,31 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "linha_cabecalho.h"
+#include "veiculo_cabecalho.h"
+
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
 	int numeroRegistros = 0;
-	char *nomeCampo;
-	char *valorCampo;
+	char nomeCampo[30];
+	char valorCampo[30];
+	char arquivoCSV[30];
+	char arquivoBIN[30];
 
 
 	scanf("%d", &funcionalidade);
 
 	switch(funcionalidade) { //verifica qual funcionalidade inserida e chama a função que a executa
 		case 1:
-			//criaBinarioVeiculo();
+			scanf("%s", arquivoCSV);//Lendo com /0 no final
+			scanf("%s", arquivoBIN);//Lendo com /0 no final
+			criaBinarioVeiculo(arquivoCSV, arquivoBIN);
 			break;
 
 		case 2:
-			//criaBinarioLinha();
+			scanf("%s", arquivoCSV);//Lendo com /0 no final
+			scanf("%s", arquivoBIN);//Lendo com /0 no final
+			criaBinarioLinha(arquivoCSV, arquivoBIN);
 			break;
 
 		case 3:
@@ -31,14 +40,12 @@ int main(int argc, char const *argv[]){
 		case 5:
 			scanf("%s", nomeCampo);//Lendo com /0 no final
 			scanf("%s", valorCampo);//Lendo com /0 no final
-
 			//leVeiculo(parametro, valor);
 			break;
 
 		case 6:
 			scanf("%s", nomeCampo);//Lendo com /0 no final
 			scanf("%s", valorCampo);//Lendo com /0 no final
-
 			//leLinha(parametro, valor);
 			break;
 
