@@ -11,13 +11,11 @@ int create_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho);
 
 int read_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho);
 
-int update_linha_cabecalho();
-
 int delete_linha_cabecalho();
 
 int mudaStatus(FILE *arquivoBin, char status);
 
-int setByteOffset(FILE *arquivoBin, int byteOffset);
+int setByteOffset(FILE *arquivoBin, long long int byteOffset);
 
 int setNRegistros(FILE *arquivoBin, int nRegistros);
 

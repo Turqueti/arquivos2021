@@ -4,6 +4,7 @@
 
 #include "linha_cabecalho.h"
 #include "veiculo_cabecalho.h"
+#include "linha_registro.h"
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -20,13 +21,13 @@ int main(int argc, char const *argv[]){
 		case 1:
 			scanf("%s", arquivoCSV);//Lendo com /0 no final
 			scanf("%s", arquivoBIN);//Lendo com /0 no final
-			criaBinarioVeiculo(arquivoCSV, arquivoBIN);
+			//criaBinarioVeiculo(arquivoCSV, arquivoBIN);
 			break;
 
 		case 2:
 			scanf("%s", arquivoCSV);//Lendo com /0 no final
 			scanf("%s", arquivoBIN);//Lendo com /0 no final
-			criaBinarioLinha(arquivoCSV, arquivoBIN);
+			teste(arquivoCSV, arquivoBIN);
 			break;
 
 		case 3:

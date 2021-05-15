@@ -2,7 +2,7 @@
 
 struct _linha_cabecalho {
     char status;
-    int byteProxReg;
+    long long int byteProxReg;
     int nroRegistros;
     int nroRegRemovidos;
     char descreveCodigo[15];
@@ -28,7 +28,7 @@ int create_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 
 	fseek(arquivoBin, 0, SEEK_SET);
 	fwrite(&cabecalho->status, sizeof(char), 1, arquivoBin);
-	fwrite(&cabecalho->byteProxReg, sizeof(int), 1, arquivoBin);
+	fwrite(&cabecalho->byteProxReg, sizeof(long long int), 1, arquivoBin);
 	fwrite(&cabecalho->nroRegistros, sizeof(int), 1, arquivoBin);
 	fwrite(&cabecalho->nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	fwrite(&cabecalho->descreveCodigo, sizeof(char), 15, arquivoBin);
@@ -56,7 +56,7 @@ int read_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 
 	fseek(arquivoBin, 0, SEEK_SET);
 	fread(&cabecalho->status, sizeof(char), 1, arquivoBin);
-	fread(&cabecalho->byteProxReg, sizeof(int), 1, arquivoBin);
+	fread(&cabecalho->byteProxReg, sizeof(long long int), 1, arquivoBin);
 	fread(&cabecalho->nroRegistros, sizeof(int), 1, arquivoBin);
 	fread(&cabecalho->nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	fread(&cabecalho->descreveCodigo, sizeof(char), 15, arquivoBin);
@@ -84,7 +84,7 @@ int mostrarCabecalhoLinha(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	printf("%c\n", cabecalho->status);
-	printf("%d\n", cabecalho->byteProxReg);
+	printf("%lld\n", cabecalho->byteProxReg);
 	printf("%d\n", cabecalho->nroRegistros);
 	printf("%d\n", cabecalho->nroRegRemovidos);
 	printf("%s\n", cabecalho->descreveCodigo);
@@ -132,7 +132,7 @@ int mudaStatus(FILE *arquivoBin, char status) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int setByteOffset(FILE *arquivoBin, int byteOffset) {
+int setByteOffset(FILE *arquivoBin, long long int byteOffset) {
 	if (arquivoBin == NULL) return 0;
 	LINHA_CABECALHO cabecalho;
 
@@ -141,7 +141,7 @@ int setByteOffset(FILE *arquivoBin, int byteOffset) {
 	
 	//Salvar novamente no binário fseek = 1; pois inicio do arquivo + sizeof(char)
 	fseek(arquivoBin, 1, SEEK_SET);
-	fwrite(&cabecalho.byteProxReg, sizeof(int), 1, arquivoBin);
+	fwrite(&cabecalho.byteProxReg, sizeof(long long int), 1, arquivoBin);
 	return 1;
 }
 
@@ -165,7 +165,7 @@ int setNRegistros(FILE *arquivoBin, int nRegistros) {
 	cabecalho.nroRegistros = nRegistros;
 	
 	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
-	fseek(arquivoBin, 5, SEEK_SET);
+	fseek(arquivoBin, 9, SEEK_SET);
 	fwrite(&cabecalho.nroRegistros, sizeof(int), 1, arquivoBin);
 	return 1;
 } 
@@ -190,7 +190,7 @@ int setNRemovidos(FILE *arquivoBin, int nRemovidos) {
 	cabecalho.nroRegRemovidos = nRemovidos;
 
 	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
-	fseek(arquivoBin, 9, SEEK_SET);
+	fseek(arquivoBin, 13, SEEK_SET);
 	fwrite(&cabecalho.nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	return 1;
 }
