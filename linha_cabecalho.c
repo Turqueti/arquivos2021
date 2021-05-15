@@ -23,7 +23,7 @@ struct _linha_cabecalho {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int create_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
+int createLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	fseek(arquivoBin, 0, SEEK_SET);
@@ -51,7 +51,7 @@ int create_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
     	se tudo der certo retorna 1 se algo der errado retorna 0
     	após a leitura ele retorna o que foi lido pelo 'cabecalho'
 */
-int read_linha_cabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
+int readLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	fseek(arquivoBin, 0, SEEK_SET);
@@ -107,11 +107,11 @@ int mostrarCabecalhoLinha(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int mudaStatus(FILE *arquivoBin, char status) {
+int mudaStatusCabecalhoLinha(FILE *arquivoBin, char status) {
 	if (arquivoBin == NULL) return 0;
 	LINHA_CABECALHO cabecalho;
 
-	read_linha_cabecalho(arquivoBin, &cabecalho);
+	readLinhaCabecalho(arquivoBin, &cabecalho);
 	cabecalho.status = status;
 	
 	//Salvar novamente no binário fseek = 0; pois inicio do arquivo
@@ -132,11 +132,11 @@ int mudaStatus(FILE *arquivoBin, char status) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int setByteOffset(FILE *arquivoBin, long long int byteOffset) {
+int setByteOffsetLinha(FILE *arquivoBin, long long int byteOffset) {
 	if (arquivoBin == NULL) return 0;
 	LINHA_CABECALHO cabecalho;
 
-	read_linha_cabecalho(arquivoBin, &cabecalho);
+	readLinhaCabecalho(arquivoBin, &cabecalho);
 	cabecalho.byteProxReg = byteOffset;
 	
 	//Salvar novamente no binário fseek = 1; pois inicio do arquivo + sizeof(char)
@@ -157,18 +157,18 @@ int setByteOffset(FILE *arquivoBin, long long int byteOffset) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int setNRegistros(FILE *arquivoBin, int nRegistros) {
+int setNRegistrosLinha(FILE *arquivoBin, int nRegistros) {
 	if (arquivoBin == NULL) return 0;
 	LINHA_CABECALHO cabecalho;
 
-	read_linha_cabecalho(arquivoBin, &cabecalho);
+	readLinhaCabecalho(arquivoBin, &cabecalho);
 	cabecalho.nroRegistros = nRegistros;
 	
 	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
 	fseek(arquivoBin, 9, SEEK_SET);
 	fwrite(&cabecalho.nroRegistros, sizeof(int), 1, arquivoBin);
 	return 1;
-} 
+}
 
 /*
     Descricao:
@@ -182,11 +182,11 @@ int setNRegistros(FILE *arquivoBin, int nRegistros) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int setNRemovidos(FILE *arquivoBin, int nRemovidos) {
+int setNRemovidosLinha(FILE *arquivoBin, int nRemovidos) {
 	if (arquivoBin == NULL) return 0;
 	LINHA_CABECALHO cabecalho;
 
-	read_linha_cabecalho(arquivoBin, &cabecalho);
+	readLinhaCabecalho(arquivoBin, &cabecalho);
 	cabecalho.nroRegRemovidos = nRemovidos;
 
 	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
@@ -223,8 +223,8 @@ int criaBinarioLinha(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
 	strcpy(cabecalho.descreveNome, "abc3");
 	strcpy(cabecalho.descreveCor, "abc4");
 	
-	create_linha_cabecalho(arquivoBIN, &cabecalho);
-	read_linha_cabecalho(arquivoBIN, &cabecalho2);
+	createLinhaCabecalho(arquivoBIN, &cabecalho);
+	readLinhaCabecalho(arquivoBIN, &cabecalho2);
 
 
 	//JOGAR ISSO NUMA FUNÇÃO
