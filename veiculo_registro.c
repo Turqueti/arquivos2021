@@ -88,8 +88,12 @@ int readRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 int mostrarRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
 
-	if(registro->prefixo != "NULO") printf("Prefixo do veiculo:: %s\n", registro->prefixo);
-	else printf("Prefixo do veiculo: campo com valor nulo\n");
+	char vet[5];
+	for (int i = 0; i < 5; ++i){
+		vet[i] = registro->prefixo[i];
+	}
+
+	printf("Prefixo do veiculo: %s\n", vet);
 
 	if(registro->modelo != "NULO") printf("Modelo do veiculo: %s\n", registro->modelo);
 	else printf("Modelo do veiculo: campo com valor nulo\n");
@@ -117,13 +121,13 @@ int mostrarRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 	return 1;
 }
 
-int teste(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
+int teste_veic(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
 	char linha[150];
 	char *b = linha;
 	size_t i = 150;
 
-	LINHA_REGISTRO registro;
-	LINHA_REGISTRO registro2;
+	VEICULO_REGISTRO registro;
+	VEICULO_REGISTRO registro2;
 
 	FILE *arquivoCSV = NULL;
 	FILE *arquivoBIN = NULL;
@@ -137,23 +141,25 @@ int teste(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
 	if(arquivoBIN == NULL) return 0;
 
 	registro.removido = '0';
-    registro.tamanhoRegistro = 1;
-    registro.codLinha = 2;
-    registro.aceitaCartao = 'S';
+	registro.tamanhoRegistro = 1;
+	strcpy(registro.prefixo, "22222");
+	strcpy(registro.data, "31/12/3333");
+	registro.quantidadeLugares = 4;
+	registro.codLinha = 5;
 
-    registro.tamanhoNome = 80;
-    registro.nomeLinha = (char*) malloc(sizeof(char) * 80);
-    strcpy(registro.nomeLinha, "too");
+    registro.tamanhoModelo = 80;
+    registro.modelo = (char*) malloc(sizeof(char) * 80);
+    strcpy(registro.modelo, "6666666666");
     
-    registro.tamanhoCor = 80;
-	registro.corLinha = (char*) malloc(sizeof(char) * 80);
-    strcpy(registro.corLinha, "sooo");
+    registro.tamanhoCategoria = 80;
+	registro.categoria = (char*) malloc(sizeof(char) * 80);
+    strcpy(registro.categoria, "777777777777");
 
-    createRegistroLinha(arquivoBIN, &registro);
+    createRegistroVeiculo(arquivoBIN, &registro);
 
 	fseek(arquivoBIN, 0, SEEK_SET);
-    readRegistroLinha(arquivoBIN, &registro2);
-    mostrarRegistroLinha(arquivoBIN, &registro2);
+    readRegistroVeiculo(arquivoBIN, &registro2);
+    mostrarRegistroVeiculo(arquivoBIN, &registro2);
 
 	//JOGAR ISSO NUMA FUNÇÃO
 		//lê a primeira linha do arquivo
