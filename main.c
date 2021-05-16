@@ -16,8 +16,8 @@ int main(int argc, char const *argv[]){
 	char palavra2[MATRIZBUFFERLEN] = "bbbbbbbbbbbb";
 	char palavra3[MATRIZBUFFERLEN] = "ccccccccccccc";
 	char palavra4[MATRIZBUFFERLEN] = "dddddddddddddd";
-
-	MATRIZ* mat = allocaMatriz(2,2);
+	MATRIZ* mat;
+	// MATRIZ* mat = allocaMatriz(2,2);
 
 
 	scanf("%d", &funcionalidade);
@@ -40,15 +40,15 @@ int main(int argc, char const *argv[]){
 			break;
 
 		case 5:
-			scanf("%s", nomeCampo);//Lendo com /0 no final
-			scanf("%s", valorCampo);//Lendo com /0 no final
+			// scanf("%s", nomeCampo);//Lendo com /0 no final
+			// scanf("%s", valorCampo);//Lendo com /0 no final
 
 			//leVeiculo(parametro, valor);
 			break;
 
 		case 6:
-			scanf("%s", nomeCampo);//Lendo com /0 no final
-			scanf("%s", valorCampo);//Lendo com /0 no final
+			// scanf("%s", nomeCampo);//Lendo com /0 no final
+			// scanf("%s", valorCampo);//Lendo com /0 no final
 
 			//leLinha(parametro, valor);
 			break;
@@ -66,20 +66,16 @@ int main(int argc, char const *argv[]){
 			break;
 		case 22: //testes
 			
-			// nome = (char*)malloc(100*sizeof(char));
-			// scanf("%s",nome);
-			// FILE* fp;
-			// fp = open_csv(nome);
+			nome = (char*)malloc(100*sizeof(char));
+			scanf("%s",nome);
+			FILE* fp;
+			fp = open_csv(nome);
 
-			// csvToMatrix(fp);
+			mat = csvToMatrix(fp);
+			printMatriz(mat);
 
-			// free(nome);
-			// close_csv(fp);
-			
-			inserePalavra(mat,0,0,palavra1);
-			inserePalavra(mat,0,1,palavra2);
-			inserePalavra(mat,1,0,palavra3);
-			inserePalavra(mat,1,1,palavra4);
+			free(nome);
+			close_csv(fp);
 			freeMatriz(mat);
 
 			break;

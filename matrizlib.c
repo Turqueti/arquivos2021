@@ -1,6 +1,7 @@
 #include "matrizlib.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 struct _matriz
 {
@@ -29,6 +30,12 @@ MATRIZ* allocaMatriz(int numLinhas, int numColunas){
     for (int i = 0; i < numLinhas; i++)
     {
         matrix->matriz[i] = (char**)malloc(numColunas * sizeof(char*));
+
+        for (int j = 0; j < numColunas; j++)
+        {
+            matrix->matriz[i][j] = NULL;
+        }
+        
     }
     
     return matrix;
@@ -70,16 +77,27 @@ void freeMatriz(MATRIZ* matrix){
     1 caso sucesso
     -1 caso fracasso
 */
-int inserePalavra(MATRIZ* matrix,int linha,int coluna,char palavra[MATRIZBUFFERLEN]){
+int inserePalavra(MATRIZ* matrix,int linha,int coluna,char palavra[]){
     if (checkBoundaries(matrix,linha,coluna) < 0)
     {
         return -1;
     }
 
-    int tamPalavra = strlen(palavra);
-    char* palavraMallocada = (char*)malloc((tamPalavra)*sizeof(char)+1);
-    strncpy(palavraMallocada,palavra,tamPalavra);
-    matrix->matriz[linha][coluna] = palavraMallocada;
+    if (matrix->matriz[linha][coluna] == NULL)
+    {
+        int tamPalavra = strlen(palavra);
+        char* palavraMallocada = (char*)malloc((tamPalavra+1)*sizeof(char));
+        memset(palavraMallocada,'\0',(tamPalavra+1)*sizeof(char)); // inicializando a palavra com varios \0s
+        strncpy(palavraMallocada,palavra,tamPalavra);
+        matrix->matriz[linha][coluna] = palavraMallocada;
+    }else
+    {
+        //todo: caso de substituir uma palavra
+    }
+    
+    
+
+    
     return 1;
     
 }
@@ -115,5 +133,18 @@ int checkBoundaries(MATRIZ* matrix, int linha, int coluna){
         return -21;
     }
     
+    
+}
+
+void printMatriz(MATRIZ* matrix){
+
+    for (int i = 0; i < matrix->linhas; i++)
+    {
+        for (int j = 0; j < matrix->colunas; j++)
+        {
+            printf("%s//",matrix->matriz[i][j]);
+        }
+        printf("\n");
+    }
     
 }

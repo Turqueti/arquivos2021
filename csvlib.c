@@ -1,6 +1,7 @@
 #include "csvlib.h"
 #include "matrizlib.h"
 
+
 /*
     descricao:
     Abre o arquivo csv e retorna o ponteiro pro arquivo
@@ -46,7 +47,20 @@ MATRIZ* csvToMatrix(FILE* filePointer){
     int numeroLinhas = numLinhas(filePointer);
     int numeroColunas = numCampos(filePointer);
     matrizRetorno = allocaMatriz(numeroLinhas,numeroColunas);
+    
+    fseek(filePointer,0,SEEK_SET);
 
+    char line[99999];
+
+    int linhaAtual = 0;
+    while(fgets(line, sizeof(line), filePointer) != NULL) {
+        line[strcspn(line, "\n")] = 0;
+        picotadora(line,matrizRetorno,linhaAtual);
+        linhaAtual++;
+    }
+
+
+   return matrizRetorno;
 
 }
 
@@ -102,4 +116,34 @@ int numCampos(FILE* filePointer){
     }
     
     return count;
+}
+
+/*
+    descricao:
+    recebe uma linha csv e retorna um vetor de strings(char**)
+    argumentos:
+    [in] char* line: linha
+    retono:
+    caso sucesso retorna um char** com as strings
+    caso fracasso retorna NULL
+*/
+char** picotadora(char* line,MATRIZ* matrix,int linha){
+
+    // char** retorno;
+    // int num_elementos = 3; //todo: func que pega o numero de elementos em uma linha
+    char delimitadores[] = ",";
+    // retorno = (char**)malloc(num_elementos*sizeof(char*));
+    char* token;
+
+    token = strsep(&line, delimitadores);
+    int itemAtual = 0;
+   /* walk through other tokens */
+   while( token != NULL ) {
+        // printf( "valor:%s tamanho:%ld\n", token,strlen(token) );
+        inserePalavra(matrix,linha,itemAtual,token);
+        itemAtual++;
+        token = strsep(&line, delimitadores);
+   }
+
+    return NULL;
 }
