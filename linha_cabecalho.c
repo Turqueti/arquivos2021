@@ -1,15 +1,15 @@
 #include "linha_cabecalho.h"
 
-struct _linha_cabecalho {
-    char status;
-    long long int byteProxReg;
-    int nroRegistros;
-    int nroRegRemovidos;
-    char descreveCodigo[15];
-    char descreveCartao[13];
-    char descreveNome[13];
-    char descreveCor[24];
-};
+LINHA_CABECALHO createLinhaCabecalho() {
+	LINHA_CABECALHO cabecalho;
+
+	cabecalho.status = '0';
+	cabecalho.byteProxReg = 0;
+	cabecalho.nroRegistros = 0;
+	cabecalho.nroRegRemovidos = 0;
+
+	return cabecalho;
+}
 
 /*
     Descricao:
@@ -23,7 +23,7 @@ struct _linha_cabecalho {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int createLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
+int insereLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	fseek(arquivoBin, 0, SEEK_SET);
@@ -192,54 +192,5 @@ int setNRemovidosLinha(FILE *arquivoBin, int nRemovidos) {
 	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
 	fseek(arquivoBin, 13, SEEK_SET);
 	fwrite(&cabecalho.nroRegRemovidos, sizeof(int), 1, arquivoBin);
-	return 1;
-}
-
-int criaBinarioLinha(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
-	char linha[150];
-	char *b = linha;
-	size_t i = 150;
-
-	LINHA_CABECALHO cabecalho;
-	LINHA_CABECALHO cabecalho2;
-
-	FILE *arquivoCSV = NULL;
-	FILE *arquivoBIN = NULL;
-
-	//abre arquivo csv
-	arquivoCSV = fopen(nomeArquivoCSV, "r");
-	if(arquivoCSV == NULL) return 0;
-
-
-	arquivoBIN = fopen(nomeArquivoBIN, "w+b");
-	if(arquivoBIN == NULL) return 0;
-
-	cabecalho.status = '0';
-	cabecalho.byteProxReg = 1;
-	cabecalho.nroRegistros = 2;
-	cabecalho.nroRegRemovidos = 3;
-	strcpy(cabecalho.descreveCodigo, "abc1");
-	strcpy(cabecalho.descreveCartao, "abc2");
-	strcpy(cabecalho.descreveNome, "abc3");
-	strcpy(cabecalho.descreveCor, "abc4");
-	
-	createLinhaCabecalho(arquivoBIN, &cabecalho);
-	readLinhaCabecalho(arquivoBIN, &cabecalho2);
-
-
-	//JOGAR ISSO NUMA FUNÇÃO
-		//lê a primeira linha do arquivo
-		//getline(&b, &i, arquivoCSV);//Pega 1B a mais?
-		//separa a linha em 4 strings
-		//joga a primeira linha na struct
-		
-	//abre o arquivo binário
-	//escreve a primeira linha no arquivo binário
-	//fecha o arquivo binário
-	fclose(arquivoBIN);
-
-	//fecha o arquivo csv
-	fclose(arquivoCSV);
-
 	return 1;
 }

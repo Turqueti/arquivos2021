@@ -1,4 +1,5 @@
 #include "linha_registro.h"
+#include "linha_cabecalho.h"
 
 struct _linha_registro {
     char removido;
@@ -23,7 +24,7 @@ struct _linha_registro {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int createRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
+int insereRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
 
 	fwrite(&registro->removido, sizeof(char), 1, arquivoBin);
@@ -107,55 +108,44 @@ int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	return 1;
 }
 
-int teste(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
-	char linha[150];
-	char *b = linha;
-	size_t i = 150;
+int insereNRegistros(FILE *arquivoBin, int numeroNovosRegistros) {
+	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+	readLinhaCabecalho(arquivoBin, &cabecalho);
+
+	mudaStatusCabecalhoLinha(arquivoBin, '0');
+
+	int proxByte = cabecalho.byteProxReg;
+	int nRegistros = cabecalho.nroRegistros;
+
+	int codLinha;
+	char aceitaCartao;
+	char nomeLinha[150];
+	char corLinha[150];
 
 	LINHA_REGISTRO registro;
-	LINHA_REGISTRO registro2;
+	fseek(arquivoBin, cabecalho.byteProxReg, SEEK_SET);
+	for (int i = 0; i < numeroNovosRegistros; ++i){//verificar nulos e retirar aspas
+		scanf("%d %c %s %s", &codLinha, &aceitaCartao, nomeLinha, corLinha);
 
-	FILE *arquivoCSV = NULL;
-	FILE *arquivoBIN = NULL;
+		int nomeTam = strlen(nomeLinha);
+		int corTam = strlen(corLinha);
 
-	//abre arquivo csv
-	arquivoCSV = fopen(nomeArquivoCSV, "r");
-	if(arquivoCSV == NULL) return 0;
+		registro.removido = '@';
+		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + nomeTam + corTam;
+		registro.codLinha = codLinha;
+		registro.aceitaCartao = aceitaCartao;
 
+		registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
+		strcpy(registro.nomeLinha, nomeLinha);
 
-	arquivoBIN = fopen(nomeArquivoBIN, "w+b");
-	if(arquivoBIN == NULL) return 0;
+		registro.corLinha = (char*) malloc(sizeof(char) * corTam);
+		strcpy(registro.corLinha, corLinha);
 
-	registro.removido = '0';
-    registro.tamanhoRegistro = 1;
-    registro.codLinha = 2;
-    registro.aceitaCartao = 'S';
+		insereRegistroLinha(arquivoBin, &registro);
+		proxByte += registro.tamanhoRegistro;
+	}
 
-    registro.tamanhoNome = 80;
-    registro.nomeLinha = (char*) malloc(sizeof(char) * 80);
-    strcpy(registro.nomeLinha, "too");
-    
-    registro.tamanhoCor = 80;
-	registro.corLinha = (char*) malloc(sizeof(char) * 80);
-    strcpy(registro.corLinha, "sooo");
-
-    createRegistroLinha(arquivoBIN, &registro);
-
-	fseek(arquivoBIN, 0, SEEK_SET);
-    readRegistroLinha(arquivoBIN, &registro2);
-    mostrarRegistroLinha(arquivoBIN, &registro2);
-
-	//JOGAR ISSO NUMA FUNÇÃO
-		//lê a primeira linha do arquivo
-		//getline(&b, &i, arquivoCSV);//Pega 1B a mais?
-		//separa a linha em 4 strings
-		//joga a primeira linha na struct
-		
-	//abre o arquivo binário
-	//escreve a primeira linha no arquivo binário
-	//fecha o arquivo binário
-	fclose(arquivoBIN);
-
-	//fecha o arquivo csv
-	fclose(arquivoCSV);
+	setByteOffsetLinha(arquivoBin, proxByte);
+	setNRegistrosLinha(arquivoBin, nRegistros+numeroNovosRegistros);
+	mudaStatusCabecalhoLinha(arquivoBin, '1');
 }

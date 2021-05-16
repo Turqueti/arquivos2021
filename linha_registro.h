@@ -7,9 +7,9 @@
 
 typedef struct _linha_registro  LINHA_REGISTRO;
 
-int createRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
+int insereRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
 int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
-int teste(char nomeArquivoCSV[30], char nomeArquivoBIN[30]);
+int insereNRegistros(FILE *arquivoBin, int numeroNovosRegistros);
 
 #endif
