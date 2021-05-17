@@ -136,6 +136,14 @@ int checkBoundaries(MATRIZ* matrix, int linha, int coluna){
     
 }
 
+/*
+    descricao:
+    printa uma matriz com o separador // entre os itens
+    argumentos:
+    [in]MATRIZ* matrix: matriz a ser printada
+    retono:
+    void
+*/
 void printMatriz(MATRIZ* matrix){
 
     for (int i = 0; i < matrix->linhas; i++)
