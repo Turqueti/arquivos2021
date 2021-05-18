@@ -10,6 +10,6 @@ typedef struct _linha_registro  LINHA_REGISTRO;
 int insereRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
 int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
-int insereNRegistros(FILE *arquivoBin, int numeroNovosRegistros);
+int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros);
 
 #endif

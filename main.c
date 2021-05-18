@@ -63,9 +63,20 @@ int main(int argc, char const *argv[]){
 			break;
 
 		case 7:
+			scanf("%s", arquivoBIN);
 			scanf("%d", &numeroNovosRegistros);
-			//leNRegistros(numeroRegistros);
-			//insereVeiculo();
+
+			int codLinha;
+			char aceitaCartao;
+			char nomeLinha[200];
+			char corLinha[200];
+
+			FILE* arquivoBin;
+			arquivoBin = fopen(arquivoBIN, "w+b");
+
+			//insereNRegistrosVeiculo(arquivoBin, numeroNovosRegistros);
+
+			fclose(arquivoBin);
 			break;
 
 		case 8:
@@ -80,7 +91,7 @@ int main(int argc, char const *argv[]){
 			FILE* arquivoBin;
 			arquivoBin = fopen(arquivoBIN, "w+b");
 
-			insereNRegistros(arquivoBin, numeroNovosRegistros);
+			insereNRegistrosLinha(arquivoBin, numeroNovosRegistros);
 
 			fclose(arquivoBin);
 			break;

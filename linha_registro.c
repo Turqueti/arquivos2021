@@ -59,9 +59,13 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	fread(&registro->tamanhoRegistro, sizeof(int), 1, arquivoBin);
 	fread(&registro->codLinha, sizeof(int), 1, arquivoBin);
 	fread(&registro->aceitaCartao, sizeof(char), 1, arquivoBin);
+	
 	fread(&registro->tamanhoNome, sizeof(int), 1, arquivoBin);
+	registro->nomeLinha = (char*) malloc(sizeof(char) * registro->tamanhoNome);
 	fread(&registro->nomeLinha, sizeof(char), registro->tamanhoNome, arquivoBin);
+
 	fread(&registro->tamanhoCor, sizeof(int), 1, arquivoBin);
+	registro->corLinha = (char*) malloc(sizeof(char) * registro->tamanhoCor);
 	fread(&registro->corLinha, sizeof(char), registro->tamanhoCor, arquivoBin);
 	
 	return 1;
@@ -95,20 +99,21 @@ int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if(registro->aceitaCartao == 'S') printf("Aceita cartao: PAGAMENTO  SOMENTE  COM  CARTAO  SEM  PRESENCA  DECOBRADOR\n");
 	else if(registro->aceitaCartao == 'N') printf("Aceita cartao: PAGAMENTO EM CARTAO E DINHEIRO\n");
 	else if(registro->aceitaCartao == 'F') printf("Aceita cartao: PAGAMENTO EM CARTAO SOMENTE NO FINAL DE SEMANA\n");
+	printf("\n");
 
-	/*printf("%c\n", registro->removido);
-	printf("%d\n", registro->tamanhoRegistro);
-	printf("%d\n", registro->codLinha);
-	printf("%c\n", registro->aceitaCartao);
-	printf("%d\n", registro->tamanhoNome);
-	printf("%s\n", registro->nomeLinha); //sem \0
-	printf("%d\n", registro->tamanhoCor);
-	printf("%s\n", registro->corLinha); //sem \0*/
+	/*printf("removido %c\n", registro->removido);
+	printf("tamanhoRegistro %d\n", registro->tamanhoRegistro);
+	printf("codLinha %d\n", registro->codLinha);
+	printf("aceitaCartao %c\n", registro->aceitaCartao);
+	printf("tamanhoNome %d\n", registro->tamanhoNome);
+	printf("nomeLinha %s\n", registro->nomeLinha); //sem \0
+	printf("tamanhoCor %d\n", registro->tamanhoCor);
+	printf("corLinha %s\n", registro->corLinha); //sem \0*/
 
 	return 1;
 }
 
-int insereNRegistros(FILE *arquivoBin, int numeroNovosRegistros) {
+int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
 	readLinhaCabecalho(arquivoBin, &cabecalho);
 
@@ -123,8 +128,9 @@ int insereNRegistros(FILE *arquivoBin, int numeroNovosRegistros) {
 	char corLinha[150];
 
 	LINHA_REGISTRO registro;
-	fseek(arquivoBin, cabecalho.byteProxReg, SEEK_SET);
+	fseek(arquivoBin, proxByte, SEEK_SET);
 	for (int i = 0; i < numeroNovosRegistros; ++i){//verificar nulos e retirar aspas
+		LINHA_REGISTRO registro2;
 		scanf("%d %c %s %s", &codLinha, &aceitaCartao, nomeLinha, corLinha);
 
 		int nomeTam = strlen(nomeLinha);
@@ -135,13 +141,17 @@ int insereNRegistros(FILE *arquivoBin, int numeroNovosRegistros) {
 		registro.codLinha = codLinha;
 		registro.aceitaCartao = aceitaCartao;
 
+		registro.tamanhoNome = nomeTam;
 		registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
 		strcpy(registro.nomeLinha, nomeLinha);
 
+		registro.tamanhoCor = corTam;
 		registro.corLinha = (char*) malloc(sizeof(char) * corTam);
 		strcpy(registro.corLinha, corLinha);
 
+		mostrarRegistroLinha(arquivoBin, &registro);
 		insereRegistroLinha(arquivoBin, &registro);
+		
 		proxByte += registro.tamanhoRegistro;
 	}
 
