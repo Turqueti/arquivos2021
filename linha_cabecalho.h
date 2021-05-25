@@ -7,7 +7,7 @@
 
 typedef struct _linha_cabecalho {
     char status;
-    long long int byteProxReg;
+    long int byteProxReg;
     int nroRegistros;
     int nroRegRemovidos;
     char descreveCodigo[15];
@@ -21,7 +21,7 @@ int insereLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho);
 int readLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho);
 int mostrarCabecalhoLinha(FILE *arquivoBin, LINHA_CABECALHO *cabecalho);
 int mudaStatusCabecalhoLinha(FILE *arquivoBin, char status);
-int setByteOffsetLinha(FILE *arquivoBin, long long int byteOffset);
+int setByteOffsetLinha(FILE *arquivoBin, long int byteOffset);
 int setNRegistrosLinha(FILE *arquivoBin, int nRegistros);
 int setNRemovidosLinha(FILE *arquivoBin, int nRemovidos);
 

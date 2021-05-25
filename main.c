@@ -17,8 +17,6 @@ int main(int argc, char const *argv[]){
 	//char valorCampo[30];
 	char arquivoCSV[30];
 	char arquivoBIN[30];
-	char nomeCampo[30];
-	char valorCampo[30];
 	char *nome;
 
 
@@ -27,6 +25,9 @@ int main(int argc, char const *argv[]){
 	char palavra3[MATRIZBUFFERLEN] = "ccccccccccccc";
 	char palavra4[MATRIZBUFFERLEN] = "dddddddddddddd";
 	MATRIZ* mat;
+
+
+	FILE* arquivoBin;
 
 
 	scanf("%d", &funcionalidade);
@@ -52,26 +53,21 @@ int main(int argc, char const *argv[]){
 			break;
 
 		case 5:
-			scanf("%s", nomeCampo);//Lendo com /0 no final
-			scanf("%s", valorCampo);//Lendo com /0 no final
 			break;
 
 		case 6:
-			scanf("%s", nomeCampo);//Lendo com /0 no final
-			scanf("%s", valorCampo);//Lendo com /0 no final
-			//leLinha(parametro, valor);
+			scanf("%s", arquivoBIN);
+			
+			arquivoBin = fopen(arquivoBIN, "rb");
+
+			buscaParametroLinha(arquivoBin);
+			fclose(arquivoBin);
 			break;
 
 		case 7:
 			scanf("%s", arquivoBIN);
 			scanf("%d", &numeroNovosRegistros);
 
-			int codLinha;
-			char aceitaCartao;
-			char nomeLinha[200];
-			char corLinha[200];
-
-			FILE* arquivoBin;
 			arquivoBin = fopen(arquivoBIN, "w+b");
 
 			//insereNRegistrosVeiculo(arquivoBin, numeroNovosRegistros);
@@ -83,12 +79,6 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoBIN);
 			scanf("%d", &numeroNovosRegistros);
 
-			int codLinha;
-			char aceitaCartao;
-			char nomeLinha[200];
-			char corLinha[200];
-
-			FILE* arquivoBin;
 			arquivoBin = fopen(arquivoBIN, "w+b");
 
 			insereNRegistrosLinha(arquivoBin, numeroNovosRegistros);

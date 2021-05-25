@@ -28,7 +28,7 @@ int insereLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 
 	fseek(arquivoBin, 0, SEEK_SET);
 	fwrite(&cabecalho->status, sizeof(char), 1, arquivoBin);
-	fwrite(&cabecalho->byteProxReg, sizeof(long long int), 1, arquivoBin);
+	fwrite(&cabecalho->byteProxReg, sizeof(long int), 1, arquivoBin);
 	fwrite(&cabecalho->nroRegistros, sizeof(int), 1, arquivoBin);
 	fwrite(&cabecalho->nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	fwrite(&cabecalho->descreveCodigo, sizeof(char), 15, arquivoBin);
@@ -56,7 +56,7 @@ int readLinhaCabecalho(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 
 	fseek(arquivoBin, 0, SEEK_SET);
 	fread(&cabecalho->status, sizeof(char), 1, arquivoBin);
-	fread(&cabecalho->byteProxReg, sizeof(long long int), 1, arquivoBin);
+	fread(&cabecalho->byteProxReg, sizeof(long int), 1, arquivoBin);
 	fread(&cabecalho->nroRegistros, sizeof(int), 1, arquivoBin);
 	fread(&cabecalho->nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	fread(&cabecalho->descreveCodigo, sizeof(char), 15, arquivoBin);
@@ -84,7 +84,7 @@ int mostrarCabecalhoLinha(FILE *arquivoBin, LINHA_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	printf("%c\n", cabecalho->status);
-	printf("%lld\n", cabecalho->byteProxReg);
+	printf("%ld\n", cabecalho->byteProxReg);
 	printf("%d\n", cabecalho->nroRegistros);
 	printf("%d\n", cabecalho->nroRegRemovidos);
 	printf("%s\n", cabecalho->descreveCodigo);
@@ -132,7 +132,7 @@ int mudaStatusCabecalhoLinha(FILE *arquivoBin, char status) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int setByteOffsetLinha(FILE *arquivoBin, long long int byteOffset) {
+int setByteOffsetLinha(FILE *arquivoBin, long int byteOffset) {
 	if (arquivoBin == NULL) return 0;
 	LINHA_CABECALHO cabecalho;
 
