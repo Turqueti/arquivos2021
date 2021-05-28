@@ -31,10 +31,14 @@ int insereRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	fwrite(&registro->tamanhoRegistro, sizeof(int), 1, arquivoBin);
 	fwrite(&registro->codLinha, sizeof(int), 1, arquivoBin);
 	fwrite(&registro->aceitaCartao, sizeof(char), 1, arquivoBin);
+	
 	fwrite(&registro->tamanhoNome, sizeof(int), 1, arquivoBin);
-	fwrite(&registro->nomeLinha, sizeof(char), registro->tamanhoNome, arquivoBin);
+	if(registro->tamanhoNome > 0)
+		fwrite(registro->nomeLinha, sizeof(char), registro->tamanhoNome, arquivoBin);
+	
 	fwrite(&registro->tamanhoCor, sizeof(int), 1, arquivoBin);
-	fwrite(&registro->corLinha, sizeof(char), registro->tamanhoCor, arquivoBin);
+	if(registro->tamanhoCor > 0)
+		fwrite(registro->corLinha, sizeof(char), registro->tamanhoCor, arquivoBin);
 
 	return 1;
 }
@@ -87,7 +91,7 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
 
-	printf("Codigo da linha: %d\n", registro->codLinha);
+	/*printf("Codigo da linha: %d\n", registro->codLinha);
 
 	if(strcmp(registro->nomeLinha, "")) printf("Nome da linha: %s\n", registro->nomeLinha);
 	else printf("Nome da linha: campo com valor nulo\n");
@@ -99,16 +103,16 @@ int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	else if(registro->aceitaCartao == 'N') printf("Aceita cartao: PAGAMENTO EM CARTAO E DINHEIRO\n");
 	else if(registro->aceitaCartao == 'F') printf("Aceita cartao: PAGAMENTO EM CARTAO SOMENTE NO FINAL DE SEMANA\n");
 	else if(registro->aceitaCartao == '\0') printf("Aceita cartao: campo com valor nulo\n");
-	printf("\n");
+	printf("\n");*/
 
-	/*printf("removido %c\n", registro->removido);
+	printf("removido %c\n", registro->removido);
 	printf("tamanhoRegistro %d\n", registro->tamanhoRegistro);
 	printf("codLinha %d\n", registro->codLinha);
 	printf("aceitaCartao %c\n", registro->aceitaCartao);
 	printf("tamanhoNome %d\n", registro->tamanhoNome);
 	printf("nomeLinha %s\n", registro->nomeLinha); //sem \0
 	printf("tamanhoCor %d\n", registro->tamanhoCor);
-	printf("corLinha %s\n\n", registro->corLinha); //sem \0*/
+	printf("corLinha %s\n\n", registro->corLinha); //sem \0
 
 	return 1;
 }
@@ -150,6 +154,9 @@ void scan_quote_string(char *str) {
 
 int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+	readLinhaCabecalho(arquivoBin, &cabecalho);
+	if(cabecalho.status == '0') return 0;
+
 	mudaStatusCabecalhoLinha(arquivoBin, '0');
 	readLinhaCabecalho(arquivoBin, &cabecalho);
 
@@ -161,9 +168,10 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 	char nomeLinha[150];
 	char corLinha[150];
 
-	LINHA_REGISTRO registro;
 	fseek(arquivoBin, proxByte, SEEK_SET);
 	for (int i = 0; i < numeroNovosRegistros; ++i) {
+		LINHA_REGISTRO registro;
+
 		scanf("%d", &codLinha);
 
 		scan_quote_string(aceitaCartao);
@@ -198,19 +206,21 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 			strcpy(registro.corLinha, corLinha);
 		}
 
-		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * nomeTam) + (sizeof(char) * corTam);
+		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * nomeTam) + (sizeof(char) * corTam) -5;
 
-		mostrarRegistroLinha(arquivoBin, &registro);
 		insereRegistroLinha(arquivoBin, &registro);
+
+		free(registro.nomeLinha);
+		free(registro.corLinha);
 		
-		proxByte += registro.tamanhoRegistro+1;
+		proxByte += registro.tamanhoRegistro+5;
 	}
 
 	setByteOffsetLinha(arquivoBin, proxByte);
 	setNRegistrosLinha(arquivoBin, nRegistros+numeroNovosRegistros);
 	mudaStatusCabecalhoLinha(arquivoBin, '1');
 
-	return 0;
+	return 1;
 }
 
 int buscaParametroLinha(FILE *arquivoBin) {

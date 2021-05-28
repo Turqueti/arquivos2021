@@ -125,9 +125,8 @@ int main(int argc, char const *argv[]){
 
 			arquivoBin = fopen(arquivoBIN, "r+b");
 
-			insereNRegistrosLinha(arquivoBin, numeroNovosRegistros);
-
-			binarioNaTela(arquivoBIN);
+			if(insereNRegistrosLinha(arquivoBin, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
+			else binarioNaTela(arquivoBIN);
 
 			fclose(arquivoBin);
 			break;
