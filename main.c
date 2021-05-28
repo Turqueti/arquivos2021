@@ -1,15 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "linha_cabecalho.h"
+#include "veiculo_cabecalho.h"
+#include "linha_registro.h"
+#include "veiculo_registro.h"
 #include "csvlib.h"
 #include "matrizlib.h"
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
-	int numeroRegistros = 0;
-	char *nomeCampo;
-	char *valorCampo;
-	char* nome;
+	int numeroNovosRegistros = 0;
+
+	//char nomeCampo[30];
+	//char valorCampo[30];
+	char arquivoCSV[30];
+	char arquivoBIN[30];
+	char *nome;
 
 
 	char palavra1[MATRIZBUFFERLEN] = "aaaaaaaaaaa";
@@ -17,18 +25,23 @@ int main(int argc, char const *argv[]){
 	char palavra3[MATRIZBUFFERLEN] = "ccccccccccccc";
 	char palavra4[MATRIZBUFFERLEN] = "dddddddddddddd";
 	MATRIZ* mat;
-	// MATRIZ* mat = allocaMatriz(2,2);
+
+
+	FILE* arquivoBin;
 
 
 	scanf("%d", &funcionalidade);
 
 	switch(funcionalidade) { //verifica qual funcionalidade inserida e chama a função que a executa
 		case 1:
-			//criaBinarioVeiculo();
+			scanf("%s", arquivoCSV);//Lendo com /0 no final
+			scanf("%s", arquivoBIN);//Lendo com /0 no final
+			teste_veic(arquivoCSV, arquivoBIN);
 			break;
 
 		case 2:
-			//criaBinarioLinha();
+			scanf("%s", arquivoCSV);//Lendo com /0 no final
+			scanf("%s", arquivoBIN);//Lendo com /0 no final
 			break;
 
 		case 3:
@@ -40,32 +53,40 @@ int main(int argc, char const *argv[]){
 			break;
 
 		case 5:
-			// scanf("%s", nomeCampo);//Lendo com /0 no final
-			// scanf("%s", valorCampo);//Lendo com /0 no final
-
-			//leVeiculo(parametro, valor);
 			break;
 
 		case 6:
-			// scanf("%s", nomeCampo);//Lendo com /0 no final
-			// scanf("%s", valorCampo);//Lendo com /0 no final
+			scanf("%s", arquivoBIN);
+			
+			arquivoBin = fopen(arquivoBIN, "rb");
 
-			//leLinha(parametro, valor);
+			buscaParametroLinha(arquivoBin);
+			fclose(arquivoBin);
 			break;
 
 		case 7:
-			scanf("%d", &numeroRegistros);
-			//leNRegistros(numeroRegistros);
-			//insereVeiculo();
+			scanf("%s", arquivoBIN);
+			scanf("%d", &numeroNovosRegistros);
+
+			arquivoBin = fopen(arquivoBIN, "w+b");
+
+			//insereNRegistrosVeiculo(arquivoBin, numeroNovosRegistros);
+
+			fclose(arquivoBin);
 			break;
 
 		case 8:
-			scanf("%d", &numeroRegistros);
-			//leNRegistros(numeroRegistros);
-			//insereLinha();
+			scanf("%s", arquivoBIN);
+			scanf("%d", &numeroNovosRegistros);
+
+			arquivoBin = fopen(arquivoBIN, "w+b");
+
+			insereNRegistrosLinha(arquivoBin, numeroNovosRegistros);
+
+			fclose(arquivoBin);
 			break;
+
 		case 22: //testes
-			
 			nome = (char*)malloc(100*sizeof(char));
 			scanf("%s",nome);
 			FILE* fp;
