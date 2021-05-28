@@ -1,5 +1,5 @@
 all:
-	gcc *.c *.h -o out -W
+	gcc *.c *.h -o out -W -g
 
 tests:
 	gcc *.c *.h -o out -W
