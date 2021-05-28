@@ -2,13 +2,13 @@
 #include "linha_cabecalho.h"
 
 struct _linha_registro {
-    char removido;
-    int tamanhoRegistro;
-    int codLinha;
-    char aceitaCartao;
-    int tamanhoNome;
+    char removido;//1
+    int tamanhoRegistro;//4
+    int codLinha;//4
+    char aceitaCartao;//1
+    int tamanhoNome;//4
     char *nomeLinha;
-    int tamanhoCor;
+    int tamanhoCor;//4
     char *corLinha;
 };
 
@@ -87,18 +87,18 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
 
-	if(registro->codLinha != -1) printf("Codigo da linha: %d\n", registro->codLinha);
-	else printf("Codigo da linha: campo com valor nulo\n");
+	printf("Codigo da linha: %d\n", registro->codLinha);
 
-	if(registro->nomeLinha != NULL) printf("Nome da linha: %s\n", registro->nomeLinha);
+	if(strcmp(registro->nomeLinha, "")) printf("Nome da linha: %s\n", registro->nomeLinha);
 	else printf("Nome da linha: campo com valor nulo\n");
 
-	if(registro->corLinha != "NULO") printf("Cor que descreve a linha: %s\n", registro->corLinha);
+	if(strcmp(registro->corLinha, "NULO")) printf("Cor que descreve a linha: %s\n", registro->corLinha);
 	else printf("Cor que descreve a linha: campo com valor nulo\n");
 
-	if(registro->aceitaCartao == 'S') printf("Aceita cartao: PAGAMENTO  SOMENTE  COM  CARTAO  SEM  PRESENCA  DECOBRADOR\n");
+	if(registro->aceitaCartao == 'S') printf("Aceita cartao: PAGAMENTO SOMENTE COM CARTAO SEM PRESENCA DE COBRADOR\n");
 	else if(registro->aceitaCartao == 'N') printf("Aceita cartao: PAGAMENTO EM CARTAO E DINHEIRO\n");
 	else if(registro->aceitaCartao == 'F') printf("Aceita cartao: PAGAMENTO EM CARTAO SOMENTE NO FINAL DE SEMANA\n");
+	else if(registro->aceitaCartao == '\0') printf("Aceita cartao: campo com valor nulo\n");
 	printf("\n");
 
 	/*printf("removido %c\n", registro->removido);
@@ -150,11 +150,10 @@ void scan_quote_string(char *str) {
 
 int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+	mudaStatusCabecalhoLinha(arquivoBin, '0');
 	readLinhaCabecalho(arquivoBin, &cabecalho);
 
-	mudaStatusCabecalhoLinha(arquivoBin, '0');
-
-	int proxByte = cabecalho.byteProxReg;
+	long int proxByte = cabecalho.byteProxReg;
 	int nRegistros = cabecalho.nroRegistros;
 
 	int codLinha;
@@ -164,8 +163,7 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 
 	LINHA_REGISTRO registro;
 	fseek(arquivoBin, proxByte, SEEK_SET);
-	for (int i = 0; i < numeroNovosRegistros; ++i){//verificar nulos e retirar aspas
-		LINHA_REGISTRO registro2;
+	for (int i = 0; i < numeroNovosRegistros; ++i) {
 		scanf("%d", &codLinha);
 
 		scan_quote_string(aceitaCartao);
@@ -175,31 +173,44 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 		int nomeTam = strlen(nomeLinha);
 		int corTam = strlen(corLinha);
 
-		registro.removido = '@';
-		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + nomeTam + corTam;
+		registro.removido = '1';
+
 		registro.codLinha = codLinha;
 
-
 		if(!strcmp(aceitaCartao, "NULO")) registro.aceitaCartao = '\0';
-		else registro.aceitaCartao = aceitaCartao[1];
+		else registro.aceitaCartao = aceitaCartao[0];
 
 		registro.tamanhoNome = nomeTam;
-		registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
-		if(strcmp(nomeLinha, "NULO")) strcpy(registro.nomeLinha, nomeLinha);
+		if(!strcmp(nomeLinha, "NULO")) {
+			strcpy(registro.nomeLinha, "");
+			registro.tamanhoNome = 0;
+		} else {
+			registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
+			strcpy(registro.nomeLinha, nomeLinha);
+		}
 
 		registro.tamanhoCor = corTam;
-		registro.corLinha = (char*) malloc(sizeof(char) * corTam);
-		if(strcmp(corLinha, "NULO")) strcpy(registro.corLinha, corLinha);
+		if(!strcmp(corLinha, "NULO")) {
+			strcpy(registro.corLinha, "");
+			registro.tamanhoCor = 0;
+		} else {
+			registro.corLinha = (char*) malloc(sizeof(char) * corTam);
+			strcpy(registro.corLinha, corLinha);
+		}
+
+		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * nomeTam) + (sizeof(char) * corTam);
 
 		mostrarRegistroLinha(arquivoBin, &registro);
 		insereRegistroLinha(arquivoBin, &registro);
 		
-		proxByte += registro.tamanhoRegistro;
+		proxByte += registro.tamanhoRegistro+1;
 	}
 
 	setByteOffsetLinha(arquivoBin, proxByte);
 	setNRegistrosLinha(arquivoBin, nRegistros+numeroNovosRegistros);
 	mudaStatusCabecalhoLinha(arquivoBin, '1');
+
+	return 0;
 }
 
 int buscaParametroLinha(FILE *arquivoBin) {
@@ -244,6 +255,23 @@ int buscaParametroLinha(FILE *arquivoBin) {
 			}
 		}
 	}
+
+	return 1;
+}
+
+int	imprimeRegistrosLinha(FILE *arquivoBin) {
+	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+	readLinhaCabecalho(arquivoBin, &cabecalho);
+
+	LINHA_REGISTRO registro;
+
+	int n = 0;
+	while(readRegistroLinha(arquivoBin, &registro) != 0) {
+			mostrarRegistroLinha(arquivoBin, &registro);
+			n++;
+	}
+
+	if(n == 0) printf("Registro inexistente.\n");
 
 	return 1;
 }
