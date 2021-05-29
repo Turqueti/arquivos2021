@@ -40,6 +40,7 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
 			//teste_veic(arquivoCsvPath, arquivoBinPath);
 			arquivoCsvFP = open_csv(arquivoCsvPath);
+			mat = csvToMatrix(arquivoCsvFP);
 
 			close_csv(arquivoCsvFP);
 			break;
@@ -47,6 +48,25 @@ int main(int argc, char const *argv[]){
 		case 2:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
+			arquivoCsvFP = open_csv(arquivoCsvPath);
+			
+			mat = csvToMatrix(arquivoCsvFP);
+			arquivoBinFP = fopen(arquivoBinPath, "wb");
+
+			LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+			strncpy(cabecalho.descreveCodigo,retorna_elemento(mat,0,0),15);
+			strncpy(cabecalho.descreveCartao,retorna_elemento(mat,0,1),13);
+			strncpy(cabecalho.descreveNome,retorna_elemento(mat,0,2),13);
+			strncpy(cabecalho.descreveCor,retorna_elemento(mat,0,3),24);
+
+			insereLinhaCabecalho(arquivoBinFP,&cabecalho);
+			insereNRegistrosLinhaMatriz(arquivoBinFP,mat);
+
+			freeMatriz(mat);
+			close_csv(arquivoCsvFP);
+			binarioNaTela(arquivoBinPath);
+			fclose(arquivoBinFP);
+			
 			break;
 
 		case 3:

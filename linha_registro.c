@@ -1,6 +1,7 @@
 #include "linha_registro.h"
 #include "linha_cabecalho.h"
 #include "binarioNaTela.h"
+#include "matrizlib.h"
 
 struct _linha_registro {
     char removido;//1
@@ -156,7 +157,7 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 
 		registro.tamanhoNome = nomeTam;
 		if(!strcmp(nomeLinha, "NULO")) {
-			strcpy(registro.nomeLinha, "");
+			registro.nomeLinha = NULL; //mudanca feita por conta do erro no valgrind
 			registro.tamanhoNome = 0;
 		} else {
 			registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
@@ -248,6 +249,73 @@ int	imprimeRegistrosLinha(FILE *arquivoBin) {
 	}
 
 	if(n == 0) printf("Registro inexistente.\n");
+
+	return 1;
+}
+
+int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
+	int numeroNovosRegistros = retornaNumLinhas(matrix);
+
+
+
+	long int proxByte = ftell(arquivoBin);
+
+	int codLinha;
+	char* aceitaCartao;
+	char* nomeLinha;
+	char* corLinha;
+
+	fseek(arquivoBin, proxByte, SEEK_SET);
+	for (int i = 1; i < numeroNovosRegistros; ++i) {
+		LINHA_REGISTRO registro;
+
+		codLinha = atoi(retorna_elemento(matrix,i,0));
+		aceitaCartao = retorna_elemento(matrix,i,1);
+		nomeLinha = retorna_elemento(matrix,i,2);
+		corLinha = retorna_elemento(matrix,i,3);
+
+
+		int nomeTam = strlen(nomeLinha);
+		int corTam = strlen(corLinha);
+
+		registro.removido = '1';
+
+		registro.codLinha = codLinha;
+
+		if(!strcmp(aceitaCartao, "NULO")) registro.aceitaCartao = '\0';
+		else registro.aceitaCartao = aceitaCartao[0];
+
+		registro.tamanhoNome = nomeTam;
+		if(!strcmp(nomeLinha, "NULO")) {
+			registro.nomeLinha = NULL;
+			registro.tamanhoNome = 0;
+		} else {
+			registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
+			strncpy(registro.nomeLinha, nomeLinha,nomeTam);
+		}
+
+		registro.tamanhoCor = corTam;
+		if(!strcmp(corLinha, "NULO")) {
+			strcpy(registro.corLinha, "");
+			registro.tamanhoCor = 0;
+		} else {
+			registro.corLinha = (char*) malloc(sizeof(char) * corTam);
+			strncpy(registro.corLinha, corLinha,corTam);
+		}
+
+		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * nomeTam) + (sizeof(char) * corTam) -5;
+
+		insereRegistroLinha(arquivoBin, &registro);
+
+		free(registro.nomeLinha);
+		free(registro.corLinha);
+		
+		proxByte += registro.tamanhoRegistro+5;
+	}
+
+	setByteOffsetLinha(arquivoBin, proxByte);
+	setNRegistrosLinha(arquivoBin, numeroNovosRegistros);
+	mudaStatusCabecalhoLinha(arquivoBin, '1');
 
 	return 1;
 }

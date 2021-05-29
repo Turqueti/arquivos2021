@@ -110,6 +110,7 @@ int inserePalavra(MATRIZ* matrix,int linha,int coluna,char palavra[]){
     [in] linha: numero da linha
     [in] coluna: numero da coluna
     retono:
+     1 sucesso
     -10 linha menor que 0
     -11 linha maior que o maior valor
     -20 coluna menor que 0
@@ -132,7 +133,7 @@ int checkBoundaries(MATRIZ* matrix, int linha, int coluna){
     {
         return -21;
     }
-    
+    return 1;
     
 }
 
@@ -155,4 +156,29 @@ void printMatriz(MATRIZ* matrix){
         printf("\n");
     }
     
+}
+
+
+/*
+    descricao:
+        retorna o elemento daquela matriz
+    argumentos:
+        [in] mat
+        [in] linha
+        [in] coluna
+    retono:
+        caso sucesso retorna o elemento caso falha retorna NULL
+*/
+char* retorna_elemento(MATRIZ* mat,int linha, int coluna){
+    char* palavra = NULL;
+    if (checkBoundaries(mat,linha,coluna) > 0)
+    {
+        palavra = mat->matriz[linha][coluna];
+    }
+    
+    return palavra;
+}
+
+int retornaNumLinhas(MATRIZ* mat){
+    return mat->linhas;
 }

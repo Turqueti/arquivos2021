@@ -9,5 +9,7 @@ void freeMatriz(MATRIZ* matrix);
 int inserePalavra(MATRIZ* matrix,int linha,int coluna,char palavra[]);
 int checkBoundaries(MATRIZ* matrix, int linha, int coluna);
 void printMatriz(MATRIZ* matrix);
+char* retorna_elemento(MATRIZ* mat,int linha, int coluna);
+int retornaNumLinhas(MATRIZ* mat);
 
 #endif
