@@ -72,6 +72,7 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 
 	fread(&registro->tamanhoCor, sizeof(int), 1, arquivoBin);
 	registro->corLinha = (char*) malloc(sizeof(char) * registro->tamanhoCor);
+
 	if(fread(registro->corLinha, sizeof(char), registro->tamanhoCor, arquivoBin) == 0) return 0;
 	
 	return 1;
@@ -93,11 +94,13 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
 
-	/*printf("Codigo da linha: %d\n", registro->codLinha);
+	printf("Codigo da linha: %d\n", registro->codLinha);
 
+	registro->nomeLinha[registro->tamanhoNome] = '\0';
 	if(strcmp(registro->nomeLinha, "")) printf("Nome da linha: %s\n", registro->nomeLinha);
 	else printf("Nome da linha: campo com valor nulo\n");
 
+	registro->corLinha[registro->tamanhoCor] = '\0';
 	if(strcmp(registro->corLinha, "NULO")) printf("Cor que descreve a linha: %s\n", registro->corLinha);
 	else printf("Cor que descreve a linha: campo com valor nulo\n");
 
@@ -105,16 +108,16 @@ int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	else if(registro->aceitaCartao == 'N') printf("Aceita cartao: PAGAMENTO EM CARTAO E DINHEIRO\n");
 	else if(registro->aceitaCartao == 'F') printf("Aceita cartao: PAGAMENTO EM CARTAO SOMENTE NO FINAL DE SEMANA\n");
 	else if(registro->aceitaCartao == '\0') printf("Aceita cartao: campo com valor nulo\n");
-	printf("\n");*/
+	printf("\n");
 
-	printf("removido %c\n", registro->removido);
+	/*printf("removido %c\n", registro->removido);
 	printf("tamanhoRegistro %d\n", registro->tamanhoRegistro);
 	printf("codLinha %d\n", registro->codLinha);
 	printf("aceitaCartao %c\n", registro->aceitaCartao);
 	printf("tamanhoNome %d\n", registro->tamanhoNome);
 	printf("nomeLinha %s\n", registro->nomeLinha); //sem \0
 	printf("tamanhoCor %d\n", registro->tamanhoCor);
-	printf("corLinha %s\n\n", registro->corLinha); //sem \0
+	printf("corLinha %s\n\n", registro->corLinha); //sem \0*/
 
 	return 1;
 }
@@ -208,7 +211,7 @@ int buscaParametroLinha(FILE *arquivoBin) {
 
 		while(readRegistroLinha(arquivoBin, &registro) != 0) {
 			if(registro.codLinha == cod) {
-				mostrarRegistroLinha(arquivoBin, &registro);
+				if(registro.removido == '1') mostrarRegistroLinha(arquivoBin, &registro);
 			}	
 		}
 	} else if(!strcmp(nomeCampo, "aceitaCartao")) {
@@ -216,19 +219,19 @@ int buscaParametroLinha(FILE *arquivoBin) {
 
 		while(readRegistroLinha(arquivoBin, &registro) != 0) {
 			if(registro.aceitaCartao == val) {
-				mostrarRegistroLinha(arquivoBin, &registro);
+				if(registro.removido == '1') mostrarRegistroLinha(arquivoBin, &registro);
 			}
 		}
 	} else if(!strcmp(nomeCampo, "nomeLinha")) {
 		while(readRegistroLinha(arquivoBin, &registro) != 0) {
 			if(!strcmp(registro.nomeLinha, valorCampo)) {
-				mostrarRegistroLinha(arquivoBin, &registro);
+				if(registro.removido == '1') mostrarRegistroLinha(arquivoBin, &registro);
 			}
 		}
 	} else if(!strcmp(nomeCampo, "corLinha")) {
 		while(readRegistroLinha(arquivoBin, &registro) != 0) {
 			if(!strcmp(registro.corLinha, valorCampo)) {
-				mostrarRegistroLinha(arquivoBin, &registro);
+				if(registro.removido == '1') mostrarRegistroLinha(arquivoBin, &registro);
 			}
 		}
 	}
@@ -244,7 +247,7 @@ int	imprimeRegistrosLinha(FILE *arquivoBin) {
 
 	int n = 0;
 	while(readRegistroLinha(arquivoBin, &registro) != 0) {
-			mostrarRegistroLinha(arquivoBin, &registro);
+			if(registro.removido == '1')mostrarRegistroLinha(arquivoBin, &registro);
 			n++;
 	}
 
