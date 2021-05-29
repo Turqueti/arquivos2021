@@ -29,6 +29,7 @@ int main(int argc, char const *argv[]){
 
 
 	FILE* arquivoBinFP;
+	FILE* arquivoCsvFP;
 
 
 	scanf("%d", &funcionalidade);
@@ -38,6 +39,9 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
 			//teste_veic(arquivoCsvPath, arquivoBinPath);
+			arquivoCsvFP = open_csv(arquivoCsvPath);
+
+			close_csv(arquivoCsvFP);
 			break;
 
 		case 2:
