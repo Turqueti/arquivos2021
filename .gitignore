@@ -1,3 +1,5 @@
 .testes
 test*
 out
+*csv
+*bin
