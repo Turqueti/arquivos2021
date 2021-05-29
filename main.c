@@ -9,6 +9,34 @@
 #include "csvlib.h"
 #include "matrizlib.h"
 
+void binarioNaTela(char *nomeArquivoBinario) { /* Você não precisa entender o código dessa função. */
+
+	/* Use essa função para comparação no run.codes. Lembre-se de ter fechado (fclose) o arquivo anteriormente.
+	*  Ela vai abrir de novo para leitura e depois fechar (você não vai perder pontos por isso se usar ela). */
+
+	unsigned long i, cs;
+	unsigned char *mb;
+	size_t fl;
+	FILE *fs;
+	if(nomeArquivoBinario == NULL || !(fs = fopen(nomeArquivoBinario, "rb"))) {
+		fprintf(stderr, "ERRO AO ESCREVER O BINARIO NA TELA (função binarioNaTela): não foi possível abrir o arquivo que me passou para leitura. Ele existe e você tá passando o nome certo? Você lembrou de fechar ele com fclose depois de usar?\n");
+		return;
+	}
+	fseek(fs, 0, SEEK_END);
+	fl = ftell(fs);
+	fseek(fs, 0, SEEK_SET);
+	mb = (unsigned char *) malloc(fl);
+	fread(mb, 1, fl, fs);
+
+	cs = 0;
+	for(i = 0; i < fl; i++) {
+		cs += (unsigned long) mb[i];
+	}
+	printf("%lf\n", (cs / (double) 100));
+	free(mb);
+	fclose(fs);
+}
+
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
 	int numeroNovosRegistros = 0;
@@ -36,7 +64,7 @@ int main(int argc, char const *argv[]){
 		case 1:
 			scanf("%s", arquivoCSV);//Lendo com /0 no final
 			scanf("%s", arquivoBIN);//Lendo com /0 no final
-			teste_veic(arquivoCSV, arquivoBIN);
+			//teste_veic(arquivoCSV, arquivoBIN);
 			break;
 
 		case 2:
@@ -45,14 +73,30 @@ int main(int argc, char const *argv[]){
 			break;
 
 		case 3:
-			//leVeiculo("", "");
+			scanf("%s", arquivoBIN);
+			
+			arquivoBin = fopen(arquivoBIN, "rb");
+
+			//imprimeRegistrosVeiculo(arquivoBin);
+			fclose(arquivoBin);
 			break;
 
 		case 4:
-			//lelinha("", "");
+			scanf("%s", arquivoBIN);
+			
+			arquivoBin = fopen(arquivoBIN, "rb");
+
+			imprimeRegistrosLinha(arquivoBin);
+			fclose(arquivoBin);
 			break;
 
 		case 5:
+			scanf("%s", arquivoBIN);
+			
+			arquivoBin = fopen(arquivoBIN, "rb");
+
+			//buscaParametroVeiculo(arquivoBin);
+			fclose(arquivoBin);
 			break;
 
 		case 6:
@@ -68,7 +112,7 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoBIN);
 			scanf("%d", &numeroNovosRegistros);
 
-			arquivoBin = fopen(arquivoBIN, "w+b");
+			arquivoBin = fopen(arquivoBIN, "r+b");
 
 			//insereNRegistrosVeiculo(arquivoBin, numeroNovosRegistros);
 
@@ -79,36 +123,13 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoBIN);
 			scanf("%d", &numeroNovosRegistros);
 
-			arquivoBin = fopen(arquivoBIN, "w+b");
+			arquivoBin = fopen(arquivoBIN, "r+b");
 
-			insereNRegistrosLinha(arquivoBin, numeroNovosRegistros);
+			if(insereNRegistrosLinha(arquivoBin, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
+			else binarioNaTela(arquivoBIN);
 
 			fclose(arquivoBin);
 			break;
-
-		case 22: //testes
-			nome = (char*)malloc(100*sizeof(char));
-			scanf("%s",nome);
-			FILE* fp;
-			fp = open_csv(nome);
-
-			mat = csvToMatrix(fp);
-			printMatriz(mat);
-
-			free(nome);
-			close_csv(fp);
-			freeMatriz(mat);
-
-			break;
 	}
-
 	return 0;
 }
-
-/*
-leNRegistros {
-	numeroRegistros: número de registros a serem lidos
-	
-	retorna uma matriz de strings, cada linha é um registro, cada coluna é um campo
-}
-*/
