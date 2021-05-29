@@ -12,5 +12,6 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro);
 int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros);
 int buscaParametroLinha(FILE *arquivoBin);
+int	imprimeRegistrosLinha(FILE *arquivoBin);
 
 #endif
