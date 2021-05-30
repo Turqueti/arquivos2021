@@ -55,7 +55,7 @@ int main(int argc, char const *argv[]){
 			strncpy(cabecalhoV.descreveModelo,retorna_elemento(mat,0,4),17);
 			strncpy(cabecalhoV.descreveCategoria,retorna_elemento(mat,0,5),20);
 			insereVeiculoCabecalho(arquivoBinFP,&cabecalhoV);
-
+			insereNRegistrosVeiculoMatriz(arquivoBinFP,mat);
 
 			freeMatriz(mat);
 			close_csv(arquivoCsvFP);

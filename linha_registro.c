@@ -186,7 +186,7 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 			strcpy(registro.corLinha, corLinha);
 		}
 
-		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * nomeTam) + (sizeof(char) * corTam) -5;
+		registro.tamanhoRegistro = sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * registro.tamanhoNome) + (sizeof(char) * registro.tamanhoCor);
 
 		insereRegistroLinha(arquivoBin, &registro);
 

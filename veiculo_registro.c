@@ -2,6 +2,7 @@
 #include "veiculo_cabecalho.h"
 #include "binarioNaTela.h"
 
+
 struct _veiculo_registro {
     char removido;
     int tamanhoRegistro;
@@ -329,7 +330,7 @@ int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 			strcpy(registro.categoria, categoria);
 		}
 
-		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(char)*5 + sizeof(char)*10 + sizeof(int) + sizeof(int) + sizeof(int) + (sizeof(char) * tamanhoModelo) + sizeof(int) + (sizeof(char) * tamanhoCategoria) -5;
+		registro.tamanhoRegistro = sizeof(char)*5 + sizeof(char)*10 + sizeof(int) + sizeof(int) + sizeof(int) + (sizeof(char) * registro.tamanhoModelo) + sizeof(int) + (sizeof(char) * registro.tamanhoCategoria);
 
 		insereRegistroVeiculo(arquivoBin, &registro);
 
@@ -341,6 +342,105 @@ int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 
 	setByteOffsetVeiculo(arquivoBin, proxByte);
 	setNRegistrosVeiculo(arquivoBin, nRegistros+numeroNovosRegistros);
+	mudaStatusCabecalhoVeiculo(arquivoBin, '1');
+
+	return 1;
+}
+
+int insereNRegistrosVeiculoMatriz(FILE *arquivoBin, MATRIZ* matrix) {
+	
+	int numRegistrosCsv = retornaNumLinhas(matrix);
+	int numeroNovosRegistros = numRegistrosCsv - 1;
+	int numRegistrosRemovidos = 0;
+
+	long int proxByte = ftell(arquivoBin);
+
+	char* data;
+	char* quantidadeLugares;
+	char* codLinha;
+	char* modelo;
+	char* categoria;
+
+	fseek(arquivoBin, proxByte, SEEK_SET);
+	for (int i = 1; i < numRegistrosCsv; ++i) {
+		VEICULO_REGISTRO registro;
+
+		char* prefixoBuffer = retorna_elemento(matrix,i,0);
+		if (prefixoBuffer[0] == '*')
+		{
+			registro.removido = '0';
+			memmove(prefixoBuffer, prefixoBuffer+1, strlen(prefixoBuffer));
+			numeroNovosRegistros--;
+			numRegistrosRemovidos++;
+		}else
+		{
+			registro.removido = '1';
+		}
+		
+
+		data = retorna_elemento(matrix,i,1);
+		quantidadeLugares = retorna_elemento(matrix,i,2);
+		codLinha = retorna_elemento(matrix,i,3);
+		modelo = retorna_elemento(matrix,i,4);
+		categoria = retorna_elemento(matrix,i,5);
+
+		int tamanhoModelo = strlen(modelo);
+		int tamanhoCategoria= strlen(categoria);
+
+
+		strcpy(registro.prefixo, prefixoBuffer);
+
+		if(!strcmp(quantidadeLugares, "NULO")) registro.quantidadeLugares = -1;
+		else registro.quantidadeLugares = atoi(quantidadeLugares);	
+
+		if(!strcmp(data, "NULO")) {
+			registro.data[0] = '\0';
+			registro.data[1] = '@';
+			registro.data[2] = '@';
+			registro.data[3] = '@';
+			registro.data[4] = '@';
+			registro.data[5] = '@';
+			registro.data[6] = '@';
+			registro.data[7] = '@';
+			registro.data[8] = '@';
+			registro.data[9] = '@';
+		}
+		else strcpy(registro.data, data);
+
+		if(!strcmp(codLinha, "NULO")) registro.codLinha = -1;
+		else registro.codLinha = atoi(codLinha);
+
+		registro.tamanhoModelo = tamanhoModelo;
+		if(!strcmp(modelo, "NULO")) {
+			registro.modelo = NULL;
+			registro.tamanhoModelo = 0;
+		} else {
+			registro.modelo = (char*) malloc(sizeof(char) * tamanhoModelo);
+			strncpy(registro.modelo, modelo,registro.tamanhoModelo);
+		}
+
+		registro.tamanhoCategoria = tamanhoCategoria;
+		if(!strcmp(categoria, "NULO")) {
+			registro.categoria = NULL;
+			registro.tamanhoCategoria = 0;
+		} else {
+			registro.categoria = (char*) malloc(sizeof(char) * tamanhoCategoria);
+			strncpy(registro.categoria, categoria,registro.tamanhoCategoria);
+		}
+
+		registro.tamanhoRegistro = sizeof(char)*5 + sizeof(char)*10 + sizeof(int) + sizeof(int) + sizeof(int) + (sizeof(char) * registro.tamanhoModelo) + sizeof(int) + (sizeof(char) * registro.tamanhoCategoria);
+
+		insereRegistroVeiculo(arquivoBin, &registro);
+
+		free(registro.modelo);
+		free(registro.categoria);
+		
+		proxByte += registro.tamanhoRegistro+5;
+	}
+
+	setByteOffsetVeiculo(arquivoBin, proxByte);
+	setNRegistrosVeiculo(arquivoBin, numeroNovosRegistros);
+	setNRemovidosVeiculo(arquivoBin,numRegistrosRemovidos);
 	mudaStatusCabecalhoVeiculo(arquivoBin, '1');
 
 	return 1;
