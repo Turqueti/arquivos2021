@@ -296,20 +296,22 @@ int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 		if(!strcmp(quantidadeLugares, "NULO")) registro.quantidadeLugares = -1;
 		else registro.quantidadeLugares = atoi(quantidadeLugares);	
 
-		if(!strcmp(data, "NULO")) {
+		if(!strcmp(data, "")) {
 			//strcpy(registro.data, "\0@@@@@@@@@");
-			registro.data[0] = '\0';
-			registro.data[1] = '@';
-			registro.data[2] = '@';
-			registro.data[3] = '@';
-			registro.data[4] = '@';
-			registro.data[5] = '@';
-			registro.data[6] = '@';
-			registro.data[7] = '@';
-			registro.data[8] = '@';
-			registro.data[9] = '@';
+			// registro.data[0] = '\0';
+			// registro.data[1] = '@';
+			// registro.data[2] = '@';
+			// registro.data[3] = '@';
+			// registro.data[4] = '@';
+			// registro.data[5] = '@';
+			// registro.data[6] = '@';
+			// registro.data[7] = '@';
+			// registro.data[8] = '@';
+			// registro.data[9] = '@';
+			memset(registro.data,'\0',1);
+			memset(registro.data+1,'@',9);
 		}
-		else strcpy(registro.data, data);
+		else strncpy(registro.data, data,10);
 
 		if(!strcmp(codLinha, "NULO")) registro.codLinha = -1;
 		else registro.codLinha = atoi(codLinha);
