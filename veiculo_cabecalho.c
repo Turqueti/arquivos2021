@@ -20,7 +20,7 @@ VEICULO_CABECALHO createVeiculoCabecalho() {
 
 /*
     Descricao:
-    	essa func cria um cabecalho do arquivo veiculo
+    	essa func insere um cabecalho do arquivo veiculo
     
     Argumentos:
 	    [in]arquivoBin: arquivo binário que foi criado

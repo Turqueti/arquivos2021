@@ -32,6 +32,7 @@ int main(int argc, char const *argv[]){
 		case 1:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
+			arquivoCsvFP = open_csv(arquivoCsvPath);
 
 			//arquivoCsvFP = open_csv(arquivoCsvPath);
 
@@ -45,8 +46,21 @@ int main(int argc, char const *argv[]){
 			
 			//teste_veic(arquivoCsvPath, arquivoBinPath);
 			mat = csvToMatrix(arquivoCsvFP);
+			arquivoBinFP = fopen(arquivoBinPath, "wb");
+			VEICULO_CABECALHO cabecalhoV = createVeiculoCabecalho();
+			strncpy(cabecalhoV.descrevePrefixo,retorna_elemento(mat,0,0),18);
+			strncpy(cabecalhoV.descreveData,retorna_elemento(mat,0,1),35);
+			strncpy(cabecalhoV.descreveLugares,retorna_elemento(mat,0,2),42);
+			strncpy(cabecalhoV.descreveLinha,retorna_elemento(mat,0,3),26);
+			strncpy(cabecalhoV.descreveModelo,retorna_elemento(mat,0,4),17);
+			strncpy(cabecalhoV.descreveCategoria,retorna_elemento(mat,0,5),20);
+			insereVeiculoCabecalho(arquivoBinFP,&cabecalhoV);
 
+
+			freeMatriz(mat);
 			close_csv(arquivoCsvFP);
+			binarioNaTela(arquivoBinPath);
+			fclose(arquivoBinFP);
 			break;
 
 		case 2:
@@ -71,7 +85,6 @@ int main(int argc, char const *argv[]){
 			strncpy(cabecalho.descreveCartao,retorna_elemento(mat,0,1),13);
 			strncpy(cabecalho.descreveNome,retorna_elemento(mat,0,2),13);
 			strncpy(cabecalho.descreveCor,retorna_elemento(mat,0,3),24);
-			cabecalho.nroRegistros = 0;
 			insereLinhaCabecalho(arquivoBinFP,&cabecalho);
 			insereNRegistrosLinhaMatriz(arquivoBinFP,mat);
 
