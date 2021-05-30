@@ -19,16 +19,11 @@ int main(int argc, char const *argv[]){
 	char arquivoCsvPath[30];
 	char arquivoBinPath[30];
 	char *nome;
-
-
-	char palavra1[MATRIZBUFFERLEN] = "aaaaaaaaaaa";
-	char palavra2[MATRIZBUFFERLEN] = "bbbbbbbbbbbb";
-	char palavra3[MATRIZBUFFERLEN] = "ccccccccccccc";
-	char palavra4[MATRIZBUFFERLEN] = "dddddddddddddd";
 	MATRIZ* mat;
 
 
 	FILE* arquivoBinFP;
+	FILE* arquivoCsvFP;
 
 
 	scanf("%d", &funcionalidade);
@@ -37,12 +32,48 @@ int main(int argc, char const *argv[]){
 		case 1:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
+
+			if (arquivoCsvFP == NULL)
+			{
+				printf("Falha no processamento do arquivo\n");
+				return -1;
+			}
+			
 			//teste_veic(arquivoCsvPath, arquivoBinPath);
+			arquivoCsvFP = open_csv(arquivoCsvPath);
+			mat = csvToMatrix(arquivoCsvFP);
+
+			close_csv(arquivoCsvFP);
 			break;
 
 		case 2:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
+			arquivoCsvFP = open_csv(arquivoCsvPath);
+
+			if (arquivoCsvFP == NULL)
+			{
+				printf("Falha no processamento do arquivo\n");
+				return -1;
+			}
+			
+			mat = csvToMatrix(arquivoCsvFP);
+			arquivoBinFP = fopen(arquivoBinPath, "wb");
+
+			LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+			strncpy(cabecalho.descreveCodigo,retorna_elemento(mat,0,0),15);
+			strncpy(cabecalho.descreveCartao,retorna_elemento(mat,0,1),13);
+			strncpy(cabecalho.descreveNome,retorna_elemento(mat,0,2),13);
+			strncpy(cabecalho.descreveCor,retorna_elemento(mat,0,3),24);
+			cabecalho.nroRegistros = 0;
+			insereLinhaCabecalho(arquivoBinFP,&cabecalho);
+			insereNRegistrosLinhaMatriz(arquivoBinFP,mat);
+
+			freeMatriz(mat);
+			close_csv(arquivoCsvFP);
+			binarioNaTela(arquivoBinPath);
+			fclose(arquivoBinFP);
+			
 			break;
 
 		case 3:
