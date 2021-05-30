@@ -1,21 +1,21 @@
 #include "veiculo_cabecalho.h"
 
-struct _veiculo_cabecalho {
-    char status;
-    long long int byteProxReg;
-    int nroRegistros;
-    int nroRegRemovidos;
-    char descrevePrefixo[18];
-    char descreveData[35];
-    char descreveLugares[42];
-    char descreveLinha[26];
-    char descreveModelo[17];
-    char descreveCategoria[20];
-};
+
+
+VEICULO_CABECALHO createVeiculoCabecalho() {
+	VEICULO_CABECALHO cabecalho;
+
+	cabecalho.status = '0';
+	cabecalho.byteProxReg = 0;
+	cabecalho.nroRegistros = 0;
+	cabecalho.nroRegRemovidos = 0;
+
+	return cabecalho;
+}
 
 /*
     Descricao:
-    	essa func cria um cabecalho do arquivo veiculo
+    	essa func insere um cabecalho do arquivo veiculo
     
     Argumentos:
 	    [in]arquivoBin: arquivo binário que foi criado
@@ -25,7 +25,7 @@ struct _veiculo_cabecalho {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int createVeiculoCabecalho(FILE *arquivoBin, VEICULO_CABECALHO *cabecalho) {
+int insereVeiculoCabecalho(FILE *arquivoBin, VEICULO_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	fseek(arquivoBin, 0, SEEK_SET);
