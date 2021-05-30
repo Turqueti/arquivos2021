@@ -82,6 +82,55 @@ int readRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 	return 1;
 }
 
+void printData(char data[10]){
+	char dia[3];
+	char mes[3];
+	char ano[5];
+
+	ano[0] = data[0];
+	ano[1] = data[1];
+	ano[2] = data[2];
+	ano[3] = data[3];
+	ano[4] = '\0';
+
+	mes[0] = data[5];
+	mes[1] = data[6];
+	mes[2] = '\0';
+
+	dia[0] = data[8];
+	dia[1] = data[9];
+	dia[2] = '\0';
+
+	printf("Data de entrada do veiculo na frota: %s de ", dia);
+	if(0 == strcmp(mes, "01")){
+		printf("janeiro");
+	} else if(0 == strcmp(mes, "02")) {
+		printf("fevereiro");
+	} else if(0 == strcmp(mes, "03")) {
+		printf("março");
+	} else if(0 == strcmp(mes, "04")) {
+		printf("abril");
+	} else if(0 == strcmp(mes, "05")) {
+		printf("maio");
+	} else if(0 == strcmp(mes, "06")) {
+		printf("junho");
+	} else if(0 == strcmp(mes, "07")) {
+		printf("julho");
+	} else if(0 == strcmp(mes, "08")) {
+		printf("agosto");
+	} else if(0 == strcmp(mes, "09")) {
+		printf("setembro");
+	} else if(0 == strcmp(mes, "10")) {
+		printf("outubro");
+	} else if(0 == strcmp(mes, "11")) {
+		printf("novembro");
+	} else if(0 == strcmp(mes, "12")) {
+		printf("dezembro");
+	}
+
+	printf(" de %s\n", ano);
+}
+
 /*
 	Descrição:
 		Imprime um registro na tela
@@ -114,7 +163,7 @@ int mostrarRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 	else printf("Categoria do veiculo: campo com valor nulo\n");
 
 	//Rever data
-	if(registro->data != "NULO") printf("Data de entrada do veiculo na frota: %s\n", registro->data);
+	if(strcmp(registro->data, "\0@@@@@@@@@")) printData(registro->data); //printf("Data de entrada do veiculo na frota: %s\n", registro->data);
 	else printf("Data de entrada do veiculo na frota: campo com valor nulo\n");
 
 	if(registro->quantidadeLugares != -1) printf("Quantidade de lugares sentados disponiveis: %d\n", registro->quantidadeLugares);
@@ -161,17 +210,16 @@ int buscaParametroVeiculo(FILE *arquivoBin) {
 	readVeiculoCabecalho(arquivoBin, &cabecalho);
 
 	VEICULO_REGISTRO registro;
-	
-	//prefixo, data, quantidadeLugares, modelo, categoria.
 
 	if(!strcmp(nomeCampo, "prefixo")) {
-		char vet[5];
-		for (int i = 0; i < 5; ++i){
-			vet[i] = registro.prefixo[i];
-		}
-
 		while(readRegistroVeiculo(arquivoBin, &registro) != 0) {
-			if(!strcmp(registro.prefixo, vet)) {
+			char vet[6];
+			for (int i = 0; i < 5; ++i){
+				vet[i] = registro.prefixo[i];
+			}
+			vet[5] = '\0';
+
+			if(!strcmp(valorCampo, vet)) {
 				if(registro.removido == '1') mostrarRegistroVeiculo(arquivoBin, &registro);
 			}	
 		}
