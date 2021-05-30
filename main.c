@@ -38,6 +38,12 @@ int main(int argc, char const *argv[]){
 		case 1:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
+			if (arquivoCsvFP == NULL)
+			{
+				printf("Falha no processamento do arquivo\n");
+				return -1;
+			}
+			
 			//teste_veic(arquivoCsvPath, arquivoBinPath);
 			arquivoCsvFP = open_csv(arquivoCsvPath);
 			mat = csvToMatrix(arquivoCsvFP);
@@ -49,7 +55,14 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
 			arquivoCsvFP = open_csv(arquivoCsvPath);
+			if (arquivoCsvFP == NULL)
+			{
+				printf("Falha no processamento do arquivo\n");
+				return -1;
+			}
 			
+			
+
 			mat = csvToMatrix(arquivoCsvFP);
 			arquivoBinFP = fopen(arquivoBinPath, "wb");
 

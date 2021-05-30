@@ -257,7 +257,10 @@ int	imprimeRegistrosLinha(FILE *arquivoBin) {
 }
 
 int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
-	int numeroNovosRegistros = retornaNumLinhas(matrix);
+	
+	int numRegistrosCsv = retornaNumLinhas(matrix);
+	int numeroNovosRegistros = numRegistrosCsv - 1;
+	int numRegistrosRemovidos = 0;
 
 
 
@@ -269,10 +272,23 @@ int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 	char* corLinha;
 
 	fseek(arquivoBin, proxByte, SEEK_SET);
-	for (int i = 1; i < numeroNovosRegistros; ++i) {
+	for (int i = 1; i < numRegistrosCsv; ++i) {
 		LINHA_REGISTRO registro;
 
-		codLinha = atoi(retorna_elemento(matrix,i,0));
+		char* codLinhaBuffer = retorna_elemento(matrix,i,0);
+		
+		if (codLinhaBuffer[0] == '*')
+		{
+			registro.removido = '0';
+			memmove(codLinhaBuffer, codLinhaBuffer+1, strlen(codLinhaBuffer));
+			numeroNovosRegistros--;
+			numRegistrosRemovidos++;
+		}else
+		{
+			registro.removido = '1';
+		}
+		
+		codLinha = atoi(codLinhaBuffer);
 		aceitaCartao = retorna_elemento(matrix,i,1);
 		nomeLinha = retorna_elemento(matrix,i,2);
 		corLinha = retorna_elemento(matrix,i,3);
@@ -281,7 +297,7 @@ int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 		int nomeTam = strlen(nomeLinha);
 		int corTam = strlen(corLinha);
 
-		registro.removido = '1';
+		
 
 		registro.codLinha = codLinha;
 
@@ -318,6 +334,7 @@ int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 
 	setByteOffsetLinha(arquivoBin, proxByte);
 	setNRegistrosLinha(arquivoBin, numeroNovosRegistros);
+	setNRemovidosLinha(arquivoBin,numRegistrosRemovidos);
 	mudaStatusCabecalhoLinha(arquivoBin, '1');
 
 	return 1;
