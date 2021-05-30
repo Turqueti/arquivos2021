@@ -33,14 +33,17 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
 
+			//arquivoCsvFP = open_csv(arquivoCsvPath);
+
+			arquivoCsvFP = fopen(arquivoCsvPath, "r");	
+
 			if (arquivoCsvFP == NULL)
 			{
-				printf("Falha no processamento do arquivo\n");
-				return -1;
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
 			}
 			
 			//teste_veic(arquivoCsvPath, arquivoBinPath);
-			arquivoCsvFP = open_csv(arquivoCsvPath);
 			mat = csvToMatrix(arquivoCsvFP);
 
 			close_csv(arquivoCsvFP);
@@ -49,12 +52,15 @@ int main(int argc, char const *argv[]){
 		case 2:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
-			arquivoCsvFP = open_csv(arquivoCsvPath);
+			//arquivoCsvFP = open_csv(arquivoCsvPath);
+
+			arquivoCsvFP = fopen(arquivoCsvPath, "r");	
+
 
 			if (arquivoCsvFP == NULL)
 			{
-				printf("Falha no processamento do arquivo\n");
-				return -1;
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
 			}
 			
 			mat = csvToMatrix(arquivoCsvFP);
@@ -81,7 +87,7 @@ int main(int argc, char const *argv[]){
 			
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
-			//imprimeRegistrosVeiculo(arquivoBinFP);
+			imprimeRegistrosVeiculo(arquivoBinFP);
 			fclose(arquivoBinFP);
 			break;
 
@@ -99,7 +105,7 @@ int main(int argc, char const *argv[]){
 			
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
-			//buscaParametroVeiculo(arquivoBinFP);
+			buscaParametroVeiculo(arquivoBinFP);
 			fclose(arquivoBinFP);
 			break;
 
@@ -118,7 +124,8 @@ int main(int argc, char const *argv[]){
 
 			arquivoBinFP = fopen(arquivoBinPath, "r+b");
 
-			//insereNRegistrosVeiculo(arquivoBinFP, numeroNovosRegistros);
+			if(insereNRegistrosVeiculo(arquivoBinFP, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
+			else binarioNaTela(arquivoBinPath);
 
 			fclose(arquivoBinFP);
 			break;
