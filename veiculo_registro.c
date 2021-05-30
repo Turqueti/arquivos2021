@@ -183,6 +183,15 @@ int mostrarRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 	return 1;
 }
 
+/*
+	descricao:
+	imprime todos os registros em um arquivo binario segundo as especificacoes do trab
+	argumentos:
+	[in] arquivoBin: ponteiro pro arquivo binario aberto
+	retono:
+	caso tudo de certo retorna 1 caso contrario retorna 0
+	
+*/
 int	imprimeRegistrosVeiculo(FILE *arquivoBin) {
 	VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
 	readVeiculoCabecalho(arquivoBin, &cabecalho);
@@ -200,6 +209,17 @@ int	imprimeRegistrosVeiculo(FILE *arquivoBin) {
 	return 1;
 }
 
+/*
+	Descrição:
+		Busca no arquivo um registro com campo = valor inserido
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int buscaParametroVeiculo(FILE *arquivoBin) {
 	char nomeCampo[50];
 	char valorCampo[50];
@@ -255,6 +275,18 @@ int buscaParametroVeiculo(FILE *arquivoBin) {
 	return 1;
 }
 
+/*
+	Descrição:
+		Insere N registros no arquivo dado
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	    [in]numeroNovosRegistros: número de registros que serão inseridos
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 	VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
 	readVeiculoCabecalho(arquivoBin, &cabecalho);
@@ -295,17 +327,6 @@ int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 		else registro.quantidadeLugares = atoi(quantidadeLugares);	
 
 		if(!strcmp(data, "")) {
-			//strcpy(registro.data, "\0@@@@@@@@@");
-			// registro.data[0] = '\0';
-			// registro.data[1] = '@';
-			// registro.data[2] = '@';
-			// registro.data[3] = '@';
-			// registro.data[4] = '@';
-			// registro.data[5] = '@';
-			// registro.data[6] = '@';
-			// registro.data[7] = '@';
-			// registro.data[8] = '@';
-			// registro.data[9] = '@';
 			memset(registro.data,'\0',1);
 			memset(registro.data+1,'@',9);
 		}
@@ -349,6 +370,18 @@ int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 	return 1;
 }
 
+/*
+	Descrição:
+		Insere N registros no arquivo dado
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	    [in]matrix: Matriz com os dados a serem inseridos
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int insereNRegistrosVeiculoMatriz(FILE *arquivoBin, MATRIZ* matrix) {
 	
 	int numRegistrosCsv = retornaNumLinhas(matrix);

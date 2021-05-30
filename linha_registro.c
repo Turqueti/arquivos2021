@@ -288,6 +288,19 @@ int	imprimeRegistrosLinha(FILE *arquivoBin) {
 	return 1;
 }
 
+
+/*
+	Descrição:
+		Insere N registros no arquivo dado
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	    [in]matrix: Matriz com os dados a serem inseridos
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 	
 	int numRegistrosCsv = retornaNumLinhas(matrix);
