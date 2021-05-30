@@ -158,8 +158,6 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 		scan_quote_string(nomeLinha);
 		scan_quote_string(corLinha);
 
-		printf("%s\n",corLinha);
-
 		int nomeTam = strlen(nomeLinha);
 		int corTam = strlen(corLinha);
 
