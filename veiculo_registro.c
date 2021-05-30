@@ -284,6 +284,8 @@ int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros) {
 		scan_quote_string(modelo);
 		scan_quote_string(categoria);
 
+		printf("%s\n", categoria);
+
 		int tamanhoModelo = strlen(modelo);
 		int tamanhoCategoria= strlen(categoria);
 
