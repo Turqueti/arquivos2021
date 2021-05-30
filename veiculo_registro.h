@@ -7,9 +7,11 @@
 
 typedef struct _veiculo_registro  VEICULO_REGISTRO;
 
-int createRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro);
+int insereRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro);
 int readRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro);
 int mostrarRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro);
-int teste_veic(char nomeArquivoCSV[30], char nomeArquivoBIN[30]);
+int	imprimeRegistrosVeiculo(FILE *arquivoBin);
+int buscaParametroVeiculo(FILE *arquivoBin);
+int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros);
 
 #endif

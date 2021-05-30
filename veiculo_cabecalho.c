@@ -1,17 +1,22 @@
 #include "veiculo_cabecalho.h"
 
-struct _veiculo_cabecalho {
-    char status;
-    long long int byteProxReg;
-    int nroRegistros;
-    int nroRegRemovidos;
-    char descrevePrefixo[18];
-    char descreveData[35];
-    char descreveLugares[42];
-    char descreveLinha[26];
-    char descreveModelo[17];
-    char descreveCategoria[20];
-};
+/*
+    Descricao:
+    	essa func cria um cabecalho do arquivo veiculo
+
+    Retorno:
+    	Um cabecalho prenchido com dados falsos que devem ser alterados
+*/
+VEICULO_CABECALHO createVeiculoCabecalho() {
+	VEICULO_CABECALHO cabecalho;
+
+	cabecalho.status = '0';
+	cabecalho.byteProxReg = 0;
+	cabecalho.nroRegistros = 0;
+	cabecalho.nroRegRemovidos = 0;
+
+	return cabecalho;
+}
 
 /*
     Descricao:
@@ -25,12 +30,12 @@ struct _veiculo_cabecalho {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int createVeiculoCabecalho(FILE *arquivoBin, VEICULO_CABECALHO *cabecalho) {
+int insereVeiculoCabecalho(FILE *arquivoBin, VEICULO_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	fseek(arquivoBin, 0, SEEK_SET);
 	fwrite(&cabecalho->status, sizeof(char), 1, arquivoBin);
-	fwrite(&cabecalho->byteProxReg, sizeof(long long int), 1, arquivoBin);
+	fwrite(&cabecalho->byteProxReg, sizeof(long int), 1, arquivoBin);
 	fwrite(&cabecalho->nroRegistros, sizeof(int), 1, arquivoBin);
 	fwrite(&cabecalho->nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	fwrite(&cabecalho->descrevePrefixo, sizeof(char), 18, arquivoBin);
@@ -61,7 +66,7 @@ int readVeiculoCabecalho(FILE *arquivoBin, VEICULO_CABECALHO *cabecalho) {
 
 	fseek(arquivoBin, 0, SEEK_SET);
 	fread(&cabecalho->status, sizeof(char), 1, arquivoBin);
-	fread(&cabecalho->byteProxReg, sizeof(long long int), 1, arquivoBin);
+	fread(&cabecalho->byteProxReg, sizeof(long int), 1, arquivoBin);
 	fread(&cabecalho->nroRegistros, sizeof(int), 1, arquivoBin);
 	fread(&cabecalho->nroRegRemovidos, sizeof(int), 1, arquivoBin);
 	fread(&cabecalho->descrevePrefixo, sizeof(char), 18, arquivoBin);
@@ -91,7 +96,7 @@ int mostrarCabecalhoVeiculo(FILE *arquivoBin, VEICULO_CABECALHO *cabecalho) {
 	if (arquivoBin == NULL) return 0;
 
 	printf("%c\n", cabecalho->status);
-	printf("%lld\n", cabecalho->byteProxReg);
+	printf("%ld\n", cabecalho->byteProxReg);
 	printf("%d\n", cabecalho->nroRegistros);
 	printf("%d\n", cabecalho->nroRegRemovidos);
 	printf("%s\n", cabecalho->descrevePrefixo);
@@ -120,12 +125,10 @@ int mudaStatusCabecalhoVeiculo(FILE *arquivoBin, char status) {
 	if (arquivoBin == NULL) return 0;
 	VEICULO_CABECALHO cabecalho;
 
-	readVeiculoCabecalho(arquivoBin, &cabecalho);
-	cabecalho.status = status;
-	
-	//Salvar novamente no binário fseek = 0; pois inicio do arquivo
 	fseek(arquivoBin, 0, SEEK_SET);
-	fwrite(&cabecalho.status, sizeof(char), 1, arquivoBin);
+	fwrite(&status, sizeof(char), 1, arquivoBin);
+
+	fseek(arquivoBin, 0, SEEK_SET);
 	return 1;
 }
 
@@ -141,16 +144,13 @@ int mudaStatusCabecalhoVeiculo(FILE *arquivoBin, char status) {
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
 */
-int setByteOffsetVeiculo(FILE *arquivoBin, long long int byteOffset) {
+int setByteOffsetVeiculo(FILE *arquivoBin, long  int byteOffset) {
 	if (arquivoBin == NULL) return 0;
-	VEICULO_CABECALHO cabecalho;
-
-	readVeiculoCabecalho(arquivoBin, &cabecalho);
-	cabecalho.byteProxReg = byteOffset;
 	
-	//Salvar novamente no binário fseek = 1; pois inicio do arquivo + sizeof(char)
 	fseek(arquivoBin, 1, SEEK_SET);
-	fwrite(&cabecalho.byteProxReg, sizeof(long long int), 1, arquivoBin);
+	fwrite(&byteOffset, sizeof(long int), 1, arquivoBin);
+
+	fseek(arquivoBin, 0, SEEK_SET);
 	return 1;
 }
 
@@ -168,14 +168,11 @@ int setByteOffsetVeiculo(FILE *arquivoBin, long long int byteOffset) {
 */
 int setNRegistrosVeiculo(FILE *arquivoBin, int nRegistros) {
 	if (arquivoBin == NULL) return 0;
-	VEICULO_CABECALHO cabecalho;
-
-	readVeiculoCabecalho(arquivoBin, &cabecalho);
-	cabecalho.nroRegistros = nRegistros;
 	
-	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
 	fseek(arquivoBin, 9, SEEK_SET);
-	fwrite(&cabecalho.nroRegistros, sizeof(int), 1, arquivoBin);
+	fwrite(&nRegistros, sizeof(int), 1, arquivoBin);
+	
+	fseek(arquivoBin, 0, SEEK_SET);
 	return 1;
 }
 
@@ -193,66 +190,10 @@ int setNRegistrosVeiculo(FILE *arquivoBin, int nRegistros) {
 */
 int setNRemovidosVeiculo(FILE *arquivoBin, int nRemovidos) {
 	if (arquivoBin == NULL) return 0;
-	VEICULO_CABECALHO cabecalho;
-
-	readVeiculoCabecalho(arquivoBin, &cabecalho);
-	cabecalho.nroRegRemovidos = nRemovidos;
-
-	//Salvar novamente no binário fseek = 5; pois inicio do arquivo + sizeof(char) + sizeof(int)
-	fseek(arquivoBin, 13, SEEK_SET);
-	fwrite(&cabecalho.nroRegRemovidos, sizeof(int), 1, arquivoBin);
-	return 1;
-}
-
-int criaBinarioVeiculo(char nomeArquivoCSV[30], char nomeArquivoBIN[30]) {
-	char linha[150];
-	char *b = linha;
-	size_t i = 150;
-
-	VEICULO_CABECALHO cabecalho;
-	VEICULO_CABECALHO cabecalho2;
-
-	FILE *arquivoCSV = NULL;
-	FILE *arquivoBIN = NULL;
-
-	//abre arquivo csv
-	arquivoCSV = fopen(nomeArquivoCSV, "r");
-	if(arquivoCSV == NULL) return 0;
-
-
-	arquivoBIN = fopen(nomeArquivoBIN, "w+b");
-	if(arquivoBIN == NULL) return 0;
-
-	cabecalho.status = '0';
-	cabecalho.byteProxReg = 1;
-	cabecalho.nroRegistros = 2;
-	cabecalho.nroRegRemovidos = 3;
-	strcpy(cabecalho.descrevePrefixo, "abc1");
-	strcpy(cabecalho.descreveData, "abc2");
-	strcpy(cabecalho.descreveLugares, "abc3");
-	strcpy(cabecalho.descreveLinha, "abc4");
-	strcpy(cabecalho.descreveModelo, "abc5");
-	strcpy(cabecalho.descreveCategoria, "abc6");
-
-	createVeiculoCabecalho(arquivoBIN, &cabecalho);
-	setNRemovidosVeiculo(arquivoBIN, 5555);
 	
-	readVeiculoCabecalho(arquivoBIN, &cabecalho2);
-	mostrarCabecalhoVeiculo(arquivoBIN, &cabecalho2);
+	fseek(arquivoBin, 13, SEEK_SET);
+	fwrite(&nRemovidos, sizeof(int), 1, arquivoBin);
 
-	//JOGAR ISSO NUMA FUNÇÃO
-		//lê a primeira linha do arquivo
-		//getline(&b, &i, arquivoCSV);//Pega 1B a mais?
-		//separa a linha em 4 strings
-		//joga a primeira linha na struct
-		
-	//abre o arquivo binário
-	//escreve a primeira linha no arquivo binário
-	//fecha o arquivo binário
-	fclose(arquivoBIN);
-
-	//fecha o arquivo csv
-	fclose(arquivoCSV);
-
+	fseek(arquivoBin, 0, SEEK_SET);
 	return 1;
 }

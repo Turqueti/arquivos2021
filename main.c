@@ -50,7 +50,7 @@ int main(int argc, char const *argv[]){
 			
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
-			//imprimeRegistrosVeiculo(arquivoBinFP);
+			imprimeRegistrosVeiculo(arquivoBinFP);
 			fclose(arquivoBinFP);
 			break;
 
@@ -68,7 +68,7 @@ int main(int argc, char const *argv[]){
 			
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
-			//buscaParametroVeiculo(arquivoBinFP);
+			buscaParametroVeiculo(arquivoBinFP);
 			fclose(arquivoBinFP);
 			break;
 
@@ -87,7 +87,8 @@ int main(int argc, char const *argv[]){
 
 			arquivoBinFP = fopen(arquivoBinPath, "r+b");
 
-			//insereNRegistrosVeiculo(arquivoBinFP, numeroNovosRegistros);
+			if(insereNRegistrosVeiculo(arquivoBinFP, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
+			else binarioNaTela(arquivoBinPath);
 
 			fclose(arquivoBinFP);
 			break;

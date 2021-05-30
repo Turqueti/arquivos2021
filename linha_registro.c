@@ -20,7 +20,7 @@ struct _linha_registro {
     Argumentos:
 	    [in]arquivoBin: arquivo binário que foi criado
 	    		OBS: Não realiza fopen, nem fclose, nem muda o status, nem o fseek
-		[in]cabecalho: struct de cabecalho que foi criado e preenchido
+		[in]registro: struct de registro que foi criado e preenchido
 
     Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
@@ -51,11 +51,10 @@ int insereRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
     Argumentos:
 	    [in]arquivoBin: arquivo binário que foi criado
 	    		OBS: Não realiza fopen, nem fclose, nem muda o status, nem o fseek
-		[in]cabecalho: struct de cabecalho que foi criado e preenchido
+		[in]registro: struct de registro que foi criado e preenchido
 
     Retorno:
-    	se tudo der certo retorna 1 se algo der errado retorna 0
-    	após a leitura ele retorna o que foi lido pelo 'cabecalho'
+    	se tudo der certo retorna 1 se algo der errado ou terminar o arquivo retorna 0
 */
 int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
@@ -84,11 +83,10 @@ int readRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	Argumentos:
 		[in]arquivoBin: arquivo binário que foi criado
 	    	OBS: Não realiza fopen, nem fclose
-	    [in]cabecalho: struct de cabecalho que foi criado e preenchido
+	    [in]registro: struct de registro que foi criado e preenchido
 	
 	Retorno:
     	se tudo der certo retorna 1 se algo der errado retorna 0
-    	após a leitura ele imprime o que foi lido pelo 'cabecalho'
 */
 int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	if (arquivoBin == NULL) return 0;
@@ -121,6 +119,18 @@ int mostrarRegistroLinha(FILE *arquivoBin, LINHA_REGISTRO *registro) {
 	return 1;
 }
 
+/*
+	Descrição:
+		Insere N registros no arquivo dado
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	    [in]numeroNovosRegistros: número de registros que serão inseridos
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
 	readLinhaCabecalho(arquivoBin, &cabecalho);
@@ -192,6 +202,17 @@ int insereNRegistrosLinha(FILE *arquivoBin, int numeroNovosRegistros) {
 	return 1;
 }
 
+/*
+	Descrição:
+		Busca no arquivo um registro com campo = valor inserido
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int buscaParametroLinha(FILE *arquivoBin) {
 	char nomeCampo[30];
 	char valorCampo[30];
@@ -238,6 +259,17 @@ int buscaParametroLinha(FILE *arquivoBin) {
 	return 1;
 }
 
+/*
+	Descrição:
+		Lista todos os registros que são lidos no arquivo binário
+
+	Argumentos:
+		[in]arquivoBin: arquivo binário que foi criado
+	    	OBS: Não realiza fopen, nem fclose
+	
+	Retorno:
+    	se tudo der certo retorna 1 se algo der errado retorna 0
+*/
 int	imprimeRegistrosLinha(FILE *arquivoBin) {
 	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
 	readLinhaCabecalho(arquivoBin, &cabecalho);

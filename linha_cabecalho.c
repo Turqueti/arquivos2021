@@ -1,5 +1,12 @@
 #include "linha_cabecalho.h"
 
+/*
+    Descricao:
+    	essa func cria um cabecalho do arquivo linha
+
+    Retorno:
+    	Um cabecalho prenchido com dados falsos que devem ser alterados
+*/
 LINHA_CABECALHO createLinhaCabecalho() {
 	LINHA_CABECALHO cabecalho;
 
@@ -13,7 +20,7 @@ LINHA_CABECALHO createLinhaCabecalho() {
 
 /*
     Descricao:
-    	essa func cria um cabecalho do arquivo linha
+    	essa func insere um cabecalho do arquivo linha
     
     Argumentos:
 	    [in]arquivoBin: arquivo binário que foi criado
