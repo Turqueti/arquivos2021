@@ -306,14 +306,14 @@ int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 			strncpy(registro.corLinha, corLinha,corTam);
 		}
 
-		registro.tamanhoRegistro = sizeof(char) + sizeof(int) + sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * nomeTam) + (sizeof(char) * corTam) -5;
+		registro.tamanhoRegistro = sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * registro.tamanhoNome) + (sizeof(char) * registro.tamanhoCor);
 
 		insereRegistroLinha(arquivoBin, &registro);
 
 		free(registro.nomeLinha);
 		free(registro.corLinha);
 		
-		proxByte += registro.tamanhoRegistro+5;
+		proxByte += registro.tamanhoRegistro + 5;
 	}
 
 	setByteOffsetLinha(arquivoBin, proxByte);

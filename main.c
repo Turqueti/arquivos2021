@@ -58,7 +58,7 @@ int main(int argc, char const *argv[]){
 			strncpy(cabecalho.descreveCartao,retorna_elemento(mat,0,1),13);
 			strncpy(cabecalho.descreveNome,retorna_elemento(mat,0,2),13);
 			strncpy(cabecalho.descreveCor,retorna_elemento(mat,0,3),24);
-
+			cabecalho.nroRegistros = 0;
 			insereLinhaCabecalho(arquivoBinFP,&cabecalho);
 			insereNRegistrosLinhaMatriz(arquivoBinFP,mat);
 
