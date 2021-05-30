@@ -19,12 +19,6 @@ int main(int argc, char const *argv[]){
 	char arquivoCsvPath[30];
 	char arquivoBinPath[30];
 	char *nome;
-
-
-	char palavra1[MATRIZBUFFERLEN] = "aaaaaaaaaaa";
-	char palavra2[MATRIZBUFFERLEN] = "bbbbbbbbbbbb";
-	char palavra3[MATRIZBUFFERLEN] = "ccccccccccccc";
-	char palavra4[MATRIZBUFFERLEN] = "dddddddddddddd";
 	MATRIZ* mat;
 
 
@@ -38,6 +32,7 @@ int main(int argc, char const *argv[]){
 		case 1:
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
+
 			if (arquivoCsvFP == NULL)
 			{
 				printf("Falha no processamento do arquivo\n");
@@ -55,14 +50,13 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoCsvPath);//Lendo com /0 no final
 			scanf("%s", arquivoBinPath);//Lendo com /0 no final
 			arquivoCsvFP = open_csv(arquivoCsvPath);
+
 			if (arquivoCsvFP == NULL)
 			{
 				printf("Falha no processamento do arquivo\n");
 				return -1;
 			}
 			
-			
-
 			mat = csvToMatrix(arquivoCsvFP);
 			arquivoBinFP = fopen(arquivoBinPath, "wb");
 
