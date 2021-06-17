@@ -1,5 +1,5 @@
 .testes
-test*
+test\.
 out
 *csv
 *bin

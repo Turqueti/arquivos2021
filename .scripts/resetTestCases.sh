@@ -15,7 +15,7 @@ if [ ! -d $1 ];then
     exit
 
 else
-    pathToTests=$PWD/$1 #caminho para pasta dos casos de teste sendo $PWD a pasta em que o programa foi executado
+    pathToTests=$1 #caminho para pasta dos casos de teste sendo $PWD a pasta em que o programa foi executado
 
 fi
 shift #passa para $1 para o prox arg
