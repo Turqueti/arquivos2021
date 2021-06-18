@@ -29,9 +29,9 @@ function color() {
         else
             echo -e "\e[31m$i.in"
             echo "saida esperada:"
-            cat $pathToTests/$i.out
+            cat $pathToTests/$i.out | head
             echo "saida do caso:"
-            cat /tmp/testfile
+            cat /tmp/testfile | head
         fi
 
         ((i = i + 1))

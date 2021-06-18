@@ -6,5 +6,4 @@ run:
 
 tests:
 	gcc *.c *.h -o out -W -g
-	./.scripts/resetTestCases.sh ./.testes
-	./.scripts/tester.sh out ./.testes -c
+	./.scripts/setupTests.sh
