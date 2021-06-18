@@ -60,7 +60,10 @@ int main(int argc, char const *argv[]){
 			freeMatriz(mat);
 			close_csv(arquivoCsvFP);
 			binarioNaTela(arquivoBinPath);
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
 			break;
 
 		case 2:
@@ -101,7 +104,12 @@ int main(int argc, char const *argv[]){
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
 			imprimeRegistrosVeiculo(arquivoBinFP);
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
+			
+			
 			break;
 
 		case 4:
@@ -110,7 +118,10 @@ int main(int argc, char const *argv[]){
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
 			imprimeRegistrosLinha(arquivoBinFP);
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
 			break;
 
 		case 5:
@@ -119,7 +130,10 @@ int main(int argc, char const *argv[]){
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
 			buscaParametroVeiculo(arquivoBinFP);
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
 			break;
 
 		case 6:
@@ -128,7 +142,10 @@ int main(int argc, char const *argv[]){
 			arquivoBinFP = fopen(arquivoBinPath, "rb");
 
 			buscaParametroLinha(arquivoBinFP);
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
 			break;
 
 		case 7:
@@ -140,7 +157,10 @@ int main(int argc, char const *argv[]){
 			if(insereNRegistrosVeiculo(arquivoBinFP, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
 			else binarioNaTela(arquivoBinPath);
 
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
 			break;
 
 		case 8:
@@ -152,7 +172,10 @@ int main(int argc, char const *argv[]){
 			if(insereNRegistrosLinha(arquivoBinFP, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
 			else binarioNaTela(arquivoBinPath);
 
-			fclose(arquivoBinFP);
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
 			break;
 	}
 	return 0;
