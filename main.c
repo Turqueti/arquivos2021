@@ -9,6 +9,8 @@
 #include "csvlib.h"
 #include "matrizlib.h"
 #include "binarioNaTela.h"
+#include "btree_cabecalho.h"
+
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -171,6 +173,25 @@ int main(int argc, char const *argv[]){
 
 			if(insereNRegistrosLinha(arquivoBinFP, numeroNovosRegistros) == 0) printf("Falha no processamento do arquivo.\n");
 			else binarioNaTela(arquivoBinPath);
+
+			if (arquivoBinFP)
+			{
+				fclose(arquivoBinFP);
+			}
+			break;
+
+		case 22:
+			// caso de teste
+			scanf("%s", arquivoBinPath);
+			arquivoBinFP = fopen(arquivoBinPath, "wb");
+			BTREE_CABECALHO cabecalhoBtree = createBtreeCabecalho();
+			
+			cabecalhoBtree.noRaiz = 3;
+			cabecalhoBtree.RNNProx = 6;
+			insereBtreeCabecalho(arquivoBinFP,&cabecalhoBtree);
+			escreveLixo(arquivoBinFP,10,9);
+
+
 
 			if (arquivoBinFP)
 			{
