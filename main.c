@@ -10,6 +10,7 @@
 #include "matrizlib.h"
 #include "binarioNaTela.h"
 #include "btree_cabecalho.h"
+#include "btree_registro.h"
 
 
 int main(int argc, char const *argv[]){
@@ -189,15 +190,50 @@ int main(int argc, char const *argv[]){
 			cabecalhoBtree.noRaiz = 3;
 			cabecalhoBtree.RNNProx = 6;
 			insereBtreeCabecalho(arquivoBinFP,&cabecalhoBtree);
-			escreveLixo(arquivoBinFP,10,9);
+			escreveLixo(arquivoBinFP,68,9);
+			BTREE_REGISTRO* reg = criaRegistroBtree();
+
+
+			for (int i = 0; i < 4; i++)
+			{
+				SetChaveBtree(reg,i,i*10);
+				SetPonteiroRegistroBtree(reg,i,(i*10)+1);
+				SetPonteiroSubArvoreBtree(reg,i,i+1);
+			}
+			SetPonteiroSubArvoreBtree(reg,4,6);
+			TESTEescreveRegistroBtree(reg,arquivoBinFP,1);
+
+
+			
 
 
 
+			if (reg)
+			{
+				freeRegistroBtree(reg);
+
+			}
+			
+			
 			if (arquivoBinFP)
 			{
 				fclose(arquivoBinFP);
 			}
 			break;
+
+		case 23:
+			//test read
+			scanf("%s", arquivoBinPath);
+			
+			arquivoBinFP = fopen(arquivoBinPath, "rb");
+
+			BTREE_REGISTRO* reg1 = criaRegistroBtree();
+			readRegistroBtree(reg1,arquivoBinFP,1);
+			TESTEprintRegistroBtree(reg1);
+
+			freeRegistroBtree(reg1);
+			break;
+
 	}
 	return 0;
 }

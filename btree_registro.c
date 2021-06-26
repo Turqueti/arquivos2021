@@ -69,35 +69,95 @@ int readRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree,int rnn){
     if (arquivoBtree)
     {
         fseek(arquivoBtree,rnn*77,SEEK_SET);
-        fread(reg->folha,1,1,arquivoBtree);
-        fread(reg->nroChaves,1,4,arquivoBtree);
-        fread(reg->RNNdoNO,1,4,arquivoBtree);
+        fread(&reg->folha,1,1,arquivoBtree);
+        fread(&reg->nroChaves,1,4,arquivoBtree);
+        fread(&reg->RNNdoNO,1,4,arquivoBtree);
 
-        fread(reg->ponteirosSubArvores[0],1,4,arquivoBtree);
-        fread(reg->chaves[0],1,4,arquivoBtree);
-        fread(reg->ponteirosRegistros[0],1,4,arquivoBtree);
+        fread(&reg->ponteirosSubArvores[0],1,4,arquivoBtree);
+        fread(&reg->chaves[0],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[0],1,4,arquivoBtree);
 
-        fread(reg->ponteirosSubArvores[1],1,4,arquivoBtree);
-        fread(reg->chaves[1],1,4,arquivoBtree);
-        fread(reg->ponteirosRegistros[1],1,4,arquivoBtree);
+        fread(&reg->ponteirosSubArvores[1],1,4,arquivoBtree);
+        fread(&reg->chaves[1],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[1],1,4,arquivoBtree);
 
-        fread(reg->ponteirosSubArvores[2],1,4,arquivoBtree);
-        fread(reg->chaves[2],1,4,arquivoBtree);
-        fread(reg->ponteirosRegistros[2],1,4,arquivoBtree);
+        fread(&reg->ponteirosSubArvores[2],1,4,arquivoBtree);
+        fread(&reg->chaves[2],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[2],1,4,arquivoBtree);
 
-        fread(reg->ponteirosSubArvores[3],1,4,arquivoBtree);
-        fread(reg->chaves[3],1,4,arquivoBtree);
-        fread(reg->ponteirosRegistros[3],1,4,arquivoBtree);
+        fread(&reg->ponteirosSubArvores[3],1,4,arquivoBtree);
+        fread(&reg->chaves[3],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[3],1,4,arquivoBtree);
 
-        fread(reg->ponteirosSubArvores[4],1,4,arquivoBtree);
-        fread(reg->chaves[4],1,4,arquivoBtree);
-        fread(reg->ponteirosRegistros[4],1,4,arquivoBtree);
+        fread(&reg->ponteirosSubArvores[4],1,4,arquivoBtree);
+        fread(&reg->chaves[4],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[4],1,4,arquivoBtree);
 
-        fread(reg->ponteirosSubArvores[5],1,4,arquivoBtree);
+        fread(&reg->ponteirosSubArvores[5],1,4,arquivoBtree);
 
     }
     
 
 
+}
+
+int insertChaveRegistroBtree(int RNNAtual,int chave,int RNNFilhoDireitoPromo, int chavePromovida){
+
+}
+
+void TESTEescreveRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree, int rnn){
+
+    if (arquivoBtree)
+    {
+        fseek(arquivoBtree,rnn*77,SEEK_SET);
+        fwrite(&reg->folha,1,1,arquivoBtree);
+        fwrite(&reg->nroChaves,1,4,arquivoBtree);
+        fwrite(&reg->RNNdoNO,1,4,arquivoBtree);
+
+        fwrite(&reg->ponteirosSubArvores[0],1,4,arquivoBtree);
+        fwrite(&reg->chaves[0],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[0],1,4,arquivoBtree);
+
+        fwrite(&reg->ponteirosSubArvores[1],1,4,arquivoBtree);
+        fwrite(&reg->chaves[1],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[1],1,4,arquivoBtree);
+
+        fwrite(&reg->ponteirosSubArvores[2],1,4,arquivoBtree);
+        fwrite(&reg->chaves[2],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[2],1,4,arquivoBtree);
+
+        fwrite(&reg->ponteirosSubArvores[3],1,4,arquivoBtree);
+        fwrite(&reg->chaves[3],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[3],1,4,arquivoBtree);
+
+        fwrite(&reg->ponteirosSubArvores[4],1,4,arquivoBtree);
+        fwrite(&reg->chaves[4],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[4],1,4,arquivoBtree);
+
+        fwrite(&reg->ponteirosSubArvores[5],1,4,arquivoBtree);
+    }
+    
+
+}
+
+void TESTEprintRegistroBtree(BTREE_REGISTRO* reg){
+    printf("folha: %c\n",reg->folha);
+    printf("rnn: %d\n",reg->RNNdoNO);
+
+    for (int i = 0; i < grau; i++)
+    {
+        printf("subArvore[%d]: %d\n",i,reg->ponteirosSubArvores[i]);
+    }
+    printf("\n\n\n");
+    for (int i = 0; i < grau-1; i++)
+    {
+        printf("chave[%d]: %d\n",i,reg->chaves[i]);
+    }
+    printf("\n\n\n");
+    for (int i = 0; i < grau-1; i++)
+    {
+        printf("ponteiroReg[%d]: %d\n",i,reg->ponteirosRegistros[i]);
+    }
+    
 }
 
