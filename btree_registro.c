@@ -56,3 +56,48 @@ int SetnroChavesBtree(BTREE_REGISTRO* reg, int valornroChaves){
     return 1;
 }
 
+void freeRegistroBtree(BTREE_REGISTRO* reg){
+    if (reg)
+    {
+        free(reg);
+    }
+    
+}
+
+int readRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree,int rnn){
+
+    if (arquivoBtree)
+    {
+        fseek(arquivoBtree,rnn*77,SEEK_SET);
+        fread(reg->folha,1,1,arquivoBtree);
+        fread(reg->nroChaves,1,4,arquivoBtree);
+        fread(reg->RNNdoNO,1,4,arquivoBtree);
+
+        fread(reg->ponteirosSubArvores[0],1,4,arquivoBtree);
+        fread(reg->chaves[0],1,4,arquivoBtree);
+        fread(reg->ponteirosRegistros[0],1,4,arquivoBtree);
+
+        fread(reg->ponteirosSubArvores[1],1,4,arquivoBtree);
+        fread(reg->chaves[1],1,4,arquivoBtree);
+        fread(reg->ponteirosRegistros[1],1,4,arquivoBtree);
+
+        fread(reg->ponteirosSubArvores[2],1,4,arquivoBtree);
+        fread(reg->chaves[2],1,4,arquivoBtree);
+        fread(reg->ponteirosRegistros[2],1,4,arquivoBtree);
+
+        fread(reg->ponteirosSubArvores[3],1,4,arquivoBtree);
+        fread(reg->chaves[3],1,4,arquivoBtree);
+        fread(reg->ponteirosRegistros[3],1,4,arquivoBtree);
+
+        fread(reg->ponteirosSubArvores[4],1,4,arquivoBtree);
+        fread(reg->chaves[4],1,4,arquivoBtree);
+        fread(reg->ponteirosRegistros[4],1,4,arquivoBtree);
+
+        fread(reg->ponteirosSubArvores[5],1,4,arquivoBtree);
+
+    }
+    
+
+
+}
+
