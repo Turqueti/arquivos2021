@@ -22,7 +22,7 @@ BTREE_REGISTRO* criaRegistroBtree(){
         reg->chaves[i] = -1;
         reg->ponteirosRegistros[i] = -1;
     }
-    reg->ponteirosSubArvores[grau] = -1;
+    reg->ponteirosSubArvores[grau-1] = -1;
     return reg;
 }
 
@@ -153,11 +153,11 @@ void TESTEprintRegistroBtree(BTREE_REGISTRO* reg){
     {
         printf("chave[%d]: %d\n",i,reg->chaves[i]);
     }
-    printf("\n\n\n");
-    for (int i = 0; i < grau-1; i++)
-    {
-        printf("ponteiroReg[%d]: %d\n",i,reg->ponteirosRegistros[i]);
-    }
+    // printf("\n\n\n");
+    // for (int i = 0; i < grau-1; i++)
+    // {
+    //     printf("ponteiroReg[%d]: %d\n",i,reg->ponteirosRegistros[i]);
+    // }
     
 }
 

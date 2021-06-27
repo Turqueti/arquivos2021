@@ -12,6 +12,33 @@
 #include "btree_cabecalho.h"
 #include "btree_registro.h"
 
+void caso23(char arquivoBinPath[30]){
+			
+			
+			FILE* arquivoBinFP = fopen(arquivoBinPath, "rb");
+
+
+			BTREE_REGISTRO* reg = criaRegistroBtree();
+			BTREE_REGISTRO* reg1 = criaRegistroBtree();
+			BTREE_REGISTRO* reg2 = criaRegistroBtree();
+			readRegistroBtree(reg,arquivoBinFP,1);
+			readRegistroBtree(reg1,arquivoBinFP,2);
+			readRegistroBtree(reg2,arquivoBinFP,3);
+
+			TESTEprintRegistroBtree(reg);
+			printf("-----------------------------------------------------------------------\n");
+			TESTEprintRegistroBtree(reg1);
+			printf("-----------------------------------------------------------------------\n");
+
+			TESTEprintRegistroBtree(reg2);
+			printf("-----------------------------------------------------------------------\n");
+
+			freeRegistroBtree(reg);
+			freeRegistroBtree(reg1);
+			freeRegistroBtree(reg2);
+}
+
+
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -192,28 +219,42 @@ int main(int argc, char const *argv[]){
 			insereBtreeCabecalho(arquivoBinFP,&cabecalhoBtree);
 			escreveLixo(arquivoBinFP,68,9);
 			BTREE_REGISTRO* reg = criaRegistroBtree();
+			BTREE_REGISTRO* reg1 = criaRegistroBtree();
+			BTREE_REGISTRO* reg2 = criaRegistroBtree();
 
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 2; i++)
 			{
-				SetChaveBtree(reg,i,i*10);
-				SetPonteiroRegistroBtree(reg,i,(i*10)+1);
-				SetPonteiroSubArvoreBtree(reg,i,i+1);
+				SetChaveBtree(reg,i,i+1);
+				
 			}
-			SetPonteiroSubArvoreBtree(reg,4,6);
-			TESTEescreveRegistroBtree(reg,arquivoBinFP,1);
+			SetChaveBtree(reg1,0,4);
+			SetChaveBtree(reg1,1,5);
+			SetRNNdoNoBtree(reg,1);
+			SetRNNdoNoBtree(reg1,2);
+			SetRNNdoNoBtree(reg2,3);
+			mudaFolhaBtree(reg,'1');
+			mudaFolhaBtree(reg1,'1');
 
 
+
+			SetChaveBtree(reg2,0,3);
+			SetPonteiroSubArvoreBtree(reg2,0,1);
+			SetPonteiroSubArvoreBtree(reg2,1,2);
 			
-
-
+			
+			TESTEescreveRegistroBtree(reg,arquivoBinFP,1);
+			TESTEescreveRegistroBtree(reg1,arquivoBinFP,2);
+			TESTEescreveRegistroBtree(reg2,arquivoBinFP,3);
 
 			if (reg)
 			{
 				freeRegistroBtree(reg);
 
 			}
-			
+			freeRegistroBtree(reg1);
+			freeRegistroBtree(reg2);
+
 			
 			if (arquivoBinFP)
 			{
@@ -224,14 +265,7 @@ int main(int argc, char const *argv[]){
 		case 23:
 			//test read
 			scanf("%s", arquivoBinPath);
-			
-			arquivoBinFP = fopen(arquivoBinPath, "rb");
-
-			BTREE_REGISTRO* reg1 = criaRegistroBtree();
-			readRegistroBtree(reg1,arquivoBinFP,1);
-			TESTEprintRegistroBtree(reg1);
-
-			freeRegistroBtree(reg1);
+			caso23(arquivoBinPath);
 			break;
 
 	}
