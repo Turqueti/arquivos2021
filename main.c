@@ -11,7 +11,10 @@
 #include "binarioNaTela.h"
 #include "btree_cabecalho.h"
 #include "btree_registro.h"
+#include "btree_algoritimos.h"
 
+
+//caso de teste prinra 3 registros hardcoded em um arquivo bin
 void caso23(char arquivoBinPath[30]){
 			
 			
@@ -36,9 +39,20 @@ void caso23(char arquivoBinPath[30]){
 			freeRegistroBtree(reg);
 			freeRegistroBtree(reg1);
 			freeRegistroBtree(reg2);
+			fclose(arquivoBinFP);
 }
 
 
+//caso de teste de busca de chave
+void caso24(char arquivoBinPath[30], int chaveProcurada){
+	FILE* arquivoBinFP = fopen(arquivoBinPath, "rb");
+
+	int resultado = search(arquivoBinFP,chaveProcurada,-2);
+
+	printf("resultado da busca: %d\n",resultado);
+
+	fclose(arquivoBinFP);
+}
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -50,6 +64,7 @@ int main(int argc, char const *argv[]){
 	char arquivoBinPath[30];
 	char *nome;
 	MATRIZ* mat;
+	int chaveBuscada;
 
 
 	FILE* arquivoBinFP;
@@ -225,22 +240,25 @@ int main(int argc, char const *argv[]){
 
 			for (int i = 0; i < 2; i++)
 			{
-				SetChaveBtree(reg,i,i+1);
+				setChaveBtree(reg,i,i+1);
 				
 			}
-			SetChaveBtree(reg1,0,4);
-			SetChaveBtree(reg1,1,5);
-			SetRNNdoNoBtree(reg,1);
-			SetRNNdoNoBtree(reg1,2);
-			SetRNNdoNoBtree(reg2,3);
+			setChaveBtree(reg1,0,4);
+			setChaveBtree(reg1,1,5);
+			setRNNdoNoBtree(reg,1);
+			setRNNdoNoBtree(reg1,2);
+			setRNNdoNoBtree(reg2,3);
 			mudaFolhaBtree(reg,'1');
 			mudaFolhaBtree(reg1,'1');
+			setnroChavesBtree(reg,2);
+			setnroChavesBtree(reg1,2);
+			setnroChavesBtree(reg2,1);
 
 
 
-			SetChaveBtree(reg2,0,3);
-			SetPonteiroSubArvoreBtree(reg2,0,1);
-			SetPonteiroSubArvoreBtree(reg2,1,2);
+			setChaveBtree(reg2,0,3);
+			setPonteiroSubArvoreBtree(reg2,0,1);
+			setPonteiroSubArvoreBtree(reg2,1,2);
 			
 			
 			TESTEescreveRegistroBtree(reg,arquivoBinFP,1);
@@ -267,6 +285,14 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoBinPath);
 			caso23(arquivoBinPath);
 			break;
+
+		case 24:
+			
+			scanf("%s", arquivoBinPath);
+			scanf("%d",&chaveBuscada);
+			caso24(arquivoBinPath,chaveBuscada);
+
+
 
 	}
 	return 0;
