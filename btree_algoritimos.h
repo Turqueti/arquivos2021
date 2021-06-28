@@ -7,7 +7,6 @@
 #include "btree_cabecalho.h"
 #include "btree_registro.h"
 
-
-int search(FILE* arquivoBtree,int chave,int rnnPag);
+int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag);
 
 #endif

@@ -3,16 +3,16 @@
 #include "binarioNaTela.h"
 #include "matrizlib.h"
 
-struct _linha_registro {
-    char removido;//1
-    int tamanhoRegistro;//4
-    int codLinha;//4
-    char aceitaCartao;//1
-    int tamanhoNome;//4
-    char *nomeLinha;
-    int tamanhoCor;//4
-    char *corLinha;
-};
+// struct _linha_registro {
+//     char removido;//1
+//     int tamanhoRegistro;//4
+//     int codLinha;//4
+//     char aceitaCartao;//1
+//     int tamanhoNome;//4
+//     char *nomeLinha;
+//     int tamanhoCor;//4
+//     char *corLinha;
+// };
 
 /*
     Descricao:
@@ -382,5 +382,28 @@ int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 	setNRemovidosLinha(arquivoBin,numRegistrosRemovidos);
 	mudaStatusCabecalhoLinha(arquivoBin, '1');
 
+	return 1;
+}
+
+
+int readRegistroLinhaByteOffSet(FILE *arquivoBin, LINHA_REGISTRO *registro,int byteOffSet) {
+	if (arquivoBin == NULL) return 0;
+
+	fseek(arquivoBin,byteOffSet,SEEK_SET);
+
+	fread(&registro->removido, sizeof(char), 1, arquivoBin);
+	fread(&registro->tamanhoRegistro, sizeof(int), 1, arquivoBin);
+	fread(&registro->codLinha, sizeof(int), 1, arquivoBin);
+	fread(&registro->aceitaCartao, sizeof(char), 1, arquivoBin);
+	
+	fread(&registro->tamanhoNome, sizeof(int), 1, arquivoBin);
+	registro->nomeLinha = (char*) malloc(sizeof(char) * registro->tamanhoNome);
+	fread(registro->nomeLinha, sizeof(char), registro->tamanhoNome, arquivoBin);
+
+	fread(&registro->tamanhoCor, sizeof(int), 1, arquivoBin);
+	registro->corLinha = (char*) malloc(sizeof(char) * registro->tamanhoCor);
+
+	if(fread(registro->corLinha, sizeof(char), registro->tamanhoCor, arquivoBin) == 0) return 0;
+	
 	return 1;
 }

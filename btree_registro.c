@@ -112,14 +112,15 @@ int insertChaveRegistroBtree(int RNNAtual,int chave,int RNNFilhoDireitoPromo, in
 
 }
 
-int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave){
+int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave, int* achouFlag){
     
     int i;
     for (i = 0; i < reg->nroChaves; i++)
     {
         if (reg->chaves[i] == chave)
         {
-            return -3; // achou
+            *achouFlag = 1;
+            return reg->ponteirosRegistros[i];
         }else if (reg->chaves[i] > chave || reg->chaves[i] == -1)
         {
             return reg->ponteirosSubArvores[i];

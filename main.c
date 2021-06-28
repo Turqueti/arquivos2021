@@ -46,8 +46,9 @@ void caso23(char arquivoBinPath[30]){
 //caso de teste de busca de chave
 void caso24(char arquivoBinPath[30], int chaveProcurada){
 	FILE* arquivoBinFP = fopen(arquivoBinPath, "rb");
-
-	int resultado = search(arquivoBinFP,chaveProcurada,-2);
+	
+	int achouFlag = -1;
+	int resultado = search(arquivoBinFP,chaveProcurada,-2,&achouFlag);
 
 	printf("resultado da busca: %d\n",resultado);
 
@@ -63,6 +64,7 @@ void caso12(){
 
 	FILE* arquivoBinFP;
 	FILE* arquivoIndiceFP;
+	LINHA_REGISTRO registroLinha;
 
 	
 	scanf("%s", arquivoBinPath);//Lendo com /0 no final
@@ -75,9 +77,21 @@ void caso12(){
 	int chaveProcurada;
 	scanf("%d",&chaveProcurada);
 	
-	int resultado = search(arquivoIndiceFP,chaveProcurada,-2);
 
-	printf("resultado da busca: %d\n",resultado);
+	int achouFlag = -1;
+	int resultado = search(arquivoIndiceFP,chaveProcurada,-2,&achouFlag);
+
+	// printf("resultado da busca: %d\n",resultado);
+	if (achouFlag == 1)
+	{
+		readRegistroLinhaByteOffSet(arquivoBinFP,&registroLinha,resultado);
+		mostrarRegistroLinha(arquivoBinFP,&registroLinha);
+	}else
+	{
+		printf("Registro inexistente.\n");
+	}
+	
+
 
 	fclose(arquivoIndiceFP);
 	fclose(arquivoBinFP);

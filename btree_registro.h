@@ -18,7 +18,7 @@ int setnroChavesBtree(BTREE_REGISTRO* reg, int valornroChaves);
 void freeRegistroBtree(BTREE_REGISTRO* reg);
 int readRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree,int rnn);
 int insertChaveRegistroBtree(int RNNAtual,int chave,int RNNFilhoDireitoPromo, int chavePromovida);
-int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave);
+int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave, int* achouFlag);
 void TESTEescreveRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree, int rnn);
 void TESTEprintRegistroBtree(BTREE_REGISTRO* reg);
 
