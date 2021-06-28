@@ -30,7 +30,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/out",
-            "args": ["<","testSearch.in"],
+            "args": ["<","test7.in"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

@@ -54,6 +54,35 @@ void caso24(char arquivoBinPath[30], int chaveProcurada){
 	fclose(arquivoBinFP);
 }
 
+
+//caso search btree linha
+void caso12(){
+	char arquivoBinPath[30];
+	char arquivoIndicePath[30];
+
+
+	FILE* arquivoBinFP;
+	FILE* arquivoIndiceFP;
+
+	
+	scanf("%s", arquivoBinPath);//Lendo com /0 no final
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+	arquivoIndiceFP = fopen(arquivoIndicePath,"rb");
+	arquivoBinFP = fopen(arquivoBinPath,"rb");
+	char codLinha[30];
+	scanf("%s", codLinha);//Lendo com /0 no final
+	
+	int chaveProcurada;
+	scanf("%d",&chaveProcurada);
+	
+	int resultado = search(arquivoIndiceFP,chaveProcurada,-2);
+
+	printf("resultado da busca: %d\n",resultado);
+
+	fclose(arquivoIndiceFP);
+	fclose(arquivoBinFP);
+}
+
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
 	int numeroNovosRegistros = 0;
@@ -278,6 +307,9 @@ int main(int argc, char const *argv[]){
 			{
 				fclose(arquivoBinFP);
 			}
+			break;
+		case 12:
+			caso12();
 			break;
 
 		case 23:
