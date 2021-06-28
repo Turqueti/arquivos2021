@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define llint long long int
 
 typedef struct _btree_registro  BTREE_REGISTRO;
 
@@ -11,7 +12,7 @@ BTREE_REGISTRO* criaRegistroBtree();
 int mudaFolhaBtree(BTREE_REGISTRO* reg,char folha);
 int setChaveBtree(BTREE_REGISTRO* reg,int indexChave, int valorChave);
 int setPonteiroSubArvoreBtree(BTREE_REGISTRO* reg,int indexPonteiroSubArvore, int valorPonteiroSubArvore);
-int setPonteiroRegistroBtree(BTREE_REGISTRO* reg,int indexPonteiroRegistro, int valorPonteiroRegistro);
+int setPonteiroRegistroBtree(BTREE_REGISTRO* reg,int indexPonteiroRegistro, llint valorPonteiroRegistro);
 int setRNNdoNoBtree(BTREE_REGISTRO* reg, int valorRNNdoNo);
 int setnroChavesBtree(BTREE_REGISTRO* reg, int valornroChaves);
 void freeRegistroBtree(BTREE_REGISTRO* reg);

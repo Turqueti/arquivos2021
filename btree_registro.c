@@ -2,13 +2,14 @@
 
 #define grau 5 
 
+
 struct _btree_registro {
     char folha;
     int nroChaves;
     int RNNdoNO;
     int ponteirosSubArvores[grau];
     int chaves[grau-1];
-    int ponteirosRegistros[grau-1];
+    llint ponteirosRegistros[grau-1];
 };
 
 BTREE_REGISTRO* criaRegistroBtree(){
@@ -41,7 +42,7 @@ int setPonteiroSubArvoreBtree(BTREE_REGISTRO* reg,int indexPonteiroSubArvore, in
     return 1;
 }
 
-int setPonteiroRegistroBtree(BTREE_REGISTRO* reg,int indexPonteiroRegistro, int valorPonteiroRegistro){
+int setPonteiroRegistroBtree(BTREE_REGISTRO* reg,int indexPonteiroRegistro, llint valorPonteiroRegistro){
     reg->ponteirosRegistros[indexPonteiroRegistro] = valorPonteiroRegistro;
     return 1;
 }
@@ -68,26 +69,36 @@ int readRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree,int rnn){
 
     if (arquivoBtree)
     {
-        fseek(arquivoBtree,rnn*77,SEEK_SET);
+        if (rnn == 0)
+        {
+            fseek(arquivoBtree,77,SEEK_SET);
+        }else
+        {
+            fseek(arquivoBtree,(rnn+1)*77,SEEK_SET);
+        }
+        
+        
+
+        
         fread(&reg->folha,1,1,arquivoBtree);
         fread(&reg->nroChaves,1,4,arquivoBtree);
         fread(&reg->RNNdoNO,1,4,arquivoBtree);
 
         fread(&reg->ponteirosSubArvores[0],1,4,arquivoBtree);
         fread(&reg->chaves[0],1,4,arquivoBtree);
-        fread(&reg->ponteirosRegistros[0],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[0],1,8,arquivoBtree);
 
         fread(&reg->ponteirosSubArvores[1],1,4,arquivoBtree);
         fread(&reg->chaves[1],1,4,arquivoBtree);
-        fread(&reg->ponteirosRegistros[1],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[1],1,8,arquivoBtree);
 
         fread(&reg->ponteirosSubArvores[2],1,4,arquivoBtree);
         fread(&reg->chaves[2],1,4,arquivoBtree);
-        fread(&reg->ponteirosRegistros[2],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[2],1,8,arquivoBtree);
 
         fread(&reg->ponteirosSubArvores[3],1,4,arquivoBtree);
         fread(&reg->chaves[3],1,4,arquivoBtree);
-        fread(&reg->ponteirosRegistros[3],1,4,arquivoBtree);
+        fread(&reg->ponteirosRegistros[3],1,8,arquivoBtree);
 
         fread(&reg->ponteirosSubArvores[4],1,4,arquivoBtree);
 
@@ -109,13 +120,15 @@ int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave){
         if (reg->chaves[i] == chave)
         {
             return -3; // achou
-        }else if (reg->chaves[i] > chave)
+        }else if (reg->chaves[i] > chave || reg->chaves[i] == -1)
         {
             return reg->ponteirosSubArvores[i];
         }
         
     }
-    return reg->ponteirosSubArvores[i]; // todas as chaves no registro são menores que a chave buscada logo retorna o ultimo ponteiro de subarvore 
+
+        return reg->ponteirosSubArvores[i]; // todas as chaves no registro são menores que a chave buscada logo retorna o ultimo ponteiro de subarvore 
+    
 }
 
 
@@ -130,19 +143,19 @@ void TESTEescreveRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree, int rnn){
 
         fwrite(&reg->ponteirosSubArvores[0],1,4,arquivoBtree);
         fwrite(&reg->chaves[0],1,4,arquivoBtree);
-        fwrite(&reg->ponteirosRegistros[0],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[0],1,8,arquivoBtree);
 
         fwrite(&reg->ponteirosSubArvores[1],1,4,arquivoBtree);
         fwrite(&reg->chaves[1],1,4,arquivoBtree);
-        fwrite(&reg->ponteirosRegistros[1],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[1],1,8,arquivoBtree);
 
         fwrite(&reg->ponteirosSubArvores[2],1,4,arquivoBtree);
         fwrite(&reg->chaves[2],1,4,arquivoBtree);
-        fwrite(&reg->ponteirosRegistros[2],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[2],1,8,arquivoBtree);
 
         fwrite(&reg->ponteirosSubArvores[3],1,4,arquivoBtree);
         fwrite(&reg->chaves[3],1,4,arquivoBtree);
-        fwrite(&reg->ponteirosRegistros[3],1,4,arquivoBtree);
+        fwrite(&reg->ponteirosRegistros[3],1,8,arquivoBtree);
 
         fwrite(&reg->ponteirosSubArvores[4],1,4,arquivoBtree);
 
