@@ -27,9 +27,9 @@ ERROS PT. 1:
 erro: em algum momento a verificacao se o arquivo existe se perdeu. 
 Isso não colocava a mensagem "Falha no processamento do arquivo." 
 e na hora que o fclose era chamado gerava um segfault por tentar fechar um ponteiro pra lixo
-[] criar um arquivo de boilerPlates de arquivo
-    [] abre o arquivo com verificacao de existencia
-    [] fecha o arquivo com verificacao de existencia
+[x] criar um arquivo de boilerPlates de arquivo
+    [x] abre o arquivo com verificacao de existencia
+    [x] fecha o arquivo com verificacao de existencia
 
 
 PT 2:
@@ -46,8 +46,8 @@ PT 2:
     [] busca btree
         [] caso 11: busca btree de veiculo por prefixo
             casos de teste:
-            [] 5.in
-            [] 6.in
+            [] 5.in erro no processamento do arquivo precisa ser jogado na abertura
+            [x] 6.in
         [x] caso 12: busca btree de linha por codLinha
             casos de teste:
             [x] 7.in
