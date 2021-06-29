@@ -31,6 +31,8 @@ e na hora que o fclose era chamado gerava um segfault por tentar fechar um ponte
     [x] abre o arquivo com verificacao de existencia
     [x] fecha o arquivo com verificacao de existencia
 
+[] colocar em pratica os boilerPlates
+
 
 PT 2:
 
