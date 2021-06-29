@@ -16,6 +16,35 @@ struct _veiculo_registro {
     char *categoria;
 };
 
+
+VEICULO_REGISTRO* criaRegistroVeiculo(){
+	VEICULO_REGISTRO* reg = (VEICULO_REGISTRO*)malloc(sizeof(VEICULO_REGISTRO));
+	reg->removido = '0';
+	reg->tamanhoRegistro = 0;
+	reg->prefixo[5] = '0';
+	reg->data[10] = '0';
+	reg->quantidadeLugares = 0;
+	reg->codLinha = 0;
+	reg->tamanhoModelo = 0;
+	reg->modelo = NULL;
+	reg->tamanhoCategoria = 0;
+	reg->categoria = NULL;
+
+	return reg;
+}
+
+void freeRegistroVeiculo(VEICULO_REGISTRO* reg){
+	if (reg->modelo)
+	{
+		free(reg->modelo);
+	}
+	if (reg->categoria)
+	{
+		free(reg->categoria);
+	}
+	free(reg);
+}
+
 /*
     Descricao:
     	essa func cria um registro do arquivo veiculo
@@ -480,3 +509,27 @@ int insereNRegistrosVeiculoMatriz(FILE *arquivoBin, MATRIZ* matrix) {
 
 	return 1;
 }
+
+int readRegistroVeiculoByteOffSet(FILE *arquivoBin, VEICULO_REGISTRO *registro,int byteOffSet) {
+	if (arquivoBin == NULL) return 0;
+
+	fseek(arquivoBin,byteOffSet,SEEK_SET);
+
+	fread(&registro->removido, sizeof(char), 1, arquivoBin);
+	fread(&registro->tamanhoRegistro, sizeof(int), 1, arquivoBin);
+	fread(&registro->prefixo, sizeof(char), 5, arquivoBin);
+	fread(&registro->data, sizeof(char), 10, arquivoBin);
+	fread(&registro->quantidadeLugares, sizeof(int), 1, arquivoBin);
+	fread(&registro->codLinha, sizeof(int), 1, arquivoBin);
+	
+	fread(&registro->tamanhoModelo, sizeof(int), 1, arquivoBin);
+	registro->modelo = (char*) malloc(sizeof(char) * registro->tamanhoModelo);
+	fread(registro->modelo, sizeof(char), registro->tamanhoModelo, arquivoBin);
+	
+	fread(&registro->tamanhoCategoria, sizeof(int), 1, arquivoBin);
+	registro->categoria = (char*) malloc(sizeof(char) * registro->tamanhoCategoria);
+	if(fread(registro->categoria, sizeof(char), registro->tamanhoCategoria, arquivoBin) == 0) return 0;
+	
+	return 1;
+}
+

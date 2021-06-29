@@ -132,7 +132,6 @@ int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave, int* achouFlag){
     
 }
 
-
 void TESTEescreveRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree, int rnn){
 
     if (arquivoBtree)

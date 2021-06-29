@@ -55,6 +55,54 @@ void caso24(char arquivoBinPath[30], int chaveProcurada){
 	fclose(arquivoBinFP);
 }
 
+//caso search btree Veiculo
+void caso11(){
+	char arquivoBinPath[30];
+	char arquivoIndicePath[30];
+
+
+	FILE* arquivoBinFP;
+	FILE* arquivoIndiceFP;
+	VEICULO_REGISTRO* reg = criaRegistroVeiculo();
+
+	LINHA_REGISTRO registroLinha;
+
+	
+	scanf("%s", arquivoBinPath);//Lendo com /0 no final
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+	arquivoIndiceFP = fopen(arquivoIndicePath,"rb");
+	arquivoBinFP = fopen(arquivoBinPath,"rb");
+	char prefixoPadding[30];
+	scanf("%s", prefixoPadding);//Lendo com /0 no final
+	
+	char prefixo[5] = "\0";
+	scanf("%s", prefixo);
+
+	int chaveProcurada = -1;
+	chaveProcurada = convertePrefixo(prefixo);
+	
+	
+
+	int achouFlag = -1;
+	int resultado = search(arquivoIndiceFP,chaveProcurada,-2,&achouFlag);
+
+	// printf("resultado da busca: %d\n",resultado);
+	if (achouFlag == 1)
+	{
+		readRegistroVeiculoByteOffSet(arquivoBinFP,reg,resultado);
+		mostrarRegistroVeiculo(arquivoBinFP,reg);
+	}else
+	{
+		printf("Registro inexistente.\n");
+	}
+	
+
+	freeRegistroVeiculo(reg);
+	fclose(arquivoIndiceFP);
+	fclose(arquivoBinFP);
+}
+
+
 
 //caso search btree linha
 void caso12(){
@@ -265,7 +313,15 @@ int main(int argc, char const *argv[]){
 				fclose(arquivoBinFP);
 			}
 			break;
+		case 11:
+			caso11();
+			break;
+		
+		case 12:
+			caso12();
+			break;
 
+		
 		case 22:
 			// caso de teste
 			scanf("%s", arquivoBinPath);
@@ -321,9 +377,6 @@ int main(int argc, char const *argv[]){
 			{
 				fclose(arquivoBinFP);
 			}
-			break;
-		case 12:
-			caso12();
 			break;
 
 		case 23:
