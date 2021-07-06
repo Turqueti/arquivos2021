@@ -30,7 +30,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/out",
-            "args": ["<","test7.in"],
+            "args": ["<","testinsert.in"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

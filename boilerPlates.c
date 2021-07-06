@@ -17,7 +17,7 @@ FILE* abreArquivoBin(char arquivoPath[30],char* mode){
     {
         fseek(arquivoBinFP,0,SEEK_SET);
         char consistente = '0';
-        fread(consistente,1,1,arquivoBinFP);
+        fread(&consistente,1,1,arquivoBinFP);
         if (consistente == '0')
         {
             arquivoBinFP = NULL;

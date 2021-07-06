@@ -14,7 +14,7 @@
 #include "btree_algoritimos.h"
 
 
-//caso de teste prinra 3 registros hardcoded em um arquivo bin
+//caso de teste printa 3 registros hardcoded em um arquivo bin
 void caso23(char arquivoBinPath[30]){
 			
 			
@@ -42,7 +42,6 @@ void caso23(char arquivoBinPath[30]){
 			fclose(arquivoBinFP);
 }
 
-
 //caso de teste de busca de chave
 void caso24(char arquivoBinPath[30], int chaveProcurada){
 	FILE* arquivoBinFP = fopen(arquivoBinPath, "rb");
@@ -53,6 +52,42 @@ void caso24(char arquivoBinPath[30], int chaveProcurada){
 	printf("resultado da busca: %d\n",resultado);
 
 	fclose(arquivoBinFP);
+}
+
+//caso de teste de insercao
+void caso25(){
+	BTREE_REGISTRO* reg = criaRegistroBtree();
+	int res = 0;
+
+	TESTEprintRegistroBtree(reg);
+	printf("---------------------------------------------------\n");
+
+	res = insertChaveRegistroBtree(reg,1);
+	TESTEprintRegistroBtree(reg);
+	printf("res: %d\n",res);
+	printf("---------------------------------------------------\n");
+	res = insertChaveRegistroBtree(reg,4);
+	TESTEprintRegistroBtree(reg);
+	printf("res: %d\n",res);
+	printf("---------------------------------------------------\n");
+	res = insertChaveRegistroBtree(reg,2);
+	TESTEprintRegistroBtree(reg);
+	printf("res: %d\n",res);
+	printf("---------------------------------------------------\n");
+	res = insertChaveRegistroBtree(reg,3);
+	TESTEprintRegistroBtree(reg);
+	printf("res: %d\n",res);
+	printf("---------------------------------------------------\n");
+	res = insertChaveRegistroBtree(reg,5);
+	TESTEprintRegistroBtree(reg);
+	printf("res: %d\n",res);
+	printf("---------------------------------------------------\n");
+
+
+
+
+
+	freeRegistroBtree(reg);
 }
 
 //caso search btree Veiculo
@@ -101,8 +136,6 @@ void caso11(){
 	fclose(arquivoIndiceFP);
 	fclose(arquivoBinFP);
 }
-
-
 
 //caso search btree linha
 void caso12(){
@@ -390,6 +423,11 @@ int main(int argc, char const *argv[]){
 			scanf("%s", arquivoBinPath);
 			scanf("%d",&chaveBuscada);
 			caso24(arquivoBinPath,chaveBuscada);
+			break;
+
+		case 25:
+			caso25();
+			break;
 
 
 

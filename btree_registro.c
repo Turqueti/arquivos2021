@@ -108,8 +108,62 @@ int readRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree,int rnn){
 
 }
 
-int insertChaveRegistroBtree(int RNNAtual,int chave,int RNNFilhoDireitoPromo, int chavePromovida){
+int insertChaveRegistroBtree(BTREE_REGISTRO* reg,int chave){
+    
 
+    if (reg->nroChaves == grau-1)
+    {
+        return -1; //overflow de chaves
+    }
+    
+    int i = 0;
+    while (i < grau && reg->chaves[i] < chave && reg->chaves[i] != -1)
+    {
+        i++;
+    }
+    if (reg->chaves[i] != -1)
+    {
+        shiftRightVetChaves(reg,i);
+        shiftRightVetPonteirosRegistros(reg,i);
+        shiftRightVetPonteirosSubTree(reg,i);
+        
+    }
+    reg->chaves[i] = chave;
+    reg->nroChaves++;
+    return 1;
+    
+    
+}
+
+void shiftRightVetPonteirosSubTree(BTREE_REGISTRO* reg,int indexStart){
+
+    for (int i = grau-1; i > indexStart; i--)
+    {
+        reg->ponteirosSubArvores[i] = reg->ponteirosSubArvores[i-1];
+    }
+    
+
+
+}
+
+void shiftRightVetPonteirosRegistros(BTREE_REGISTRO* reg,int indexStart){
+
+    for (int i = grau-2; i > indexStart; i--)
+    {
+        reg->ponteirosRegistros[i] = reg->ponteirosRegistros[i-1];
+    }
+    
+
+
+}
+
+void shiftRightVetChaves(BTREE_REGISTRO* reg,int indexStart){
+
+    for (int i = grau-2; i > indexStart; i--)
+    {
+        reg->chaves[i] = reg->chaves[i-1];
+    }
+    
 }
 
 int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave, int* achouFlag){
