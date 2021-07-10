@@ -8,7 +8,7 @@
 
 typedef struct _btree_registro  BTREE_REGISTRO;
 
-BTREE_REGISTRO* criaRegistroBtree();
+BTREE_REGISTRO* criaRegistroBtree(int grau);
 int mudaFolhaBtree(BTREE_REGISTRO* reg,char folha);
 int setChaveBtree(BTREE_REGISTRO* reg,int indexChave, int valorChave);
 int setPonteiroSubArvoreBtree(BTREE_REGISTRO* reg,int indexPonteiroSubArvore, int valorPonteiroSubArvore);
@@ -28,5 +28,6 @@ void copyKeysAndPointersFromIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int 
 void copyKeysAndPointersUntilIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int index);
 int returnKeyAtIndex(BTREE_REGISTRO* reg, int index);
 int returnBtreeChildPointerAtIndex(BTREE_REGISTRO* reg, int index);
+int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito);
 
 #endif

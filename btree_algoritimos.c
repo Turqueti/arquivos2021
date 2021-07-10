@@ -1,5 +1,7 @@
 #include "btree_algoritimos.h"
 
+
+#define grau 5 
 //possivel struct para retorno de busca
 
 
@@ -20,7 +22,7 @@ int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag){
         readBtreeCabecalho(arquivoBtree,&cabecalho);
         search(arquivoBtree,chave,cabecalho.noRaiz,achouFlag); //chama a func para o no raiz
     }else{
-        BTREE_REGISTRO* reg = criaRegistroBtree();
+        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
         readRegistroBtree(reg,arquivoBtree,rnnPag);
         int resultadoBusca = searchChaveRegistroBtree(reg,chave,achouFlag);
         freeRegistroBtree(reg);
@@ -50,7 +52,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag,int rnnFilhoDi
         insert(arquivoBtree,chave,cabecalho.noRaiz,achouFlag,rnnFilhoDireitoPromovida,chavePromovida); //chama a func para o no raiz
     }else{
         
-        BTREE_REGISTRO* reg = criaRegistroBtree();
+        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
         readRegistroBtree(reg,arquivoBtree,rnnPag);
         int resultadoBusca = searchChaveRegistroBtree(reg,chave,achouFlag);
         freeRegistroBtree(reg);
@@ -63,7 +65,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag,int rnnFilhoDi
         }else if(*achouFlag == -1 && resultadoBusca == -1){
             // se não achou e terminou a busca, insere a chave
 
-            BTREE_REGISTRO* registroInsert = criaRegistroBtree();
+            BTREE_REGISTRO* registroInsert = criaRegistroBtree(grau);
             readRegistroBtree(registroInsert,arquivoBtree,rnnPag);
             int insert = -1;
             insert = insertChaveRegistroBtree(registroInsert,chave);
@@ -92,7 +94,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag,int rnnFilhoDi
 int split(int posicaoInsercao,int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtual,int chavePromovida,int filhoDireitoChavePromovida,BTREE_REGISTRO* novaPagina){
 
 
-    BTREE_REGISTRO* registroAux = criaRegistroBtree();
+    BTREE_REGISTRO* registroAux = criaRegistroBtree(grau);
     
     if (posicaoInsercao == 2) //se a chave fosse ser inserida no meio do registro ela eh a chave promovida
     {
@@ -125,7 +127,7 @@ int btree_insert(FILE* arquivoBtree,int chave){
         return -3; //chave encontrada
     }else
     {
-        BTREE_REGISTRO* reg = criaRegistroBtree();
+        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
         readRegistroBtree(reg,arquivoBtree,rnn);
         int insert = -1;
         insert = insertChaveRegistroBtree(reg,chave);
@@ -151,7 +153,7 @@ int btree_insert(FILE* arquivoBtree,int chave){
             }
             
             //split
-            BTREE_REGISTRO* regDireita = criaRegistroBtree();
+            BTREE_REGISTRO* regDireita = criaRegistroBtree(grau);
 
 
 

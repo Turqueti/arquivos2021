@@ -13,6 +13,8 @@
 #include "btree_registro.h"
 #include "btree_algoritimos.h"
 
+#define grau 5 
+
 
 //caso de teste printa 3 registros hardcoded em um arquivo bin
 void caso23(char arquivoBinPath[30]){
@@ -21,20 +23,20 @@ void caso23(char arquivoBinPath[30]){
 			FILE* arquivoBinFP = fopen(arquivoBinPath, "rb");
 
 
-			BTREE_REGISTRO* reg = criaRegistroBtree();
-			BTREE_REGISTRO* reg1 = criaRegistroBtree();
-			BTREE_REGISTRO* reg2 = criaRegistroBtree();
+			BTREE_REGISTRO* reg = criaRegistroBtree(grau);
+			BTREE_REGISTRO* reg1 = criaRegistroBtree(grau);
+			BTREE_REGISTRO* reg2 = criaRegistroBtree(grau);
 			readRegistroBtree(reg,arquivoBinFP,0);
 			readRegistroBtree(reg1,arquivoBinFP,1);
 			readRegistroBtree(reg2,arquivoBinFP,2);
 
 			TESTEprintRegistroBtree(reg);
 			printf("-----------------------------------------------------------------------\n");
-			TESTEprintRegistroBtree(reg1);
-			printf("-----------------------------------------------------------------------\n");
+			// TESTEprintRegistroBtree(reg1);
+			// printf("-----------------------------------------------------------------------\n");
 
-			TESTEprintRegistroBtree(reg2);
-			printf("-----------------------------------------------------------------------\n");
+			// TESTEprintRegistroBtree(reg2);
+			// printf("-----------------------------------------------------------------------\n");
 
 			freeRegistroBtree(reg);
 			freeRegistroBtree(reg1);
@@ -57,7 +59,7 @@ void caso24(char arquivoBinPath[30], int chaveProcurada){
 
 //caso de teste de insercao
 void caso25(){
-	// BTREE_REGISTRO* reg = criaRegistroBtree();
+	// BTREE_REGISTRO* reg = criaRegistroBtree(grau);
 	// int res = 0;
 
 	// TESTEprintRegistroBtree(reg);
@@ -374,9 +376,9 @@ int main(int argc, char const *argv[]){
 			cabecalhoBtree.RNNProx = 1;
 			insereBtreeCabecalho(arquivoBinFP,&cabecalhoBtree);
 			escreveLixo(arquivoBinFP,68,9);
-			BTREE_REGISTRO* reg = criaRegistroBtree();
-			BTREE_REGISTRO* reg1 = criaRegistroBtree();
-			BTREE_REGISTRO* reg2 = criaRegistroBtree();
+			BTREE_REGISTRO* reg = criaRegistroBtree(grau);
+			BTREE_REGISTRO* reg1 = criaRegistroBtree(grau);
+			BTREE_REGISTRO* reg2 = criaRegistroBtree(grau);
 
 
 			for (int i = 0; i < 5; i++)
