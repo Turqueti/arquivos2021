@@ -24,9 +24,9 @@ void caso23(char arquivoBinPath[30]){
 			BTREE_REGISTRO* reg = criaRegistroBtree();
 			BTREE_REGISTRO* reg1 = criaRegistroBtree();
 			BTREE_REGISTRO* reg2 = criaRegistroBtree();
-			readRegistroBtree(reg,arquivoBinFP,1);
-			readRegistroBtree(reg1,arquivoBinFP,2);
-			readRegistroBtree(reg2,arquivoBinFP,3);
+			readRegistroBtree(reg,arquivoBinFP,0);
+			readRegistroBtree(reg1,arquivoBinFP,1);
+			readRegistroBtree(reg2,arquivoBinFP,2);
 
 			TESTEprintRegistroBtree(reg);
 			printf("-----------------------------------------------------------------------\n");
@@ -49,6 +49,7 @@ void caso24(char arquivoBinPath[30], int chaveProcurada){
 	int achouFlag = -1;
 	int resultado = search(arquivoBinFP,chaveProcurada,-2,&achouFlag);
 
+	printf("achou flag: %d\n",achouFlag);
 	printf("resultado da busca: %d\n",resultado);
 
 	fclose(arquivoBinFP);
@@ -56,38 +57,46 @@ void caso24(char arquivoBinPath[30], int chaveProcurada){
 
 //caso de teste de insercao
 void caso25(){
-	BTREE_REGISTRO* reg = criaRegistroBtree();
-	int res = 0;
+	// BTREE_REGISTRO* reg = criaRegistroBtree();
+	// int res = 0;
 
-	TESTEprintRegistroBtree(reg);
-	printf("---------------------------------------------------\n");
+	// TESTEprintRegistroBtree(reg);
+	// printf("---------------------------------------------------\n");
 
-	res = insertChaveRegistroBtree(reg,1);
-	TESTEprintRegistroBtree(reg);
-	printf("res: %d\n",res);
-	printf("---------------------------------------------------\n");
-	res = insertChaveRegistroBtree(reg,4);
-	TESTEprintRegistroBtree(reg);
-	printf("res: %d\n",res);
-	printf("---------------------------------------------------\n");
-	res = insertChaveRegistroBtree(reg,2);
-	TESTEprintRegistroBtree(reg);
-	printf("res: %d\n",res);
-	printf("---------------------------------------------------\n");
-	res = insertChaveRegistroBtree(reg,3);
-	TESTEprintRegistroBtree(reg);
-	printf("res: %d\n",res);
-	printf("---------------------------------------------------\n");
-	res = insertChaveRegistroBtree(reg,5);
-	TESTEprintRegistroBtree(reg);
-	printf("res: %d\n",res);
-	printf("---------------------------------------------------\n");
+	// res = insertChaveRegistroBtree(reg,1);
+	// TESTEprintRegistroBtree(reg);
+	// printf("res: %d\n",res);
+	// printf("---------------------------------------------------\n");
+	// res = insertChaveRegistroBtree(reg,4);
+	// TESTEprintRegistroBtree(reg);
+	// printf("res: %d\n",res);
+	// printf("---------------------------------------------------\n");
+	// res = insertChaveRegistroBtree(reg,2);
+	// TESTEprintRegistroBtree(reg);
+	// printf("res: %d\n",res);
+	// printf("---------------------------------------------------\n");
+	// res = insertChaveRegistroBtree(reg,3);
+	// TESTEprintRegistroBtree(reg);
+	// printf("res: %d\n",res);
+	// printf("---------------------------------------------------\n");
+	// res = insertChaveRegistroBtree(reg,5);
+	// TESTEprintRegistroBtree(reg);
+	// printf("res: %d\n",res);
+	// printf("---------------------------------------------------\n");
+	// freeRegistroBtree(reg);
+
+	char arquivoIndicePath[30];
+	FILE* arquivoIndiceFP;
+	int chave;
 
 
+	
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+	scanf("%d", &chave);
+	arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+	btree_insert(arquivoIndiceFP,chave);
+	fclose(arquivoIndiceFP);
 
-
-
-	freeRegistroBtree(reg);
 }
 
 //caso search btree Veiculo
@@ -361,8 +370,8 @@ int main(int argc, char const *argv[]){
 			arquivoBinFP = fopen(arquivoBinPath, "wb");
 			BTREE_CABECALHO cabecalhoBtree = createBtreeCabecalho();
 			
-			cabecalhoBtree.noRaiz = 3;
-			cabecalhoBtree.RNNProx = 6;
+			cabecalhoBtree.noRaiz = 0;
+			cabecalhoBtree.RNNProx = 1;
 			insereBtreeCabecalho(arquivoBinFP,&cabecalhoBtree);
 			escreveLixo(arquivoBinFP,68,9);
 			BTREE_REGISTRO* reg = criaRegistroBtree();
@@ -370,32 +379,32 @@ int main(int argc, char const *argv[]){
 			BTREE_REGISTRO* reg2 = criaRegistroBtree();
 
 
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < 5; i++)
 			{
-				setChaveBtree(reg,i,i+1);
+				setChaveBtree(reg,i,(i+1)*10);
 				
 			}
-			setChaveBtree(reg1,0,4);
-			setChaveBtree(reg1,1,5);
-			setRNNdoNoBtree(reg,1);
-			setRNNdoNoBtree(reg1,2);
-			setRNNdoNoBtree(reg2,3);
+			setChaveBtree(reg1,0,40);
+			setChaveBtree(reg1,1,50);
+			setRNNdoNoBtree(reg,0);
+			setRNNdoNoBtree(reg1,1);
+			setRNNdoNoBtree(reg2,2);
 			mudaFolhaBtree(reg,'1');
 			mudaFolhaBtree(reg1,'1');
-			setnroChavesBtree(reg,2);
+			setnroChavesBtree(reg,4);
 			setnroChavesBtree(reg1,2);
 			setnroChavesBtree(reg2,1);
 
 
 
-			setChaveBtree(reg2,0,3);
-			setPonteiroSubArvoreBtree(reg2,0,1);
-			setPonteiroSubArvoreBtree(reg2,1,2);
+			setChaveBtree(reg2,0,30);
+			setPonteiroSubArvoreBtree(reg2,0,0);
+			setPonteiroSubArvoreBtree(reg2,1,1);
 			
 			
-			TESTEescreveRegistroBtree(reg,arquivoBinFP,1);
-			TESTEescreveRegistroBtree(reg1,arquivoBinFP,2);
-			TESTEescreveRegistroBtree(reg2,arquivoBinFP,3);
+			TESTEescreveRegistroBtree(reg,arquivoBinFP,0);
+			// TESTEescreveRegistroBtree(reg1,arquivoBinFP,1);
+			// TESTEescreveRegistroBtree(reg2,arquivoBinFP,2);
 
 			if (reg)
 			{

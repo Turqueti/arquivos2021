@@ -111,16 +111,19 @@ int readRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree,int rnn){
 int insertChaveRegistroBtree(BTREE_REGISTRO* reg,int chave){
     
 
-    if (reg->nroChaves == grau-1)
-    {
-        return -1; //overflow de chaves
-    }
-    
     int i = 0;
     while (i < grau && reg->chaves[i] < chave && reg->chaves[i] != -1)
     {
         i++;
     }
+
+    if (reg->nroChaves == grau-1)
+    {
+        return -i; //overflow de chaves
+    }
+    
+    
+    
     if (reg->chaves[i] != -1)
     {
         shiftRightVetChaves(reg,i);
@@ -190,7 +193,13 @@ void TESTEescreveRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree, int rnn){
 
     if (arquivoBtree)
     {
-        fseek(arquivoBtree,rnn*77,SEEK_SET);
+        if (rnn == 0)
+        {
+            fseek(arquivoBtree,77,SEEK_SET);
+        }else
+        {
+            fseek(arquivoBtree,(rnn+1)*77,SEEK_SET);
+        }
         fwrite(&reg->folha,1,1,arquivoBtree);
         fwrite(&reg->nroChaves,1,4,arquivoBtree);
         fwrite(&reg->RNNdoNO,1,4,arquivoBtree);
@@ -240,3 +249,88 @@ void TESTEprintRegistroBtree(BTREE_REGISTRO* reg){
     
 }
 
+
+/*
+    descricao:
+        Copia as chaves, filhosBtree e Ponteiros de arquivos a direita de um index de um registro src para um registro dest
+    argumentos:
+    
+    retono:
+    
+*/
+void copyKeysAndPointersFromIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int index){
+    
+
+    for (int i = index; i < grau-2; i++)
+    {
+        dest->chaves[i] = src->chaves[i];
+        dest->ponteirosRegistros[i] = src->ponteirosRegistros[i];
+        dest->ponteirosSubArvores[i] = src->ponteirosSubArvores[i];
+    }
+    dest->ponteirosSubArvores[grau-1] = src->ponteirosSubArvores[grau-1];
+    
+    
+
+}
+
+/*
+    descricao:
+        Copia as chaves, filhosBtree e Ponteiros de arquivos a esquerda de um index de um registro src para um registro dest
+    argumentos:
+    
+    retono:
+    
+*/
+void copyKeysAndPointersUntilIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int index){
+    
+
+    for (int i = 0; i < index; i++)
+    {
+        dest->chaves[i] = src->chaves[i];
+        dest->ponteirosRegistros[i] = src->ponteirosRegistros[i];
+        dest->ponteirosSubArvores[i] = src->ponteirosSubArvores[i];
+    }
+    
+    
+
+}
+
+
+int returnKeyAtIndex(BTREE_REGISTRO* reg, int index){
+    return reg->chaves[index];
+}
+
+int returnBtreeChildPointerAtIndex(BTREE_REGISTRO* reg, int index){
+    return reg->ponteirosSubArvores[index];
+}
+
+int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito){
+    
+
+    int i = 0;
+    while (i < grau && reg->chaves[i] < chave && reg->chaves[i] != -1)
+    {
+        i++;
+    }
+
+    if (reg->nroChaves == grau-1)
+    {
+        return -i; //overflow de chaves
+    }
+    
+    
+    
+    if (reg->chaves[i] != -1)
+    {
+        shiftRightVetChaves(reg,i);
+        shiftRightVetPonteirosRegistros(reg,i);
+        shiftRightVetPonteirosSubTree(reg,i);
+        
+    }
+    reg->chaves[i] = chave;
+    reg->ponteirosSubArvores[i+1] = rnnFilhoDireito;
+    reg->nroChaves++;
+    return 1;
+    
+    
+}

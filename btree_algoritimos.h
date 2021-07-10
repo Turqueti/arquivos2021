@@ -8,5 +8,6 @@
 #include "btree_registro.h"
 
 int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag);
+int btree_insert(FILE* arquivoBtree,int chave);
 
 #endif
