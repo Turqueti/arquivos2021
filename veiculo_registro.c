@@ -553,3 +553,69 @@ int registroVeiculoRemovido(VEICULO_REGISTRO *registro){
 void retornaPrefixo(VEICULO_REGISTRO *registro,char* prefix){
 	strncpy(prefix,registro->prefixo,5);
 }
+
+int retornaTamanhoRegistroVeiculo(VEICULO_REGISTRO* reg){
+	return reg->tamanhoRegistro;
+}
+
+VEICULO_REGISTRO* readRegistroVeiculoStdin(){
+	VEICULO_REGISTRO* registroRetorno = criaRegistroVeiculo();
+	
+	char prefixo[5];
+    char data[10];
+	char quantidadeLugares[5];
+	char codLinha[10];
+	char modelo[150];
+	char categoria[150];
+	
+	
+	scan_quote_string(prefixo);
+	scan_quote_string(data);
+	scan_quote_string(quantidadeLugares);
+	scan_quote_string(codLinha);
+	scan_quote_string(modelo);
+	scan_quote_string(categoria);
+
+	int tamanhoModelo = strlen(modelo);
+	int tamanhoCategoria= strlen(categoria);
+
+	registroRetorno->removido = '1';
+
+	strcpy(registroRetorno->prefixo, prefixo);
+
+	if(!strcmp(quantidadeLugares, "NULO")) registroRetorno->quantidadeLugares = -1;
+	else registroRetorno->quantidadeLugares = atoi(quantidadeLugares);	
+
+	if(!strcmp(data, "")) {
+		memset(registroRetorno->data,'\0',1);
+		memset(registroRetorno->data+1,'@',9);
+	}
+	else strncpy(registroRetorno->data, data,10);
+
+	if(!strcmp(codLinha, "NULO")) registroRetorno->codLinha = -1;
+	else registroRetorno->codLinha = atoi(codLinha);
+
+	registroRetorno->tamanhoModelo = tamanhoModelo;
+	if(!strcmp(modelo, "NULO")) {
+		strcpy(registroRetorno->modelo, "");
+		registroRetorno->tamanhoModelo = 0;
+	} else {
+		registroRetorno->modelo = (char*) malloc(sizeof(char) * tamanhoModelo);
+		strcpy(registroRetorno->modelo, modelo);
+	}
+
+	registroRetorno->tamanhoCategoria = tamanhoCategoria;
+	if(!strcmp(categoria, "NULO")) {
+		strcpy(registroRetorno->categoria, "");
+		registroRetorno->tamanhoCategoria = 0;
+	} else {
+		registroRetorno->categoria = (char*) malloc(sizeof(char) * tamanhoCategoria);
+		strcpy(registroRetorno->categoria, categoria);
+	}
+
+	registroRetorno->tamanhoRegistro = sizeof(char)*5 + sizeof(char)*10 + sizeof(int) + sizeof(int) + sizeof(int) + (sizeof(char) * registroRetorno->tamanhoModelo) + sizeof(int) + (sizeof(char) * registroRetorno->tamanhoCategoria);
+	
+	
+	return registroRetorno;
+	
+}

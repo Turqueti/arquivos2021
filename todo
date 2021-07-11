@@ -36,11 +36,11 @@ e na hora que o fclose era chamado gerava um segfault por tentar fechar um ponte
 
 PT 2:
 
-    [] cria btree do arquivo bin pronto
-        [] caso 9: cria btree de veiculo
+    [x] cria btree do arquivo bin pronto
+        [x] caso 9: cria btree de veiculo
             casos de teste:
-            [] 1.in
-            [] 2.in
+            [x] 1.in
+            [x] 2.in
         [x] caso 10: cria btree de linha
             casos de teste:
             [x] 3.in

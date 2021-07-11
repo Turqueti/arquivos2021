@@ -255,8 +255,6 @@ void caso9(){
 //caso cria btree linha
 void caso10(){
 
-	
-
 
 	char arquivoBinPath[30];
 	FILE* arquivoBinFP;
@@ -424,7 +422,129 @@ void caso12(){
 	fclose(arquivoBinFP);
 }
 
+//caso insert registro novo
+void caso13(){
+	char arquivoBinPath[30];
+	FILE* arquivoBinFP;
+	scanf("%s", arquivoBinPath);//Lendo com /0 no final
+	arquivoBinFP = abreArquivoBin(arquivoBinPath,"rb");
+	if (arquivoBinFP == NULL)
+	{
+		printf("Falha no processamento do arquivo.\n");
+		return;
+	}
 
+	char arquivoIndicePath[30];
+	FILE* arquivoIndiceFP;
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+    arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+	
+	
+	int numRegistros;
+	scanf("%d\n",&numRegistros);
+
+	int numeroNovosRegistros = numRegistros;
+
+	int proxByte;
+	int nRegistros = 0;
+
+	
+    
+    if (arquivoIndiceFP == NULL)
+    {
+        arquivoIndiceFP = fopen(arquivoIndicePath,"wb");
+        BTREE_CABECALHO cabecalhoBtree = createBtreeCabecalho();
+			
+        cabecalhoBtree.noRaiz = 0;
+        cabecalhoBtree.RNNProx = 1;
+        insereBtreeCabecalho(arquivoIndiceFP,&cabecalhoBtree);
+        escreveLixo(arquivoIndiceFP,68,9);
+        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
+		
+		
+		VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
+		insereVeiculoCabecalho(arquivoBinFP,&cabecalho);
+		
+		
+		
+		VEICULO_REGISTRO* registroTemp = readRegistroVeiculoStdin();
+		char* prefixTemp = (char*)malloc(sizeof(char)*5);
+		int chaveTemp = -1;
+
+
+		if (registroTemp != NULL)
+		{
+				retornaPrefixo(registroTemp,prefixTemp);
+				chaveTemp = convertePrefixo(prefixTemp);
+				setChaveBtree(reg,0,chaveTemp);
+				setPonteiroRegistroBtree(reg,0,ftell(arquivoBinFP));
+				setRNNdoNoBtree(reg,0);
+				mudaFolhaBtree(reg,'0');
+				TESTEescreveRegistroBtree(reg,arquivoIndiceFP,0);
+				insereRegistroVeiculo(arquivoBinFP,registroTemp);
+				int proxByteTemp = retornaTamanhoRegistroVeiculo(registroTemp)+5;
+				setByteOffsetVeiculo(arquivoBinFP, proxByteTemp);
+				setNRegistrosVeiculo(arquivoBinFP,1);
+				numRegistros--;
+			
+		}
+		
+		free(prefixTemp);
+		freeRegistroVeiculo(registroTemp);
+		
+
+    }else
+	{
+		VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
+		readVeiculoCabecalho(arquivoBinFP, &cabecalho);
+		if (!checkaIntegridade(arquivoIndiceFP))
+		{
+			printf("Falha no processamento do arquivo.\n");
+			return;
+		}
+		proxByte = cabecalho.byteProxReg;
+		numRegistros = cabecalho.nroRegistros;
+	}
+
+
+	llint ponteiroArquivoDados = ftell(arquivoBinFP);
+
+
+
+	char* prefix = (char*)malloc(sizeof(char)*5);
+	int chave = -1;
+
+
+	
+
+	while(numRegistros != 0) {
+			VEICULO_REGISTRO* registro = readRegistroVeiculoStdin();
+			if(registroVeiculoRemovido(registro)){
+				// mostrarRegistroVeiculo(arquivoIndiceFP, &registro);
+				retornaPrefixo(registro,prefix);
+				chave = convertePrefixo(prefix);
+				
+				driver_insert(arquivoIndiceFP,chave,ponteiroArquivoDados);
+				ponteiroArquivoDados = ftell(arquivoBinFP);
+				numRegistros--;
+
+				insereRegistroVeiculo(arquivoBinFP, registro);
+				proxByte = retornaTamanhoRegistroVeiculo(registro)+5;
+			}
+			freeRegistroVeiculo(registro);
+	}
+	setByteOffsetVeiculo(arquivoBinFP, proxByte);
+	setNRegistrosVeiculo(arquivoBinFP, nRegistros+numeroNovosRegistros);
+	mudaStatusCabecalhoVeiculo(arquivoBinFP, '1');
+
+
+	binarioNaTela(arquivoIndicePath);
+
+	
+	free(prefix);
+	fechaArquivoBin(arquivoIndiceFP);
+	fechaArquivoBin(arquivoBinFP);
+}
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -608,6 +728,9 @@ int main(int argc, char const *argv[]){
 		
 		case 12:
 			caso12();
+			break;
+		case 13:
+			caso13();
 			break;
 
 		
