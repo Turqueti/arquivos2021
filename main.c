@@ -101,6 +101,67 @@ void caso25(){
 
 }
 
+//caso teste split
+void caso26(){
+	// BTREE_REGISTRO* reg = criaRegistroBtree(grau);
+
+	// for (int i = 0; i < grau-1; i++)
+	// {
+	// 	setChaveBtree(reg,i,(i+1)*10);
+	// 	setPonteiroSubArvoreBtree(reg,i,i);
+		
+	// }
+	// setPonteiroSubArvoreBtree(reg,4,4);
+	// setnroChavesBtree(reg,grau-1);
+
+
+	char arquivoIndicePath[30];
+	FILE* arquivoIndiceFP;
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+	arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+
+	int chave;
+	scanf("%d", &chave);
+	
+	
+	
+	
+	int achouFlag = -1;
+	//condicao de entrada
+	BTREE_CABECALHO cabecalho;
+	readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+
+
+	int chavePromovida = -1;
+	int rnnFilhoDireitoChavePromovida = -1;
+
+	int promo = -1;
+	promo = insert(arquivoIndiceFP,chave,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida); //chama a func para o no raiz
+
+
+	if (promo == 2)
+	{
+		BTREE_REGISTRO* raizNova = criaRegistroBtree(grau);
+		readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+		setPonteiroSubArvoreBtree(raizNova,0,cabecalho.noRaiz);
+		cabecalho.noRaiz = cabecalho.RNNProx;
+		cabecalho.RNNProx++;
+		setRNNdoNoBtree(raizNova,cabecalho.noRaiz);
+		insertChaveEFilhoDireitoRegistroBtree(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida);
+
+		TESTEescreveRegistroBtree(raizNova,arquivoIndiceFP,cabecalho.noRaiz);
+		insereBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+	}
+	
+
+	fclose(arquivoIndiceFP);
+	// split(chave,-2,reg,-1,-1);
+	// freeRegistroBtree(reg);
+
+}
+
+
+
 //caso search btree Veiculo
 void caso11(){
 	char arquivoBinPath[30];
@@ -440,7 +501,9 @@ int main(int argc, char const *argv[]){
 			caso25();
 			break;
 
-
+		case 26:
+			caso26();
+			break;
 
 	}
 	return 0;

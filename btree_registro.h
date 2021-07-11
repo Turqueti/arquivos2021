@@ -24,10 +24,12 @@ void shiftRightVetChaves(BTREE_REGISTRO* reg,int indexStart);
 int searchChaveRegistroBtree(BTREE_REGISTRO* reg, int chave, int* achouFlag);
 void TESTEescreveRegistroBtree(BTREE_REGISTRO* reg,FILE* arquivoBtree, int rnn);
 void TESTEprintRegistroBtree(BTREE_REGISTRO* reg);
-void copyKeysAndPointersFromIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int index);
+void copyKeysAndPointersFromIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int indexStart,int indexFinsh);
 void copyKeysAndPointersUntilIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int index);
 int returnKeyAtIndex(BTREE_REGISTRO* reg, int index);
 int returnBtreeChildPointerAtIndex(BTREE_REGISTRO* reg, int index);
 int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito);
+void deleteKeysFromIndex(BTREE_REGISTRO* reg,int index);
+void deleteBtreePointersFromIndex(BTREE_REGISTRO* reg,int index);
 
 #endif
