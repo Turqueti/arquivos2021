@@ -96,7 +96,7 @@ void caso25(){
 	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
 	scanf("%d", &chave);
 	arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
-	btree_insert(arquivoIndiceFP,chave);
+	// btree_insert(arquivoIndiceFP,chave);
 	fclose(arquivoIndiceFP);
 
 }
@@ -120,40 +120,48 @@ void caso26(){
 	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
 	arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
 
-	int chave;
-	scanf("%d", &chave);
-	
-	
-	
-	
-	int achouFlag = -1;
-	//condicao de entrada
-	BTREE_CABECALHO cabecalho;
-	readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+
+	int numChaves;
+	scanf("%d",&numChaves);
 
 
-	int chavePromovida = -1;
-	int rnnFilhoDireitoChavePromovida = -1;
-
-	int promo = -1;
-	promo = insert(arquivoIndiceFP,chave,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida); //chama a func para o no raiz
-
-
-	if (promo == 2)
+	for (int i = 0; i < numChaves; i++)
 	{
-		BTREE_REGISTRO* raizNova = criaRegistroBtree(grau);
+		int chave;
+		scanf("%d\n", &chave);
+		
+		
+		
+		
+		int achouFlag = -1;
+		//condicao de entrada
+		BTREE_CABECALHO cabecalho;
 		readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
-		setPonteiroSubArvoreBtree(raizNova,0,cabecalho.noRaiz);
-		cabecalho.noRaiz = cabecalho.RNNProx;
-		cabecalho.RNNProx++;
-		setRNNdoNoBtree(raizNova,cabecalho.noRaiz);
-		insertChaveEFilhoDireitoRegistroBtree(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida);
 
-		TESTEescreveRegistroBtree(raizNova,arquivoIndiceFP,cabecalho.noRaiz);
-		insereBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+
+		int chavePromovida = -1;
+		int rnnFilhoDireitoChavePromovida = -1;
+
+		int promo = -1;
+		promo = insert(arquivoIndiceFP,chave,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida); //chama a func para o no raiz
+
+
+		if (promo == 2)
+		{
+			BTREE_REGISTRO* raizNova = criaRegistroBtree(grau);
+			readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+			setPonteiroSubArvoreBtree(raizNova,0,cabecalho.noRaiz);
+			cabecalho.noRaiz = cabecalho.RNNProx;
+			cabecalho.RNNProx++;
+			setRNNdoNoBtree(raizNova,cabecalho.noRaiz);
+			insertChaveEFilhoDireitoRegistroBtree(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida);
+
+			TESTEescreveRegistroBtree(raizNova,arquivoIndiceFP,cabecalho.noRaiz);
+			insereBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+			fflush(arquivoIndiceFP);
+		}
 	}
 	
-
 	fclose(arquivoIndiceFP);
 	// split(chave,-2,reg,-1,-1);
 	// freeRegistroBtree(reg);

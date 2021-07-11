@@ -55,8 +55,7 @@ int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag){
 
 int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnFilhoDireitoPromovida, int *chavePromovida){
     int valorRetorno = -1;
-    int chavePromovidaNivelAnterior = -1;
-    int RNNpromovidoNivelAnterior = -1;
+
 
     if (rnnPagAtual == -1)
     {
@@ -84,7 +83,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnF
         }else
         {
             int insert = -1;
-            insert = insertChaveRegistroBtree(reg,chave);
+            insert = insertChaveEFilhoDireitoRegistroBtree(reg,*chavePromovida,*rnnFilhoDireitoPromovida);
         
             if (insert == 1) //achou espaco no registro e colocou a chave
             {
@@ -95,7 +94,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnF
             }else{
                 BTREE_REGISTRO* novoRegistro = criaRegistroBtree(grau);
 
-                split(chavePromovidaNivelAnterior,RNNpromovidoNivelAnterior,reg,chavePromovida,rnnFilhoDireitoPromovida,novoRegistro);
+                split(*chavePromovida,*rnnFilhoDireitoPromovida,reg,chavePromovida,rnnFilhoDireitoPromovida,novoRegistro);
                 BTREE_CABECALHO cabecalho;
                 readBtreeCabecalho(arquivoBtree,&cabecalho);
 
@@ -134,8 +133,8 @@ int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtua
     // printf("copia no regtrabalho:\n");
     // TESTEprintRegistroBtree(registroTrabalho);
     insertChaveEFilhoDireitoRegistroBtree(registroTrabalho,chave,filhoDireitoChaveInserida);
-    // printf("inserida a chave no regtrabalho:\n");
-    // TESTEprintRegistroBtree(registroTrabalho);
+    printf("inserida a chave no regtrabalho:\n");
+    TESTEprintRegistroBtree(registroTrabalho);
 
 
     
@@ -157,7 +156,7 @@ int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtua
     // printf("\nNOVO ATUAL:\n");
     // TESTEprintRegistroBtree(registroAtual);
     
-    *chavePromovida = returnKeyAtIndex(registroTrabalho,3);
+    *chavePromovida = returnKeyAtIndex(registroTrabalho,2);
     
     freeRegistroBtree(registroTrabalho);
 }
