@@ -501,11 +501,11 @@ void caso13(){
 			return;
 		}
 		proxByte = cabecalho.byteProxReg;
-		numRegistros = cabecalho.nroRegistros;
+		nRegistros = cabecalho.nroRegistros;
 	}
 
 
-	llint ponteiroArquivoDados = ftell(arquivoBinFP);
+	llint ponteiroArquivoDados = (llint)proxByte;
 
 
 
@@ -518,16 +518,16 @@ void caso13(){
 	while(numRegistros != 0) {
 			VEICULO_REGISTRO* registro = readRegistroVeiculoStdin();
 			if(registroVeiculoRemovido(registro)){
-				// mostrarRegistroVeiculo(arquivoIndiceFP, &registro);
+				// mostrarRegistroVeiculo(arquivoIndiceFP, registro);
 				retornaPrefixo(registro,prefix);
 				chave = convertePrefixo(prefix);
 				
 				driver_insert(arquivoIndiceFP,chave,ponteiroArquivoDados);
-				ponteiroArquivoDados = ftell(arquivoBinFP);
+				ponteiroArquivoDados += retornaTamanhoRegistroVeiculo(registro)+5;
 				numRegistros--;
 
 				insereRegistroVeiculo(arquivoBinFP, registro);
-				proxByte = retornaTamanhoRegistroVeiculo(registro)+5;
+				proxByte += retornaTamanhoRegistroVeiculo(registro)+5;
 			}
 			freeRegistroVeiculo(registro);
 	}
@@ -536,12 +536,14 @@ void caso13(){
 	mudaStatusCabecalhoVeiculo(arquivoBinFP, '1');
 
 
-	binarioNaTela(arquivoIndicePath);
+	
 
 	
 	free(prefix);
 	fechaArquivoBin(arquivoIndiceFP);
 	fechaArquivoBin(arquivoBinFP);
+
+	binarioNaTela(arquivoIndicePath);
 }
 
 int main(int argc, char const *argv[]){
