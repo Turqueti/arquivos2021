@@ -45,11 +45,12 @@ PT 2:
             casos de teste:
             [x] 3.in
             [x] 4.in
-    [] busca btree
-        [] caso 11: busca btree de veiculo por prefixo
+    [x] busca btree
+        [x] caso 11: busca btree de veiculo por prefixo
             casos de teste:
-            [] 5.in erro no processamento do arquivo precisa ser jogado na abertura
+            [x] 5.in erro no processamento do arquivo precisa ser jogado na abertura
             [x] 6.in
+            [] fix arquivos
         [x] caso 12: busca btree de linha por codLinha
             casos de teste:
             [x] 7.in

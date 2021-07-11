@@ -251,7 +251,6 @@ void caso9(){
 	fechaArquivoBin(arquivoBinFP);
 }
 
-
 //caso cria btree linha
 void caso10(){
 
@@ -355,11 +354,10 @@ void caso11(){
 	scanf("%s", prefixoPadding);//Lendo com /0 no final
 	
 	char prefixo[5] = "\0";
-	scanf("%s", prefixo);
+	scan_quote_string(prefixo);
 
 	int chaveProcurada = -1;
 	chaveProcurada = convertePrefixo(prefixo);
-	
 	
 
 	int achouFlag = -1;
