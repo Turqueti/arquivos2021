@@ -56,10 +56,10 @@ PT 2:
             [x] 7.in
             [x] 8.in
     [] insere btree e bin
-        [] caso 13: insere btree de veiculo por prefixo
+        [x] caso 13: insere btree de veiculo por prefixo
             casos de teste:
-            [] 9.in
-            [] 10.in
+            [x] 9.in
+            [x] 10.in
         [] caso 14: insere btree de linha por codLinha
             casos de teste:
             [] 11.in

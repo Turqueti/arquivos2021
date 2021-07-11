@@ -435,7 +435,11 @@ void caso13(){
 	char arquivoIndicePath[30];
 	FILE* arquivoIndiceFP;
 	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
-    arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+    arquivoIndiceFP = abreArquivoBin(arquivoIndicePath,"r+b");
+	if (arquivoIndiceFP == NULL){
+		printf("Falha no processamento do arquivo.\n");
+		return;
+	}
 	
 	
 	int numRegistros;
@@ -445,64 +449,11 @@ void caso13(){
 
 	int proxByte;
 	int nRegistros = 0;
-
-	
     
-    if (arquivoIndiceFP == NULL)
-    {
-        arquivoIndiceFP = fopen(arquivoIndicePath,"wb");
-        BTREE_CABECALHO cabecalhoBtree = createBtreeCabecalho();
-			
-        cabecalhoBtree.noRaiz = 0;
-        cabecalhoBtree.RNNProx = 1;
-        insereBtreeCabecalho(arquivoIndiceFP,&cabecalhoBtree);
-        escreveLixo(arquivoIndiceFP,68,9);
-        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
-		
-		
-		VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
-		insereVeiculoCabecalho(arquivoBinFP,&cabecalho);
-		
-		
-		
-		VEICULO_REGISTRO* registroTemp = readRegistroVeiculoStdin();
-		char* prefixTemp = (char*)malloc(sizeof(char)*5);
-		int chaveTemp = -1;
-
-
-		if (registroTemp != NULL)
-		{
-				retornaPrefixo(registroTemp,prefixTemp);
-				chaveTemp = convertePrefixo(prefixTemp);
-				setChaveBtree(reg,0,chaveTemp);
-				setPonteiroRegistroBtree(reg,0,ftell(arquivoBinFP));
-				setRNNdoNoBtree(reg,0);
-				mudaFolhaBtree(reg,'0');
-				TESTEescreveRegistroBtree(reg,arquivoIndiceFP,0);
-				insereRegistroVeiculo(arquivoBinFP,registroTemp);
-				int proxByteTemp = retornaTamanhoRegistroVeiculo(registroTemp)+5;
-				setByteOffsetVeiculo(arquivoBinFP, proxByteTemp);
-				setNRegistrosVeiculo(arquivoBinFP,1);
-				numRegistros--;
-			
-		}
-		
-		free(prefixTemp);
-		freeRegistroVeiculo(registroTemp);
-		
-
-    }else
-	{
-		VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
-		readVeiculoCabecalho(arquivoBinFP, &cabecalho);
-		if (!checkaIntegridade(arquivoIndiceFP))
-		{
-			printf("Falha no processamento do arquivo.\n");
-			return;
-		}
-		proxByte = cabecalho.byteProxReg;
-		nRegistros = cabecalho.nroRegistros;
-	}
+	VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
+	readVeiculoCabecalho(arquivoBinFP, &cabecalho);
+	proxByte = cabecalho.byteProxReg;
+	nRegistros = cabecalho.nroRegistros;
 
 
 	llint ponteiroArquivoDados = (llint)proxByte;
