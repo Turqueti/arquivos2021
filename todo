@@ -41,10 +41,10 @@ PT 2:
             casos de teste:
             [] 1.in
             [] 2.in
-        [] caso 10: cria btree de linha
+        [x] caso 10: cria btree de linha
             casos de teste:
-            [] 3.in
-            [] 4.in
+            [x] 3.in
+            [x] 4.in
     [] busca btree
         [] caso 11: busca btree de veiculo por prefixo
             casos de teste:

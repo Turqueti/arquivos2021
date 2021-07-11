@@ -10,6 +10,6 @@
 int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag);
 int insert(FILE* arquivoBtree,int chave,llint ponteiroArquivoDados,int rnnPagAtual,int* achouFlag,int *rnnFilhoDireitoPromovida, int *chavePromovida,llint *ponteiroArqDadosPromovida);
 int split(int chave, int filhoDireitoChaveInserida,llint ponteiroArquivoDeDadosChaveInserida, BTREE_REGISTRO* registroAtual,int *chavePromovida,int *filhoDireitoChavePromovida,llint *ponteiroArquivoDeDadosChavePromovida,BTREE_REGISTRO* novoRegistro);
-int driver_insert();
+int driver_insert(FILE* arquivoIndiceFP, int chave,llint ponteiro );
 
 #endif

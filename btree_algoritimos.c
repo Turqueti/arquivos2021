@@ -72,7 +72,7 @@ int insert(FILE* arquivoBtree,int chave,llint ponteiroArquivoDados,int rnnPagAtu
         
 
         if(*achouFlag == 1){
-            printf("chave encontrada!!!!\n");
+            // printf("chave encontrada!!!!\n");
             return -3; //chave encontrada
         }
         
@@ -102,7 +102,7 @@ int insert(FILE* arquivoBtree,int chave,llint ponteiroArquivoDados,int rnnPagAtu
                 TESTEescreveRegistroBtree(reg,arquivoBtree,rnnPagAtual);
 
                 setRNNdoNoBtree(novoRegistro,cabecalho.RNNProx);
-                mudaFolhaBtree(novoRegistro,'1');
+                mudaFolhaBtree(novoRegistro,returnFolha(reg));
                 TESTEescreveRegistroBtree(novoRegistro,arquivoBtree,cabecalho.RNNProx);
                 
                 *rnnFilhoDireitoPromovida = cabecalho.RNNProx;
@@ -134,8 +134,8 @@ int split(int chave, int filhoDireitoChaveInserida,llint ponteiroArquivoDeDadosC
     // printf("copia no regtrabalho:\n");
     // TESTEprintRegistroBtree(registroTrabalho);
     insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(registroTrabalho,chave,filhoDireitoChaveInserida,ponteiroArquivoDeDadosChaveInserida);
-    printf("inserida a chave no regtrabalho:\n");
-    TESTEprintRegistroBtree(registroTrabalho);
+    // printf("inserida a chave no regtrabalho:\n");
+    // TESTEprintRegistroBtree(registroTrabalho);
 
 
     
@@ -163,6 +163,38 @@ int split(int chave, int filhoDireitoChaveInserida,llint ponteiroArquivoDeDadosC
     freeRegistroBtree(registroTrabalho);
 }
 
-int driver_insert(){
+int driver_insert(FILE* arquivoIndiceFP, int chave,llint ponteiro ){
+    
+    
+    
+    
+    
+    
+    //condicao de entrada
+    BTREE_CABECALHO cabecalho;
+    readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
 
+    int achouFlag = -1;
+    int chavePromovida = -1;
+    int rnnFilhoDireitoChavePromovida = -1;
+    llint ponteiroChvePromovida = -1;
+
+    int promo = -1;
+    promo = insert(arquivoIndiceFP,chave,ponteiro,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida,&ponteiroChvePromovida); //chama a func para o no raiz
+
+
+    if (promo == 2)
+    {
+        BTREE_REGISTRO* raizNova = criaRegistroBtree(grau);
+        readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+        setPonteiroSubArvoreBtree(raizNova,0,cabecalho.noRaiz);
+        cabecalho.noRaiz = cabecalho.RNNProx;
+        cabecalho.RNNProx++;
+        setRNNdoNoBtree(raizNova,cabecalho.noRaiz);
+        insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida,ponteiroChvePromovida);
+
+        TESTEescreveRegistroBtree(raizNova,arquivoIndiceFP,cabecalho.noRaiz);
+        insereBtreeCabecalho(arquivoIndiceFP,&cabecalho);
+        fflush(arquivoIndiceFP);
+    }
 }

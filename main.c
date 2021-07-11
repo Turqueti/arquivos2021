@@ -12,6 +12,7 @@
 #include "btree_cabecalho.h"
 #include "btree_registro.h"
 #include "btree_algoritimos.h"
+#include "boilerPlates.h"
 
 #define grau 5 
 
@@ -96,6 +97,10 @@ void caso25(){
 	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
 	scanf("%d", &chave);
 	arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+	printf("ponteiro: %p\n",arquivoIndiceFP);
+	// fseek(arquivoIndiceFP,150,SEEK_SET);
+	// llint ponteiro = (llint)ftell(arquivoIndiceFP);
+	// printf("%lld",ponteiro);
 	// btree_insert(arquivoIndiceFP,chave);
 	fclose(arquivoIndiceFP);
 
@@ -131,38 +136,12 @@ void caso26(){
 		scanf("%d\n", &chave);
 		llint ponteiro;
 		scanf("%lld\n",&ponteiro);
+		driver_insert(arquivoIndiceFP,chave,ponteiro);
 		
 		
 		
 		
-		int achouFlag = -1;
-		//condicao de entrada
-		BTREE_CABECALHO cabecalho;
-		readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
-
-
-		int chavePromovida = -1;
-		int rnnFilhoDireitoChavePromovida = -1;
-		llint ponteiroChvePromovida = -1;
-
-		int promo = -1;
-		promo = insert(arquivoIndiceFP,chave,ponteiro,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida,&ponteiroChvePromovida); //chama a func para o no raiz
-
-
-		if (promo == 2)
-		{
-			BTREE_REGISTRO* raizNova = criaRegistroBtree(grau);
-			readBtreeCabecalho(arquivoIndiceFP,&cabecalho);
-			setPonteiroSubArvoreBtree(raizNova,0,cabecalho.noRaiz);
-			cabecalho.noRaiz = cabecalho.RNNProx;
-			cabecalho.RNNProx++;
-			setRNNdoNoBtree(raizNova,cabecalho.noRaiz);
-			insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida,ponteiroChvePromovida);
-
-			TESTEescreveRegistroBtree(raizNova,arquivoIndiceFP,cabecalho.noRaiz);
-			insereBtreeCabecalho(arquivoIndiceFP,&cabecalho);
-			fflush(arquivoIndiceFP);
-		}
+		
 	}
 	
 	fclose(arquivoIndiceFP);
@@ -171,7 +150,89 @@ void caso26(){
 
 }
 
+//caso cria btree linha
+void caso10(){
 
+	
+
+
+	char arquivoBinPath[30];
+	FILE* arquivoBinFP;
+	scanf("%s", arquivoBinPath);//Lendo com /0 no final
+	arquivoBinFP = abreArquivoBin(arquivoBinPath,"rb");
+	if (arquivoBinFP == NULL)
+	{
+		printf("Falha no processamento do arquivo.\n");
+		return;
+	}
+	
+
+	char arquivoIndicePath[30];
+	FILE* arquivoIndiceFP;
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+
+    arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+	
+	
+	
+    
+    if (arquivoIndiceFP == NULL)
+    {
+        arquivoIndiceFP = fopen(arquivoIndicePath,"wb");
+        BTREE_CABECALHO cabecalhoBtree = createBtreeCabecalho();
+			
+        cabecalhoBtree.noRaiz = 0;
+        cabecalhoBtree.RNNProx = 1;
+        insereBtreeCabecalho(arquivoIndiceFP,&cabecalhoBtree);
+        escreveLixo(arquivoIndiceFP,68,9);
+        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
+		LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+		readLinhaCabecalho(arquivoBinFP, &cabecalho);
+		LINHA_REGISTRO registro;
+		if (readRegistroLinha(arquivoBinFP, &registro) != 0)
+		{
+				setChaveBtree(reg,0,registro.codLinha);
+				setPonteiroRegistroBtree(reg,0,ftell(arquivoBinFP));
+				setRNNdoNoBtree(reg,0);
+				mudaFolhaBtree(reg,'0');
+				TESTEescreveRegistroBtree(reg,arquivoIndiceFP,0);
+			
+		}
+		
+
+		
+
+    }else
+	{
+		LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+		readLinhaCabecalho(arquivoBinFP, &cabecalho);
+		if (!checkaIntegridade(arquivoIndiceFP))
+		{
+			printf("Falha no processamento do arquivo.\n");
+			return;
+		}
+	}	
+	
+	LINHA_REGISTRO registro;
+
+	int n = 0;
+	llint ponteiroArquivoDados = ftell(arquivoBinFP);
+
+	while(readRegistroLinha(arquivoBinFP, &registro) != 0) {
+			if(registro.removido == '1'){
+				// mostrarRegistroLinha(arquivoBinFP, &registro);
+				driver_insert(arquivoIndiceFP,registro.codLinha,ponteiroArquivoDados);
+				ponteiroArquivoDados = ftell(arquivoBinFP);
+				n++;
+			}
+	}
+
+
+	binarioNaTela(arquivoIndicePath);
+
+	fechaArquivoBin(arquivoIndiceFP);
+	fechaArquivoBin(arquivoBinFP);
+}
 
 //caso search btree Veiculo
 void caso11(){
@@ -260,6 +321,8 @@ void caso12(){
 	fclose(arquivoIndiceFP);
 	fclose(arquivoBinFP);
 }
+
+
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -429,6 +492,10 @@ int main(int argc, char const *argv[]){
 				fclose(arquivoBinFP);
 			}
 			break;
+		case 10:
+			caso10();
+		break;
+
 		case 11:
 			caso11();
 			break;

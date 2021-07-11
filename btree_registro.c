@@ -318,6 +318,11 @@ int returnDataPointerAtIndex(BTREE_REGISTRO* reg, int index){
     return reg->ponteirosRegistros[index];
 }
 
+char returnFolha(BTREE_REGISTRO* reg){
+    return reg->folha;
+}
+
+
 int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito){
     
 

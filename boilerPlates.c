@@ -27,6 +27,24 @@ FILE* abreArquivoBin(char arquivoPath[30],char* mode){
     return arquivoBinFP;
 }
 
+int checkaIntegridade(FILE* arquivoBinFP){
+    fseek(arquivoBinFP,0,SEEK_SET);
+    char consistente = '0';
+    fread(&consistente,1,1,arquivoBinFP);
+    if (consistente == '0')
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
+    
+
+}
+
+
+
 /*
     descricao:
         verifica se o ponteiro arquivo existe e fecha
