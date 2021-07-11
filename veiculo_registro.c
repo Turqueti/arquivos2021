@@ -533,3 +533,23 @@ int readRegistroVeiculoByteOffSet(FILE *arquivoBin, VEICULO_REGISTRO *registro,i
 	return 1;
 }
 
+
+/*
+	descricao:
+		ve se o registro esta removido
+	argumentos:
+		[in]VEICULO_REGISTRO *registro 
+	retono:
+		se estiver removido retorna 0 caso contrario retorna 1
+*/
+int registroVeiculoRemovido(VEICULO_REGISTRO *registro){
+	if (registro->removido == '1')
+	{
+		return 1;
+	}
+	return 0;
+}
+
+void retornaPrefixo(VEICULO_REGISTRO *registro,char* prefix){
+	strncpy(prefix,registro->prefixo,5);
+}

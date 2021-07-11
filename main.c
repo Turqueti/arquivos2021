@@ -150,6 +150,108 @@ void caso26(){
 
 }
 
+//caso cria btree veiculo
+void caso9(){
+	char arquivoBinPath[30];
+	FILE* arquivoBinFP;
+	scanf("%s", arquivoBinPath);//Lendo com /0 no final
+	arquivoBinFP = abreArquivoBin(arquivoBinPath,"rb");
+	if (arquivoBinFP == NULL)
+	{
+		printf("Falha no processamento do arquivo.\n");
+		return;
+	}
+	
+
+	char arquivoIndicePath[30];
+	FILE* arquivoIndiceFP;
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+
+    arquivoIndiceFP = fopen(arquivoIndicePath,"r+b");
+	
+	
+	
+    
+    if (arquivoIndiceFP == NULL)
+    {
+        arquivoIndiceFP = fopen(arquivoIndicePath,"wb");
+        BTREE_CABECALHO cabecalhoBtree = createBtreeCabecalho();
+			
+        cabecalhoBtree.noRaiz = 0;
+        cabecalhoBtree.RNNProx = 1;
+        insereBtreeCabecalho(arquivoIndiceFP,&cabecalhoBtree);
+        escreveLixo(arquivoIndiceFP,68,9);
+        BTREE_REGISTRO* reg = criaRegistroBtree(grau);
+		
+		
+		VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
+		readVeiculoCabecalho(arquivoBinFP, &cabecalho);
+		
+		
+		
+		VEICULO_REGISTRO* registroTemp = criaRegistroVeiculo();
+		char* prefixTemp = (char*)malloc(sizeof(char)*5);
+		int chaveTemp = -1;
+
+
+		if (readRegistroVeiculo(arquivoBinFP, registroTemp) != 0)
+		{
+				retornaPrefixo(registroTemp,prefixTemp);
+				chaveTemp = convertePrefixo(prefixTemp);
+				setChaveBtree(reg,0,chaveTemp);
+				setPonteiroRegistroBtree(reg,0,ftell(arquivoBinFP));
+				setRNNdoNoBtree(reg,0);
+				mudaFolhaBtree(reg,'0');
+				TESTEescreveRegistroBtree(reg,arquivoIndiceFP,0);
+			
+		}
+		
+		free(prefixTemp);
+		freeRegistroVeiculo(registroTemp);
+		
+
+    }else
+	{
+		VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
+		readVeiculoCabecalho(arquivoBinFP, &cabecalho);
+		if (!checkaIntegridade(arquivoIndiceFP))
+		{
+			printf("Falha no processamento do arquivo.\n");
+			return;
+		}
+	}	
+	
+
+	int n = 0;
+	llint ponteiroArquivoDados = ftell(arquivoBinFP);
+
+
+	VEICULO_REGISTRO* registro = criaRegistroVeiculo();
+	char* prefix = (char*)malloc(sizeof(char)*5);
+	int chave = -1;
+
+	while(readRegistroVeiculo(arquivoBinFP, registro) != 0) {
+			if(registroVeiculoRemovido(registro)){
+				// mostrarRegistroVeiculo(arquivoIndiceFP, &registro);
+				retornaPrefixo(registro,prefix);
+				chave = convertePrefixo(prefix);
+				driver_insert(arquivoIndiceFP,chave,ponteiroArquivoDados);
+				ponteiroArquivoDados = ftell(arquivoBinFP);
+				n++;
+			}
+	}
+
+
+
+	binarioNaTela(arquivoIndicePath);
+
+	freeRegistroVeiculo(registro);
+	free(prefix);
+	fechaArquivoBin(arquivoIndiceFP);
+	fechaArquivoBin(arquivoBinFP);
+}
+
+
 //caso cria btree linha
 void caso10(){
 
@@ -492,6 +594,10 @@ int main(int argc, char const *argv[]){
 				fclose(arquivoBinFP);
 			}
 			break;
+
+		case 9:
+			caso9();
+		break;
 		case 10:
 			caso10();
 		break;

@@ -19,5 +19,7 @@ int buscaParametroVeiculo(FILE *arquivoBin);
 int insereNRegistrosVeiculo(FILE *arquivoBin, int numeroNovosRegistros);
 int insereNRegistrosVeiculoMatriz(FILE *arquivoBin, MATRIZ* matrix);
 int readRegistroVeiculoByteOffSet(FILE *arquivoBin, VEICULO_REGISTRO *registro,int byteOffSet);
+int registroVeiculoRemovido(VEICULO_REGISTRO *registro);
+void retornaPrefixo(VEICULO_REGISTRO *registro,char* prefix);
 
 #endif
