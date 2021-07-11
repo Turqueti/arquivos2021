@@ -129,6 +129,8 @@ void caso26(){
 	{
 		int chave;
 		scanf("%d\n", &chave);
+		llint ponteiro;
+		scanf("%lld\n",&ponteiro);
 		
 		
 		
@@ -141,9 +143,10 @@ void caso26(){
 
 		int chavePromovida = -1;
 		int rnnFilhoDireitoChavePromovida = -1;
+		llint ponteiroChvePromovida = -1;
 
 		int promo = -1;
-		promo = insert(arquivoIndiceFP,chave,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida); //chama a func para o no raiz
+		promo = insert(arquivoIndiceFP,chave,ponteiro,cabecalho.noRaiz,&achouFlag,&rnnFilhoDireitoChavePromovida,&chavePromovida,&ponteiroChvePromovida); //chama a func para o no raiz
 
 
 		if (promo == 2)
@@ -154,7 +157,7 @@ void caso26(){
 			cabecalho.noRaiz = cabecalho.RNNProx;
 			cabecalho.RNNProx++;
 			setRNNdoNoBtree(raizNova,cabecalho.noRaiz);
-			insertChaveEFilhoDireitoRegistroBtree(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida);
+			insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(raizNova,chavePromovida,rnnFilhoDireitoChavePromovida,ponteiroChvePromovida);
 
 			TESTEescreveRegistroBtree(raizNova,arquivoIndiceFP,cabecalho.noRaiz);
 			insereBtreeCabecalho(arquivoIndiceFP,&cabecalho);
@@ -453,6 +456,7 @@ int main(int argc, char const *argv[]){
 			for (int i = 0; i < 5; i++)
 			{
 				setChaveBtree(reg,i,(i+1)*10);
+				setPonteiroRegistroBtree(reg,i,(llint)(i+1)*1000);
 				
 			}
 			setChaveBtree(reg1,0,40);

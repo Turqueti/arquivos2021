@@ -28,8 +28,10 @@ void copyKeysAndPointersFromIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int 
 void copyKeysAndPointersUntilIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int index);
 int returnKeyAtIndex(BTREE_REGISTRO* reg, int index);
 int returnBtreeChildPointerAtIndex(BTREE_REGISTRO* reg, int index);
+int returnDataPointerAtIndex(BTREE_REGISTRO* reg, int index);
 int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito);
 void deleteKeysFromIndex(BTREE_REGISTRO* reg,int index);
 void deleteBtreePointersFromIndex(BTREE_REGISTRO* reg,int index);
+int insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito,llint ponteiroArquivoDados);
 
 #endif

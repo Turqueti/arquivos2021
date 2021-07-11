@@ -53,13 +53,14 @@ int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag){
 */
 
 
-int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnFilhoDireitoPromovida, int *chavePromovida){
+int insert(FILE* arquivoBtree,int chave,llint ponteiroArquivoDados,int rnnPagAtual,int* achouFlag,int *rnnFilhoDireitoPromovida, int *chavePromovida,llint *ponteiroArqDadosPromovida){
     int valorRetorno = -1;
 
 
     if (rnnPagAtual == -1)
     {
         *chavePromovida = chave;
+        *ponteiroArqDadosPromovida = ponteiroArquivoDados;
         *rnnFilhoDireitoPromovida = -1;
         return 2;
     }else
@@ -75,7 +76,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnF
             return -3; //chave encontrada
         }
         
-        valorRetorno = insert(arquivoBtree,chave,resultadoBusca,achouFlag,rnnFilhoDireitoPromovida,chavePromovida); //caso a busca ainda não tenha terminado e não achou, vai para o prox ponteiro
+        valorRetorno = insert(arquivoBtree,chave,ponteiroArquivoDados,resultadoBusca,achouFlag,rnnFilhoDireitoPromovida,chavePromovida,ponteiroArqDadosPromovida); //caso a busca ainda não tenha terminado e não achou, vai para o prox ponteiro
         
         if (valorRetorno == 1 || valorRetorno == -3)
         {
@@ -83,7 +84,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnF
         }else
         {
             int insert = -1;
-            insert = insertChaveEFilhoDireitoRegistroBtree(reg,*chavePromovida,*rnnFilhoDireitoPromovida);
+            insert = insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(reg,*chavePromovida,*rnnFilhoDireitoPromovida,*ponteiroArqDadosPromovida);
         
             if (insert == 1) //achou espaco no registro e colocou a chave
             {
@@ -94,7 +95,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnF
             }else{
                 BTREE_REGISTRO* novoRegistro = criaRegistroBtree(grau);
 
-                split(*chavePromovida,*rnnFilhoDireitoPromovida,reg,chavePromovida,rnnFilhoDireitoPromovida,novoRegistro);
+                split(*chavePromovida,*rnnFilhoDireitoPromovida,*ponteiroArqDadosPromovida, reg,chavePromovida,rnnFilhoDireitoPromovida,ponteiroArqDadosPromovida,novoRegistro);
                 BTREE_CABECALHO cabecalho;
                 readBtreeCabecalho(arquivoBtree,&cabecalho);
 
@@ -122,7 +123,7 @@ int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnF
 }
 
 
-int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtual,int *chavePromovida,int *filhoDireitoChavePromovida,BTREE_REGISTRO* novoRegistro){
+int split(int chave, int filhoDireitoChaveInserida,llint ponteiroArquivoDeDadosChaveInserida, BTREE_REGISTRO* registroAtual,int *chavePromovida,int *filhoDireitoChavePromovida,llint *ponteiroArquivoDeDadosChavePromovida,BTREE_REGISTRO* novoRegistro){
 
 
     BTREE_REGISTRO* registroTrabalho = criaRegistroBtree(grau+1);
@@ -132,7 +133,7 @@ int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtua
     
     // printf("copia no regtrabalho:\n");
     // TESTEprintRegistroBtree(registroTrabalho);
-    insertChaveEFilhoDireitoRegistroBtree(registroTrabalho,chave,filhoDireitoChaveInserida);
+    insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(registroTrabalho,chave,filhoDireitoChaveInserida,ponteiroArquivoDeDadosChaveInserida);
     printf("inserida a chave no regtrabalho:\n");
     TESTEprintRegistroBtree(registroTrabalho);
 
@@ -143,7 +144,7 @@ int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtua
     setPonteiroSubArvoreBtree(novoRegistro,0,returnBtreeChildPointerAtIndex(registroTrabalho,3));
     for (int i = 3; i < grau; i++)
     {
-        insertChaveEFilhoDireitoRegistroBtree(novoRegistro,returnKeyAtIndex(registroTrabalho,i),returnBtreeChildPointerAtIndex(registroTrabalho,i+1));
+        insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(novoRegistro,returnKeyAtIndex(registroTrabalho,i),returnBtreeChildPointerAtIndex(registroTrabalho,i+1),returnDataPointerAtIndex(registroTrabalho,i));
     }
 
     // printf("\nNOVO REGISTRO:\n");
@@ -157,6 +158,7 @@ int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtua
     // TESTEprintRegistroBtree(registroAtual);
     
     *chavePromovida = returnKeyAtIndex(registroTrabalho,2);
+    *ponteiroArquivoDeDadosChavePromovida = returnDataPointerAtIndex(registroTrabalho,2);
     
     freeRegistroBtree(registroTrabalho);
 }

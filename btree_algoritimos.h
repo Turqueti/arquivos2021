@@ -8,8 +8,8 @@
 #include "btree_registro.h"
 
 int search(FILE* arquivoBtree,int chave,int rnnPag,int* achouFlag);
-int insert(FILE* arquivoBtree,int chave,int rnnPagAtual,int* achouFlag,int *rnnFilhoDireitoPromovida, int *chavePromovida);
-int split(int chave, int filhoDireitoChaveInserida, BTREE_REGISTRO* registroAtual,int *chavePromovida,int *filhoDireitoChavePromovida,BTREE_REGISTRO* novoRegistro);
-int btree_insert(FILE* arquivoBtree,int chave);
+int insert(FILE* arquivoBtree,int chave,llint ponteiroArquivoDados,int rnnPagAtual,int* achouFlag,int *rnnFilhoDireitoPromovida, int *chavePromovida,llint *ponteiroArqDadosPromovida);
+int split(int chave, int filhoDireitoChaveInserida,llint ponteiroArquivoDeDadosChaveInserida, BTREE_REGISTRO* registroAtual,int *chavePromovida,int *filhoDireitoChavePromovida,llint *ponteiroArquivoDeDadosChavePromovida,BTREE_REGISTRO* novoRegistro);
+int driver_insert();
 
 #endif

@@ -261,7 +261,6 @@ void TESTEprintRegistroBtree(BTREE_REGISTRO* reg){
     
 }
 
-
 /*
     descricao:
         Copia as chaves, filhosBtree e Ponteiros de arquivos a direita de um index de um registro src para um registro dest
@@ -307,13 +306,16 @@ void copyKeysAndPointersUntilIndex(BTREE_REGISTRO* src, BTREE_REGISTRO* dest,int
 
 }
 
-
 int returnKeyAtIndex(BTREE_REGISTRO* reg, int index){
     return reg->chaves[index];
 }
 
 int returnBtreeChildPointerAtIndex(BTREE_REGISTRO* reg, int index){
     return reg->ponteirosSubArvores[index];
+}
+
+int returnDataPointerAtIndex(BTREE_REGISTRO* reg, int index){
+    return reg->ponteirosRegistros[index];
 }
 
 int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito){
@@ -347,11 +349,11 @@ int insertChaveEFilhoDireitoRegistroBtree(BTREE_REGISTRO* reg,int chave,int rnnF
     
 }
 
-
 void deleteKeysFromIndex(BTREE_REGISTRO* reg,int index){
     for (int i = index; i < reg->grau-1; i++)
     {
         reg->chaves[i] = -1;
+        reg->ponteirosRegistros[i] = -1;
         reg->nroChaves--;
     }  
 }
@@ -362,3 +364,36 @@ void deleteBtreePointersFromIndex(BTREE_REGISTRO* reg,int index){
         reg->ponteirosSubArvores[i] = -1;
     }  
 }
+
+int insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(BTREE_REGISTRO* reg,int chave,int rnnFilhoDireito,llint ponteiroArquivoDados){
+    
+
+    int i = 0;
+    
+
+    if (reg->nroChaves == reg->grau-1)
+    {
+        return -i; //overflow de chaves
+    }
+    
+    while (i < reg->grau && reg->chaves[i] < chave && reg->chaves[i] != -1)
+    {
+        i++;
+    }
+    
+    if (reg->chaves[i] != -1)
+    {
+        shiftRightVetChaves(reg,i);
+        shiftRightVetPonteirosRegistros(reg,i);
+        shiftRightVetPonteirosSubTree(reg,i);
+        
+    }
+    reg->chaves[i] = chave;
+    reg->ponteirosRegistros[i] = ponteiroArquivoDados;
+    reg->ponteirosSubArvores[i+1] = rnnFilhoDireito;
+    reg->nroChaves++;
+    return 1;
+    
+    
+}
+
