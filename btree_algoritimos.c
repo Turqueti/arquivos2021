@@ -150,8 +150,12 @@ int split(int chave, int filhoDireitoChaveInserida,llint ponteiroArquivoDeDadosC
     // printf("\nNOVO REGISTRO:\n");
     // TESTEprintRegistroBtree(novoRegistro);
     
-    deleteKeysFromIndex(registroAtual,2);
-    deleteBtreePointersFromIndex(registroAtual,3);
+    deleteKeysFromIndex(registroAtual,0);
+    deleteBtreePointersFromIndex(registroAtual,0);
+     for (int i = 0; i < grau/2; i++)
+    {
+        insertChaveRegistroEPonteiroArquivoBtreeEFilhoDireito(registroAtual,returnKeyAtIndex(registroTrabalho,i),returnBtreeChildPointerAtIndex(registroTrabalho,i+1),returnDataPointerAtIndex(registroTrabalho,i));
+    }
 
 
     // printf("\nNOVO ATUAL:\n");

@@ -27,5 +27,6 @@ int buscaParametroLinha(FILE *arquivoBin);
 int	imprimeRegistrosLinha(FILE *arquivoBin);
 int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix);
 int readRegistroLinhaByteOffSet(FILE *arquivoBin, LINHA_REGISTRO *registro,int byteOffSet);
+LINHA_REGISTRO readRegistroLinhaStdin();
 
 #endif

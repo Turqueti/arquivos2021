@@ -407,3 +407,52 @@ int readRegistroLinhaByteOffSet(FILE *arquivoBin, LINHA_REGISTRO *registro,int b
 	
 	return 1;
 }
+
+LINHA_REGISTRO readRegistroLinhaStdin(){
+	LINHA_REGISTRO registro;
+	registro.corLinha = "\0";
+
+	int codLinha;
+	char aceitaCartao[4];
+	char nomeLinha[150];
+	char corLinha[150];
+
+	scanf("%d", &codLinha);
+
+	scan_quote_string(aceitaCartao);
+	scan_quote_string(nomeLinha);
+	scan_quote_string(corLinha);
+
+	int nomeTam = strlen(nomeLinha);
+	int corTam = strlen(corLinha);
+
+	registro.removido = '1';
+
+	registro.codLinha = codLinha;
+
+	if(!strcmp(aceitaCartao, "NULO")) registro.aceitaCartao = '\0';
+	else registro.aceitaCartao = aceitaCartao[0];
+
+	registro.tamanhoNome = nomeTam;
+	if(!strcmp(nomeLinha, "NULO")) {
+		registro.nomeLinha = NULL; //mudanca feita por conta do erro no valgrind
+		registro.tamanhoNome = 0;
+	} else {
+		registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
+		strcpy(registro.nomeLinha, nomeLinha);
+	}
+
+	registro.tamanhoCor = corTam;
+	if(!strcmp(corLinha, "NULO")) {
+		strcpy(registro.corLinha, "");
+		registro.tamanhoCor = 0;
+	} else {
+		registro.corLinha = (char*) malloc(sizeof(char) * corTam);
+		strcpy(registro.corLinha, corLinha);
+	}
+
+	registro.tamanhoRegistro = sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * registro.tamanhoNome) + (sizeof(char) * registro.tamanhoCor);
+
+	return registro;
+
+}

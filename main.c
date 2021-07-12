@@ -420,7 +420,7 @@ void caso12(){
 	fclose(arquivoBinFP);
 }
 
-//caso insert registro novo
+//caso insert registro novo Veiculo
 void caso13(){
 	char arquivoBinPath[30];
 	FILE* arquivoBinFP;
@@ -496,6 +496,79 @@ void caso13(){
 
 	binarioNaTela(arquivoIndicePath);
 }
+
+//caso insert registro novo Linha
+void caso14(){
+char arquivoBinPath[30];
+	FILE* arquivoBinFP;
+	scanf("%s", arquivoBinPath);//Lendo com /0 no final
+	arquivoBinFP = abreArquivoBin(arquivoBinPath,"rb");
+	if (arquivoBinFP == NULL)
+	{
+		printf("Falha no processamento do arquivo.\n");
+		return;
+	}
+
+	char arquivoIndicePath[30];
+	FILE* arquivoIndiceFP;
+	scanf("%s", arquivoIndicePath);//Lendo com /0 no final
+    arquivoIndiceFP = abreArquivoBin(arquivoIndicePath,"r+b");
+	if (arquivoIndiceFP == NULL){
+		printf("Falha no processamento do arquivo.\n");
+		return;
+	}
+	
+	
+	int numRegistros;
+	scanf("%d\n",&numRegistros);
+
+	int numeroNovosRegistros = numRegistros;
+
+	int proxByte;
+	int nRegistros = 0;
+    
+	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+	readLinhaCabecalho(arquivoBinFP, &cabecalho);
+	proxByte = cabecalho.byteProxReg;
+	nRegistros = cabecalho.nroRegistros;
+
+
+	llint ponteiroArquivoDados = (llint)proxByte;
+
+	int chave = -1;
+
+	while(numRegistros != 0) {
+			LINHA_REGISTRO registro = readRegistroLinhaStdin();
+			
+			if(registro.removido == '1'){
+				chave = registro.codLinha;
+				
+				// printf("chave: %d\n",chave);
+				// mostrarRegistroLinha(arquivoBinFP,&registro);
+
+				driver_insert(arquivoIndiceFP,chave,ponteiroArquivoDados);
+				ponteiroArquivoDados += registro.tamanhoRegistro+5;
+				
+
+				insereRegistroLinha(arquivoBinFP, &registro);
+				proxByte += registro.tamanhoRegistro+5;
+			}
+			numRegistros--;
+	}
+	setByteOffsetLinha(arquivoBinFP, proxByte);
+	setNRegistrosLinha(arquivoBinFP, nRegistros+numeroNovosRegistros);
+	mudaStatusCabecalhoLinha(arquivoBinFP, '1');
+
+
+	fechaArquivoBin(arquivoIndiceFP);
+	fechaArquivoBin(arquivoBinFP);
+
+	binarioNaTela(arquivoIndicePath);
+
+
+
+}
+
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -682,6 +755,9 @@ int main(int argc, char const *argv[]){
 			break;
 		case 13:
 			caso13();
+			break;
+		case 14:
+			caso14();
 			break;
 
 		
