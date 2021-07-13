@@ -1,6 +1,8 @@
 .testes
-test*
+test\.
 out
 *csv
 *bin
 *zip
+test.in
+test*
