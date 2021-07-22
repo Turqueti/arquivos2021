@@ -3,16 +3,16 @@
 #include "binarioNaTela.h"
 #include "matrizlib.h"
 
-struct _linha_registro {
-    char removido;//1
-    int tamanhoRegistro;//4
-    int codLinha;//4
-    char aceitaCartao;//1
-    int tamanhoNome;//4
-    char *nomeLinha;
-    int tamanhoCor;//4
-    char *corLinha;
-};
+// struct _linha_registro {
+//     char removido;//1
+//     int tamanhoRegistro;//4
+//     int codLinha;//4
+//     char aceitaCartao;//1
+//     int tamanhoNome;//4
+//     char *nomeLinha;
+//     int tamanhoCor;//4
+//     char *corLinha;
+// };
 
 /*
     Descricao:
@@ -383,4 +383,76 @@ int insereNRegistrosLinhaMatriz(FILE *arquivoBin,MATRIZ* matrix) {
 	mudaStatusCabecalhoLinha(arquivoBin, '1');
 
 	return 1;
+}
+
+
+int readRegistroLinhaByteOffSet(FILE *arquivoBin, LINHA_REGISTRO *registro,int byteOffSet) {
+	if (arquivoBin == NULL) return 0;
+
+	fseek(arquivoBin,byteOffSet,SEEK_SET);
+
+	fread(&registro->removido, sizeof(char), 1, arquivoBin);
+	fread(&registro->tamanhoRegistro, sizeof(int), 1, arquivoBin);
+	fread(&registro->codLinha, sizeof(int), 1, arquivoBin);
+	fread(&registro->aceitaCartao, sizeof(char), 1, arquivoBin);
+	
+	fread(&registro->tamanhoNome, sizeof(int), 1, arquivoBin);
+	registro->nomeLinha = (char*) malloc(sizeof(char) * registro->tamanhoNome);
+	fread(registro->nomeLinha, sizeof(char), registro->tamanhoNome, arquivoBin);
+
+	fread(&registro->tamanhoCor, sizeof(int), 1, arquivoBin);
+	registro->corLinha = (char*) malloc(sizeof(char) * registro->tamanhoCor);
+
+	if(fread(registro->corLinha, sizeof(char), registro->tamanhoCor, arquivoBin) == 0) return 0;
+	
+	return 1;
+}
+
+LINHA_REGISTRO readRegistroLinhaStdin(){
+	LINHA_REGISTRO registro;
+	registro.corLinha = "\0";
+
+	int codLinha;
+	char aceitaCartao[4];
+	char nomeLinha[150];
+	char corLinha[150];
+
+	scanf("%d", &codLinha);
+
+	scan_quote_string(aceitaCartao);
+	scan_quote_string(nomeLinha);
+	scan_quote_string(corLinha);
+
+	int nomeTam = strlen(nomeLinha);
+	int corTam = strlen(corLinha);
+
+	registro.removido = '1';
+
+	registro.codLinha = codLinha;
+
+	if(!strcmp(aceitaCartao, "NULO")) registro.aceitaCartao = '\0';
+	else registro.aceitaCartao = aceitaCartao[0];
+
+	registro.tamanhoNome = nomeTam;
+	if(!strcmp(nomeLinha, "NULO")) {
+		registro.nomeLinha = NULL; //mudanca feita por conta do erro no valgrind
+		registro.tamanhoNome = 0;
+	} else {
+		registro.nomeLinha = (char*) malloc(sizeof(char) * nomeTam);
+		strcpy(registro.nomeLinha, nomeLinha);
+	}
+
+	registro.tamanhoCor = corTam;
+	if(!strcmp(corLinha, "NULO")) {
+		strcpy(registro.corLinha, "");
+		registro.tamanhoCor = 0;
+	} else {
+		registro.corLinha = (char*) malloc(sizeof(char) * corTam);
+		strcpy(registro.corLinha, corLinha);
+	}
+
+	registro.tamanhoRegistro = sizeof(int) + sizeof(char) + sizeof(int) + sizeof(int) + (sizeof(char) * registro.tamanhoNome) + (sizeof(char) * registro.tamanhoCor);
+
+	return registro;
+
 }

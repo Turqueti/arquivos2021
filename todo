@@ -1,0 +1,66 @@
+SOLTOS:
+
+[] refatorar o codigo e deixar tudo em formato TAD(sem definicoes de structs nos headers)
+    [] registro linha
+    [] cabecalho linha
+    [] registro veiculo
+    [] cabecalho veiculo
+
+
+
+
+obs: olhar o erro 1 da pt.1. talvez valha a pena resolver ele primeiro e fazer funcs que abrem 
+e fecham os arquivos.
+
+[] refatorar a main e colocar cada case em uma func.
+    [] func 1
+    [] func 2
+    [] func 3
+    [] func 4
+    [] func 5
+    [] func 6
+    [] func 7
+    [] func 8
+
+ERROS PT. 1:
+
+erro: em algum momento a verificacao se o arquivo existe se perdeu. 
+Isso não colocava a mensagem "Falha no processamento do arquivo." 
+e na hora que o fclose era chamado gerava um segfault por tentar fechar um ponteiro pra lixo
+[x] criar um arquivo de boilerPlates de arquivo
+    [x] abre o arquivo com verificacao de existencia
+    [x] fecha o arquivo com verificacao de existencia
+
+[] colocar em pratica os boilerPlates
+
+
+PT 2:
+
+    [x] cria btree do arquivo bin pronto
+        [x] caso 9: cria btree de veiculo
+            casos de teste:
+            [x] 1.in
+            [x] 2.in
+        [x] caso 10: cria btree de linha
+            casos de teste:
+            [x] 3.in
+            [x] 4.in
+    [x] busca btree
+        [x] caso 11: busca btree de veiculo por prefixo
+            casos de teste:
+            [x] 5.in erro no processamento do arquivo precisa ser jogado na abertura
+            [x] 6.in
+            [] fix arquivos
+        [x] caso 12: busca btree de linha por codLinha
+            casos de teste:
+            [x] 7.in
+            [x] 8.in
+    [] insere btree e bin
+        [x] caso 13: insere btree de veiculo por prefixo
+            casos de teste:
+            [x] 9.in
+            [x] 10.in
+        [] caso 14: insere btree de linha por codLinha
+            casos de teste:
+            [] 11.in
+            [] 12.in

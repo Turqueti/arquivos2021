@@ -30,7 +30,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}/out",
-            "args": ["<","test.in"],
+            "args": ["<","testsplit.in"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],

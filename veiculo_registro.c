@@ -16,6 +16,35 @@ struct _veiculo_registro {
     char *categoria;
 };
 
+
+VEICULO_REGISTRO* criaRegistroVeiculo(){
+	VEICULO_REGISTRO* reg = (VEICULO_REGISTRO*)malloc(sizeof(VEICULO_REGISTRO));
+	reg->removido = '0';
+	reg->tamanhoRegistro = 0;
+	reg->prefixo[5] = '0';
+	reg->data[10] = '0';
+	reg->quantidadeLugares = 0;
+	reg->codLinha = 0;
+	reg->tamanhoModelo = 0;
+	reg->modelo = NULL;
+	reg->tamanhoCategoria = 0;
+	reg->categoria = NULL;
+
+	return reg;
+}
+
+void freeRegistroVeiculo(VEICULO_REGISTRO* reg){
+	if (reg->modelo)
+	{
+		free(reg->modelo);
+	}
+	if (reg->categoria)
+	{
+		free(reg->categoria);
+	}
+	free(reg);
+}
+
 /*
     Descricao:
     	essa func cria um registro do arquivo veiculo
@@ -479,4 +508,114 @@ int insereNRegistrosVeiculoMatriz(FILE *arquivoBin, MATRIZ* matrix) {
 	mudaStatusCabecalhoVeiculo(arquivoBin, '1');
 
 	return 1;
+}
+
+int readRegistroVeiculoByteOffSet(FILE *arquivoBin, VEICULO_REGISTRO *registro,int byteOffSet) {
+	if (arquivoBin == NULL) return 0;
+
+	fseek(arquivoBin,byteOffSet,SEEK_SET);
+
+	fread(&registro->removido, sizeof(char), 1, arquivoBin);
+	fread(&registro->tamanhoRegistro, sizeof(int), 1, arquivoBin);
+	fread(&registro->prefixo, sizeof(char), 5, arquivoBin);
+	fread(&registro->data, sizeof(char), 10, arquivoBin);
+	fread(&registro->quantidadeLugares, sizeof(int), 1, arquivoBin);
+	fread(&registro->codLinha, sizeof(int), 1, arquivoBin);
+	
+	fread(&registro->tamanhoModelo, sizeof(int), 1, arquivoBin);
+	registro->modelo = (char*) malloc(sizeof(char) * registro->tamanhoModelo);
+	fread(registro->modelo, sizeof(char), registro->tamanhoModelo, arquivoBin);
+	
+	fread(&registro->tamanhoCategoria, sizeof(int), 1, arquivoBin);
+	registro->categoria = (char*) malloc(sizeof(char) * registro->tamanhoCategoria);
+	if(fread(registro->categoria, sizeof(char), registro->tamanhoCategoria, arquivoBin) == 0) return 0;
+	
+	return 1;
+}
+
+
+/*
+	descricao:
+		ve se o registro esta removido
+	argumentos:
+		[in]VEICULO_REGISTRO *registro 
+	retono:
+		se estiver removido retorna 0 caso contrario retorna 1
+*/
+int registroVeiculoRemovido(VEICULO_REGISTRO *registro){
+	if (registro->removido == '1')
+	{
+		return 1;
+	}
+	return 0;
+}
+
+void retornaPrefixo(VEICULO_REGISTRO *registro,char* prefix){
+	strncpy(prefix,registro->prefixo,5);
+}
+
+int retornaTamanhoRegistroVeiculo(VEICULO_REGISTRO* reg){
+	return reg->tamanhoRegistro;
+}
+
+VEICULO_REGISTRO* readRegistroVeiculoStdin(){
+	VEICULO_REGISTRO* registroRetorno = criaRegistroVeiculo();
+	
+	char prefixo[5];
+    char data[10];
+	char quantidadeLugares[5];
+	char codLinha[10];
+	char modelo[150];
+	char categoria[150];
+	
+	
+	scan_quote_string(prefixo);
+	scan_quote_string(data);
+	scan_quote_string(quantidadeLugares);
+	scan_quote_string(codLinha);
+	scan_quote_string(modelo);
+	scan_quote_string(categoria);
+
+	int tamanhoModelo = strlen(modelo);
+	int tamanhoCategoria= strlen(categoria);
+
+	registroRetorno->removido = '1';
+
+	strcpy(registroRetorno->prefixo, prefixo);
+
+	if(!strcmp(quantidadeLugares, "NULO")) registroRetorno->quantidadeLugares = -1;
+	else registroRetorno->quantidadeLugares = atoi(quantidadeLugares);	
+
+	if(!strcmp(data, "")) {
+		memset(registroRetorno->data,'\0',1);
+		memset(registroRetorno->data+1,'@',9);
+	}
+	else strncpy(registroRetorno->data, data,10);
+
+	if(!strcmp(codLinha, "NULO")) registroRetorno->codLinha = -1;
+	else registroRetorno->codLinha = atoi(codLinha);
+
+	registroRetorno->tamanhoModelo = tamanhoModelo;
+	if(!strcmp(modelo, "NULO")) {
+		strcpy(registroRetorno->modelo, "");
+		registroRetorno->tamanhoModelo = 0;
+	} else {
+		registroRetorno->modelo = (char*) malloc(sizeof(char) * tamanhoModelo);
+		strcpy(registroRetorno->modelo, modelo);
+	}
+
+	registroRetorno->tamanhoCategoria = tamanhoCategoria;
+	if(!strcmp(categoria, "NULO")) {
+		strcpy(registroRetorno->categoria, "");
+		registroRetorno->tamanhoCategoria = 0;
+	} else {
+		registroRetorno->categoria = (char*) malloc(sizeof(char) * tamanhoCategoria);
+		strcpy(registroRetorno->categoria, categoria);
+	}
+
+	registroRetorno->tamanhoRegistro = sizeof(char)*5 + sizeof(char)*10 + sizeof(int) + sizeof(int) + sizeof(int) + (sizeof(char) * registroRetorno->tamanhoModelo) + sizeof(int) + (sizeof(char) * registroRetorno->tamanhoCategoria);
+	
+	
+	return registroRetorno;
+	
 }
