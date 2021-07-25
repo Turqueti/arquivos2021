@@ -14,6 +14,21 @@
 //     char *corLinha;
 // };
 
+LINHA_REGISTRO* criaRegistroLinha() {
+	LINHA_REGISTRO* reg = (LINHA_REGISTRO*)malloc(sizeof(LINHA_REGISTRO));
+	
+	reg->removido = '0';
+	reg->tamanhoRegistro = 0;
+	reg->codLinha = 0;
+	reg->aceitaCartao = '0';
+	reg->tamanhoNome = 0;
+	reg->nomeLinha = NULL;
+	reg->tamanhoCor = 0;
+	reg->corLinha = NULL;
+
+	return reg;
+}
+
 /*
     Descricao:
     	essa func cria um registro do arquivo linha

@@ -6,6 +6,18 @@
 #include <string.h>
 #include "matrizlib.h"
 
+struct _veiculo_registro {
+    char removido;
+    int tamanhoRegistro;
+    char prefixo[5];
+    char data[10];
+    int quantidadeLugares;
+    int codLinha;
+    int tamanhoModelo;
+    char *modelo;
+    int tamanhoCategoria;
+    char *categoria;
+};
 typedef struct _veiculo_registro  VEICULO_REGISTRO;
 
 VEICULO_REGISTRO* criaRegistroVeiculo();

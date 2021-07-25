@@ -3,7 +3,7 @@
 #include "binarioNaTela.h"
 
 
-struct _veiculo_registro {
+/*struct _veiculo_registro {
     char removido;
     int tamanhoRegistro;
     char prefixo[5];
@@ -14,7 +14,7 @@ struct _veiculo_registro {
     char *modelo;
     int tamanhoCategoria;
     char *categoria;
-};
+};*/
 
 
 VEICULO_REGISTRO* criaRegistroVeiculo(){
@@ -199,7 +199,7 @@ int mostrarRegistroVeiculo(FILE *arquivoBin, VEICULO_REGISTRO *registro) {
 	if(registro->quantidadeLugares != -1) printf("Quantidade de lugares sentados disponiveis: %d\n", registro->quantidadeLugares);
 	else printf("Quantidade de lugares sentados disponiveis: campo com valor nulo\n");
 	printf("\n");
-
+	
 	/*printf("%c\n", registro->removido);
 	printf("%d\n", registro->tamanhoRegistro);
 	printf("%d\n", registro->codLinha);
