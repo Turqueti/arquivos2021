@@ -499,7 +499,7 @@ void caso13(){
 
 //caso insert registro novo Linha
 void caso14(){
-char arquivoBinPath[30];
+	char arquivoBinPath[30];
 	FILE* arquivoBinFP;
 	scanf("%s", arquivoBinPath);//Lendo com /0 no final
 	arquivoBinFP = abreArquivoBin(arquivoBinPath,"rb");
@@ -564,9 +564,198 @@ char arquivoBinPath[30];
 	fechaArquivoBin(arquivoBinFP);
 
 	binarioNaTela(arquivoIndicePath);
+}
 
+//15 veiculo1.bin linha2.bin codLinha codLinha
+int mergeVeiculoLinha_15(FILE *veiculo, FILE *linha) {
+	VEICULO_CABECALHO cabecalhoVeiculo = createVeiculoCabecalho();
+	readVeiculoCabecalho(veiculo, &cabecalhoVeiculo);
+	VEICULO_REGISTRO* registroVeiculo = criaRegistroVeiculo();
+	if(cabecalhoVeiculo.status != '1') return 0;
 
+	LINHA_CABECALHO cabecalhoLinha = createLinhaCabecalho();
+	readLinhaCabecalho(linha, &cabecalhoLinha);
+	LINHA_REGISTRO* registroLinha = criaRegistroLinha();
+	if(cabecalhoLinha.status != '1') return 0;
+	
 
+	int qntd = 0;
+	while(readRegistroVeiculo(veiculo, registroVeiculo) != 0) {
+		LINHA_CABECALHO cabecalhoLinha = createLinhaCabecalho();
+		readLinhaCabecalho(linha, &cabecalhoLinha);
+		
+		while(readRegistroLinha(linha, registroLinha) != 0) {
+			if(registroVeiculo->codLinha == registroLinha->codLinha && registroVeiculo->removido == '1' && registroLinha->removido == '1') {
+				
+				char vet[5];
+				for (int i = 0; i < 5; ++i){
+					vet[i] = registroVeiculo->prefixo[i];
+				}
+
+				printf("Prefixo do veiculo: %s\n", vet);
+
+				registroVeiculo->modelo[registroVeiculo->tamanhoModelo] = '\0';
+				if(strcmp(registroVeiculo->modelo, "")) printf("Modelo do veiculo: %s\n", registroVeiculo->modelo);
+				else printf("Modelo do veiculo: campo com valor nulo\n");
+
+				registroVeiculo->categoria[registroVeiculo->tamanhoCategoria] = '\0';
+				if(strcmp(registroVeiculo->categoria, "")) printf("Categoria do veiculo: %s\n", registroVeiculo->categoria);
+				else printf("Categoria do veiculo: campo com valor nulo\n");
+
+				//Rever data
+				if(strcmp(registroVeiculo->data, "\0@@@@@@@@@")) printData(registroVeiculo->data); //printf("Data de entrada do veiculo na frota: %s\n", registro->data);
+				else printf("Data de entrada do veiculo na frota: campo com valor nulo\n");
+
+				if(registroVeiculo->quantidadeLugares != -1) printf("Quantidade de lugares sentados disponiveis: %d\n", registroVeiculo->quantidadeLugares);
+				else printf("Quantidade de lugares sentados disponiveis: campo com valor nulo\n");
+
+				printf("Codigo da linha: %d\n", registroLinha->codLinha);
+
+				registroLinha->nomeLinha[registroLinha->tamanhoNome] = '\0';
+				if(strcmp(registroLinha->nomeLinha, "")) printf("Nome da linha: %s\n", registroLinha->nomeLinha);
+				else printf("Nome da linha: campo com valor nulo\n");
+
+				registroLinha->corLinha[registroLinha->tamanhoCor] = '\0';
+				if(strcmp(registroLinha->corLinha, "NULO")) printf("Cor que descreve a linha: %s\n", registroLinha->corLinha);
+				else printf("Cor que descreve a linha: campo com valor nulo\n");
+
+				if(registroLinha->aceitaCartao == 'S') printf("Aceita cartao: PAGAMENTO SOMENTE COM CARTAO SEM PRESENCA DE COBRADOR\n");
+				else if(registroLinha->aceitaCartao == 'N') printf("Aceita cartao: PAGAMENTO EM CARTAO E DINHEIRO\n");
+				else if(registroLinha->aceitaCartao == 'F') printf("Aceita cartao: PAGAMENTO EM CARTAO SOMENTE NO FINAL DE SEMANA\n");
+				else if(registroLinha->aceitaCartao == '\0') printf("Aceita cartao: campo com valor nulo\n");
+				printf("\n");
+
+				qntd++;
+			}
+		}
+		
+		fseek(linha, 0, SEEK_SET);
+	}
+
+	if(qntd == 0) printf("Registro inexistente.\n");
+
+	return 1;
+}
+
+//17 veiculo3.bin veiculo3Ordenado.bin codLinha
+int ordenaVeiculos_17(FILE *veiculo, FILE *ordenado) {
+	//copia todos os registros para um vetor de registros
+	VEICULO_CABECALHO cabecalho = createVeiculoCabecalho();
+	readVeiculoCabecalho(veiculo, &cabecalho);
+	VEICULO_REGISTRO* registroVeiculo = criaRegistroVeiculo();
+
+	VEICULO_REGISTRO** vetorRegistros = malloc(cabecalho.nroRegistros * sizeof(VEICULO_REGISTRO));
+	for (int i = 0; i < cabecalho.nroRegistros; ++i) {
+		vetorRegistros[i] = criaRegistroVeiculo();
+	}
+
+	int i = 0, tam = 0;
+	while(readRegistroVeiculo(veiculo, registroVeiculo) != 0) {
+		if(registroVeiculo->removido == '1'){//Se não for removido então copia para vetor na RAM
+
+			vetorRegistros[i]->removido = registroVeiculo->removido;
+			vetorRegistros[i]->tamanhoRegistro = registroVeiculo->tamanhoRegistro;
+			vetorRegistros[i]->quantidadeLugares = registroVeiculo->quantidadeLugares;
+			vetorRegistros[i]->codLinha = registroVeiculo->codLinha;
+			vetorRegistros[i]->tamanhoModelo = registroVeiculo->tamanhoModelo;
+			vetorRegistros[i]->tamanhoCategoria = registroVeiculo->tamanhoCategoria;
+			strcpy(vetorRegistros[i]->prefixo, registroVeiculo->prefixo);
+			strncpy(vetorRegistros[i]->data, registroVeiculo->data, 10);
+			
+			vetorRegistros[i]->categoria = (char*) malloc(sizeof(char) * registroVeiculo->tamanhoCategoria);
+			strcpy(vetorRegistros[i]->categoria, registroVeiculo->categoria);
+
+			vetorRegistros[i]->modelo = (char*) malloc(sizeof(char) * registroVeiculo->tamanhoModelo+1);
+			strcpy(vetorRegistros[i]->modelo, registroVeiculo->modelo);
+
+			tam++;
+			i++;
+		}
+	}
+
+	
+	//ordena o vetor de registros por codLinha
+	for (int i = 0; i < cabecalho.nroRegistros-1; ++i) {
+		int min = i;
+		for (int j = i+1; j < cabecalho.nroRegistros; ++j)
+			if (vetorRegistros[j]->codLinha < vetorRegistros[min]->codLinha)  min = j;
+		int x = vetorRegistros[i]->codLinha; vetorRegistros[i]->codLinha = vetorRegistros[min]->codLinha; vetorRegistros[min]->codLinha = x;
+	}
+
+	//Escrever registro por registro no arquivo .bin ordenado
+   	insereVeiculoCabecalho(ordenado, &cabecalho);
+    for (int i = 0; i < tam; ++i) {
+    	insereRegistroVeiculo(ordenado, vetorRegistros[i]);
+	}
+
+	return 1;
+}
+
+int ordenaLinhas_18(FILE *linha, FILE *ordenado) {
+	//copia todos os registros para um vetor de registros
+	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
+	readLinhaCabecalho(linha, &cabecalho);
+	if(cabecalho.status != '1') return 0;
+
+	cabecalho.status = '0';
+	cabecalho.byteProxReg = 82;
+	cabecalho.nroRegRemovidos = 0;
+
+	insereLinhaCabecalho(ordenado, &cabecalho);
+
+	
+	LINHA_REGISTRO* registroLinha = criaRegistroLinha();
+
+	LINHA_REGISTRO** vetorRegistros = malloc(cabecalho.nroRegistros * sizeof(LINHA_REGISTRO));
+	for (int i = 0; i < cabecalho.nroRegistros; ++i) {
+		vetorRegistros[i] = criaRegistroLinha();
+	}
+
+	int i = 0, tam = 0;
+	while(readRegistroLinha(linha, registroLinha) != 0) {
+		if(registroLinha->removido == '1'){//Se não for removido então copia para vetor na RAM
+			vetorRegistros[i]->removido = registroLinha->removido;
+			vetorRegistros[i]->tamanhoRegistro = registroLinha->tamanhoRegistro;
+			vetorRegistros[i]->codLinha = registroLinha->codLinha;
+			vetorRegistros[i]->aceitaCartao = registroLinha->aceitaCartao;
+			vetorRegistros[i]->tamanhoNome = registroLinha->tamanhoNome;
+			vetorRegistros[i]->tamanhoCor = registroLinha->tamanhoCor;
+			
+
+			vetorRegistros[i]->corLinha = (char*) malloc(sizeof(char) * registroLinha->tamanhoCor);
+			strcpy(vetorRegistros[i]->corLinha, registroLinha->corLinha);
+
+			vetorRegistros[i]->nomeLinha = (char*) malloc(sizeof(char) * registroLinha->tamanhoNome+1);
+			strcpy(vetorRegistros[i]->nomeLinha, registroLinha->nomeLinha);
+			
+			tam++;
+			i++;
+		}
+	}
+
+	
+	//ordena o vetor de registros por codLinha
+	for (int i = 0; i < cabecalho.nroRegistros-1; ++i) {
+		int min = i;
+		for (int j = i+1; j < cabecalho.nroRegistros; ++j)
+			if (vetorRegistros[j]->codLinha < vetorRegistros[min]->codLinha)  min = j;
+		int x = vetorRegistros[i]->codLinha; vetorRegistros[i]->codLinha = vetorRegistros[min]->codLinha; vetorRegistros[min]->codLinha = x;
+	}
+
+	//Escrever registro por registro no arquivo .bin ordenado
+	insereLinhaCabecalho(ordenado, &cabecalho);
+    for (int i = 0; i < tam; ++i) {
+    	cabecalho.byteProxReg += vetorRegistros[i]->tamanhoRegistro;
+    	insereRegistroLinha(ordenado, vetorRegistros[i]);
+    	mostrarRegistroLinha(ordenado, vetorRegistros[i]);
+    	free(vetorRegistros[i]->corLinha);
+    	free(vetorRegistros[i]->nomeLinha);
+	}
+
+	cabecalho.status = '1';
+	insereLinhaCabecalho(ordenado, &cabecalho);
+	mostrarCabecalhoLinha(ordenado, &cabecalho);
+	return 1;
 }
 
 
@@ -585,6 +774,19 @@ int main(int argc, char const *argv[]){
 
 	FILE* arquivoBinFP;
 	FILE* arquivoCsvFP;
+
+	
+
+	//Referentes ao T3
+	char arquivoVeiculoPath[30];
+	FILE* arquivoVeiculoFP;
+
+	char arquivoLinhaPath[30];
+	FILE* arquivoLinhaFP;
+
+	char nomeCampoVeiculo[30];
+	char nomeCampoLinha[30];
+
 
 
 	scanf("%d", &funcionalidade);
@@ -759,7 +961,92 @@ int main(int argc, char const *argv[]){
 		case 14:
 			caso14();
 			break;
+		case 15:
+			scanf("%s", arquivoVeiculoPath);
+			arquivoVeiculoFP = abreArquivoBin(arquivoVeiculoPath,"rb");
+			if (arquivoVeiculoFP == NULL){
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
+			}
 
+			scanf("%s", arquivoLinhaPath);
+			arquivoLinhaFP = abreArquivoBin(arquivoLinhaPath,"rb");
+			if (arquivoLinhaFP == NULL){
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
+			}
+
+			scanf("%s", nomeCampoVeiculo);
+			scanf("%s", nomeCampoLinha);
+
+			if(mergeVeiculoLinha_15(arquivoVeiculoFP, arquivoLinhaFP) == 0) printf("Falha no processamento do arquivo.\n");
+
+			if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+			if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+
+			break;
+		case 16:
+			//Procurar veiculo.cod = linha.cod
+			//Use junção de loop único
+
+			break;
+		case 17:
+			scanf("%s", arquivoVeiculoPath);
+			
+			arquivoVeiculoFP = fopen(arquivoVeiculoPath, "r+b");
+			if (arquivoVeiculoFP == NULL){
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
+			}
+
+			scanf("%s", arquivoLinhaPath);//Os testes com os casos abertos funcionam disponíveis, e no run.codes parece que ele não encontrou o arquivo. O que leva a crer que o run.codes está com os títulos diferentes do buscado(assim como os casos de teste) 
+			arquivoLinhaFP = fopen(arquivoLinhaPath, "rb");
+			if (arquivoLinhaFP == NULL){
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
+			}
+			
+			scanf("%s", nomeCampoVeiculo);
+
+			if(ordenaVeiculos_17(arquivoVeiculoFP, arquivoLinhaFP) == 0) printf("Falha no processamento do arquivo.\n");
+
+			if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+			if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+
+			binarioNaTela(arquivoLinhaPath);	
+
+			break;
+		case 18:
+			//Ordene linhas em um novo arquivo
+			scanf("%s", arquivoLinhaPath);
+			arquivoLinhaFP = fopen(arquivoLinhaPath, "r+b");
+			if (arquivoLinhaFP == NULL){
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
+			}
+
+			scanf("%s", arquivoVeiculoPath);//Os testes com os casos abertos funcionam disponíveis, e no run.codes parece que ele não encontrou o arquivo. O que leva a crer que o run.codes está com os títulos diferentes do buscado(assim como os casos de teste)
+			arquivoVeiculoFP = fopen(arquivoVeiculoPath, "rb");
+			if (arquivoVeiculoFP == NULL){
+				printf("Falha no processamento do arquivo.\n");
+				return 0;
+			}
+
+			
+			scanf("%s", nomeCampoVeiculo);
+
+			if(ordenaLinhas_18(arquivoLinhaFP, arquivoVeiculoFP) == 0) printf("Falha no processamento do arquivo.\n");
+
+			if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+			if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+
+			binarioNaTela(arquivoVeiculoPath);
+			break;
+		case 19:
+			//Procurar linha.cod = cod.cod
+			//Use junção  ordenação-intercalação
+
+			break;
 		
 		case 22:
 			// caso de teste
