@@ -17,6 +17,48 @@
 #define grau 5 
 
 
+void printT3(VEICULO_REGISTRO* registroVeiculo, LINHA_REGISTRO* registroLinha){
+	char vet[5];
+	for (int i = 0; i < 5; ++i){
+		vet[i] = registroVeiculo->prefixo[i];
+	}
+
+	printf("Prefixo do veiculo: %s\n", vet);
+
+
+	registroVeiculo->modelo[registroVeiculo->tamanhoModelo] = '\0';
+	if(strncmp(registroVeiculo->modelo, "",registroVeiculo->tamanhoModelo)) printf("Modelo do veiculo: %s\n", registroVeiculo->modelo);
+	else printf("Modelo do veiculo: campo com valor nulo\n");
+
+	registroVeiculo->categoria[registroVeiculo->tamanhoCategoria] = '\0';
+	if(strncmp(registroVeiculo->categoria, "",registroVeiculo->tamanhoCategoria)) printf("Categoria do veiculo: %s\n", registroVeiculo->categoria);
+	else printf("Categoria do veiculo: campo com valor nulo\n");
+
+	//Rever data
+	if(strcmp(registroVeiculo->data, "\0@@@@@@@@@")) printData(registroVeiculo->data); //printf("Data de entrada do veiculo na frota: %s\n", registro->data);
+	else printf("Data de entrada do veiculo na frota: campo com valor nulo\n");
+
+	if(registroVeiculo->quantidadeLugares != -1) printf("Quantidade de lugares sentados disponiveis: %d\n", registroVeiculo->quantidadeLugares);
+	else printf("Quantidade de lugares sentados disponiveis: campo com valor nulo\n");
+
+	printf("Codigo da linha: %d\n", registroLinha->codLinha);
+
+	registroLinha->nomeLinha[registroLinha->tamanhoNome] = '\0';
+	if(strncmp(registroLinha->nomeLinha, "",registroLinha->tamanhoNome)) printf("Nome da linha: %*s\n",registroLinha->tamanhoNome-1 , registroLinha->nomeLinha);
+	else printf("Nome da linha: campo com valor nulo\n");
+
+	registroLinha->corLinha[registroLinha->tamanhoCor] = '\0';
+	if(strncmp(registroLinha->corLinha, "NULO",registroLinha->tamanhoCor)) printf("Cor que descreve a linha: %s\n", registroLinha->corLinha);
+	else printf("Cor que descreve a linha: campo com valor nulo\n");
+
+	if(registroLinha->aceitaCartao == 'S') printf("Aceita cartao: PAGAMENTO SOMENTE COM CARTAO SEM PRESENCA DE COBRADOR\n");
+	else if(registroLinha->aceitaCartao == 'N') printf("Aceita cartao: PAGAMENTO EM CARTAO E DINHEIRO\n");
+	else if(registroLinha->aceitaCartao == 'F') printf("Aceita cartao: PAGAMENTO EM CARTAO SOMENTE NO FINAL DE SEMANA\n");
+	else if(registroLinha->aceitaCartao == '\0') printf("Aceita cartao: campo com valor nulo\n");
+	printf("\n");
+
+}
+
 //caso de teste printa 3 registros hardcoded em um arquivo bin
 void caso23(char arquivoBinPath[30]){
 			
@@ -637,6 +679,124 @@ int mergeVeiculoLinha_15(FILE *veiculo, FILE *linha) {
 	return 1;
 }
 
+
+int mergeVeiculoLinha_16(FILE* arquivoVeiculoFP, FILE* arquivoLinhaFP,FILE* arquivoIndiceLinhaFP){
+	
+	
+	VEICULO_CABECALHO cabecalhoVeiculo = createVeiculoCabecalho();
+	readVeiculoCabecalho(arquivoVeiculoFP, &cabecalhoVeiculo);
+	VEICULO_REGISTRO* registroVeiculo = criaRegistroVeiculo();
+	if(cabecalhoVeiculo.status != '1') return 0;
+
+	LINHA_CABECALHO cabecalhoLinha = createLinhaCabecalho();
+	readLinhaCabecalho(arquivoLinhaFP, &cabecalhoLinha);
+	
+	if(cabecalhoLinha.status != '1') return 0;
+	
+
+	int qntd = 0;
+	while(readRegistroVeiculo(arquivoVeiculoFP, registroVeiculo) != 0) {
+		
+
+		LINHA_CABECALHO cabecalhoLinha = createLinhaCabecalho();
+		readLinhaCabecalho(arquivoLinhaFP, &cabecalhoLinha);
+		
+		int achouFlag = -1;
+		int chave = registroVeiculo->codLinha;
+		if (chave != -1 && registroVeiculo->removido == '1')
+		{
+			int resultado = search(arquivoIndiceLinhaFP,chave,-2,&achouFlag);
+			if (achouFlag == 1)
+			{
+				LINHA_REGISTRO* registroLinha = criaRegistroLinha();
+				readRegistroLinhaByteOffSet(arquivoLinhaFP,registroLinha,resultado);
+				
+				// mostrarRegistroLinha(arquivoBinFP,&registroLinha);
+				if (registroLinha->removido == '1')
+				{
+					printT3(registroVeiculo,registroLinha);
+				}
+				
+				
+			
+				// freeRegistroLinha(registroLinha);
+				qntd++;
+			}
+		}
+		
+
+		
+		
+		
+		fseek(arquivoLinhaFP, 0, SEEK_SET);
+		// freeRegistroVeiculo(registroVeiculo);
+		registroVeiculo = criaRegistroVeiculo();
+	}
+
+	// if (registroVeiculo)
+	// {
+	// 	// freeRegistroVeiculo(registroVeiculo);
+	// }
+	
+
+	if(qntd == 0) printf("Registro inexistente.\n");
+
+	return 1;
+
+}
+
+//16 veiculo.bin linha.bin nomeCampoVeiculo nomeCampoLinha indice linha
+int caso16(){
+	char arquivoVeiculoPath[30];
+	FILE* arquivoVeiculoFP;
+
+	char arquivoLinhaPath[30];
+	FILE* arquivoLinhaFP;
+
+	char nomeCampoVeiculo[30];
+	char nomeCampoLinha[30];
+
+	char arquivoIndiceLinhaPath[30];
+	FILE* arquivoIndiceLinhaFP;
+
+
+	scanf("%s", arquivoVeiculoPath);
+	arquivoVeiculoFP = abreArquivoBin(arquivoVeiculoPath,"rb");
+	if (arquivoVeiculoFP == NULL){
+		printf("Falha no processamento do arquivo.\n");
+		return 0;
+	}
+
+	scanf("%s", arquivoLinhaPath);
+	arquivoLinhaFP = abreArquivoBin(arquivoLinhaPath,"rb");
+	if (arquivoLinhaFP == NULL){
+		printf("Falha no processamento do arquivo.\n");
+		return 0;
+	}
+
+
+
+	scanf("%s", nomeCampoVeiculo);
+	scanf("%s", nomeCampoLinha);
+
+
+	scanf("%s", arquivoIndiceLinhaPath);
+	arquivoIndiceLinhaFP = abreArquivoBin(arquivoIndiceLinhaPath,"rb");
+	if (arquivoIndiceLinhaFP == NULL){
+		printf("Falha no processamento do arquivo.\n");
+		return 0;
+	}
+
+	if(mergeVeiculoLinha_16(arquivoVeiculoFP, arquivoLinhaFP,arquivoIndiceLinhaFP) == 0) printf("Falha no processamento do arquivo.\n");
+
+	if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+	if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+	if (arquivoIndiceLinhaFP) fclose(arquivoIndiceLinhaFP);
+
+
+
+}
+
 //17 veiculo3.bin veiculo3Ordenado.bin codLinha
 int ordenaVeiculos_17(FILE *veiculo, FILE *ordenado) {
 	//copia todos os registros para um vetor de registros
@@ -757,7 +917,6 @@ int ordenaLinhas_18(FILE *linha, FILE *ordenado) {
 	mostrarCabecalhoLinha(ordenado, &cabecalho);
 	return 1;
 }
-
 
 int main(int argc, char const *argv[]){
 	int funcionalidade = 0;
@@ -988,6 +1147,7 @@ int main(int argc, char const *argv[]){
 		case 16:
 			//Procurar veiculo.cod = linha.cod
 			//Use junção de loop único
+			caso16();
 
 			break;
 		case 17:

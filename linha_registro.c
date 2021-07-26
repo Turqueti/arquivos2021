@@ -471,3 +471,19 @@ LINHA_REGISTRO readRegistroLinhaStdin(){
 	return registro;
 
 }
+
+void freeRegistroLinha(LINHA_REGISTRO* registro){
+	if (registro !=NULL)
+	{
+		if (registro->nomeLinha !=NULL)
+		{
+			free(registro->nomeLinha);
+		}
+		if (registro->corLinha !=NULL)
+		{
+			free(registro->corLinha);
+		}
+		free(registro);
+	}
+	
+}
