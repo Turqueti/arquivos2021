@@ -792,9 +792,6 @@ int caso16(){
 	if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
 	if (arquivoLinhaFP) fclose(arquivoLinhaFP);
 	if (arquivoIndiceLinhaFP) fclose(arquivoIndiceLinhaFP);
-
-
-
 }
 
 //compara os dados da struct linha funcao aux q sort
@@ -835,39 +832,31 @@ int ordenaVeiculos_17(FILE *veiculo, FILE *ordenado) {
 		if(registroVeiculo->removido == '1'){//Se não for removido então copia para vetor na RAM
 		    vetorRegistros[i]->removido = registroVeiculo->removido;
 		    vetorRegistros[i]->tamanhoRegistro = registroVeiculo->tamanhoRegistro;
-		    strcpy(vetorRegistros[i]->prefixo, registroVeiculo->prefixo);
-		    strcpy(vetorRegistros[i]->data, registroVeiculo->data);
+		    strncpy(vetorRegistros[i]->prefixo, registroVeiculo->prefixo, 5);
+		    strncpy(vetorRegistros[i]->data, registroVeiculo->data, 10);
 		    vetorRegistros[i]->quantidadeLugares = registroVeiculo->quantidadeLugares;
 		    vetorRegistros[i]->codLinha = registroVeiculo->codLinha;
 		    vetorRegistros[i]->tamanhoModelo = registroVeiculo->tamanhoModelo;
 		    vetorRegistros[i]->tamanhoCategoria = registroVeiculo->tamanhoCategoria;
 
 			vetorRegistros[i]->modelo = (char*) malloc(sizeof(char) * registroVeiculo->tamanhoModelo+1);
-			strcpy(vetorRegistros[i]->modelo, registroVeiculo->modelo);
+			strncpy(vetorRegistros[i]->modelo, registroVeiculo->modelo, registroVeiculo->tamanhoModelo+1);
 
 			vetorRegistros[i]->categoria = (char*) malloc(sizeof(char) * registroVeiculo->tamanhoCategoria);
-			strcpy(vetorRegistros[i]->categoria, registroVeiculo->categoria);
+			strncpy(vetorRegistros[i]->categoria, registroVeiculo->categoria, registroVeiculo->tamanhoCategoria);
 
 			tam++;
 			i++;
 		}
 	}
-
 	
 	//ordena o vetor de registros por codLinha
-	/*for (int i = 0; i < cabecalho.nroRegistros-1; ++i) {
-		int min = i;
-		for (int j = i+1; j < cabecalho.nroRegistros; ++j)
-			if (vetorRegistros[j]->codLinha < vetorRegistros[min]->codLinha)  min = j;
-		int x = vetorRegistros[i]->codLinha; vetorRegistros[i]->codLinha = vetorRegistros[min]->codLinha; vetorRegistros[min]->codLinha = x;
-	}*/
 	qsort(vetorRegistros, cabecalho.nroRegistros, sizeof(VEICULO_REGISTRO), compararVeiculo);
 
 	//Escrever registro por registro no arquivo .bin ordenado
    	insereVeiculoCabecalho(ordenado, &cabecalho);
    	insereVeiculoCabecalho(ordenado, &cabecalho);
     for (int i = 0; i < tam; ++i) {
-    	mostrarRegistroVeiculo(ordenado, vetorRegistros[i]);
     	cabecalho.byteProxReg += vetorRegistros[i]->tamanhoRegistro + 5;
     	insereRegistroVeiculo(ordenado, vetorRegistros[i]);
 	}
@@ -876,6 +865,7 @@ int ordenaVeiculos_17(FILE *veiculo, FILE *ordenado) {
 	return 1;
 }
 
+//18 linha3.bin linha3Ordenado.bin codLinha
 int ordenaLinhas_18(FILE *linha, FILE *ordenado) {
 	//copia todos os registros para um vetor de registros
 	LINHA_CABECALHO cabecalho = createLinhaCabecalho();
@@ -919,12 +909,6 @@ int ordenaLinhas_18(FILE *linha, FILE *ordenado) {
 
 	
 	//ordena o vetor de registros por codLinha
-	/*for (int i = 0; i < cabecalho.nroRegistros-1; ++i) {
-		int min = i;
-		for (int j = i+1; j < cabecalho.nroRegistros; ++j)
-			if (vetorRegistros[j]->codLinha < vetorRegistros[min]->codLinha)  min = j;
-		int x = vetorRegistros[i]->codLinha; vetorRegistros[i]->codLinha = vetorRegistros[min]->codLinha; vetorRegistros[min]->codLinha = x;
-	}*/
 	qsort(vetorRegistros, cabecalho.nroRegistros, sizeof(LINHA_REGISTRO), compararLinha);
 
 	//Escrever registro por registro no arquivo .bin ordenado
@@ -1134,8 +1118,7 @@ int main(int argc, char const *argv[]){
 
 		case 11:
 			caso11();
-			break;
-		
+			break;		
 		case 12:
 			caso12();
 			break;
@@ -1191,12 +1174,19 @@ int main(int argc, char const *argv[]){
 			
 			scanf("%s", nomeCampoVeiculo);
 
-			if(ordenaVeiculos_17(arquivoVeiculoFP, arquivoLinhaFP) == 0) printf("Falha no processamento do arquivo.\n");
+			if(ordenaVeiculos_17(arquivoVeiculoFP, arquivoLinhaFP) == 1) {
+				if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+				if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+				
+				binarioNaTela(arquivoVeiculoPath);
+			} else {
+				printf("Falha no processamento do arquivo.\n");
+				
+				if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+				if (arquivoLinhaFP) fclose(arquivoLinhaFP);
 
-			if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
-			if (arquivoLinhaFP) fclose(arquivoLinhaFP);
-
-			binarioNaTela(arquivoLinhaPath);	
+				return 0;
+			}
 
 			break;
 		case 18:
@@ -1218,15 +1208,21 @@ int main(int argc, char const *argv[]){
 			
 			scanf("%s", nomeCampoVeiculo);
 
-			if(ordenaLinhas_18(arquivoLinhaFP, arquivoVeiculoFP) == 0) {
+			if(ordenaLinhas_18(arquivoLinhaFP, arquivoVeiculoFP) == 1) {
+				if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+				if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+				
+				binarioNaTela(arquivoVeiculoPath);
+			} else {
 				printf("Falha no processamento do arquivo.\n");
+				
+				if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
+				if (arquivoLinhaFP) fclose(arquivoLinhaFP);
+
 				return 0;
 			}
 
-			if (arquivoVeiculoFP) fclose(arquivoVeiculoFP);
-			if (arquivoLinhaFP) fclose(arquivoLinhaFP);
 
-			binarioNaTela(arquivoVeiculoPath);
 			break;
 		case 19:
 			//Procurar linha.cod = cod.cod
