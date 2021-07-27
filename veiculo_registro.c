@@ -42,7 +42,12 @@ void freeRegistroVeiculo(VEICULO_REGISTRO* reg){
 	{
 		free(reg->categoria);
 	}
-	free(reg);
+	if (reg)
+	{
+		free(reg);
+	}
+	
+	
 }
 
 /*
