@@ -1019,14 +1019,14 @@ int main(int argc, char const *argv[]){
 		case 18:
 			//Ordene linhas em um novo arquivo
 			scanf("%s", arquivoLinhaPath);
-			arquivoLinhaFP = fopen(arquivoLinhaPath, "r+b");
+			arquivoLinhaFP = fopen(arquivoLinhaPath, "rb");
 			if (arquivoLinhaFP == NULL){
 				printf("Falha no processamento do arquivo.\n");
 				return 0;
 			}
 
 			scanf("%s", arquivoVeiculoPath);//Os testes com os casos abertos funcionam disponíveis, e no run.codes parece que ele não encontrou o arquivo. O que leva a crer que o run.codes está com os títulos diferentes do buscado(assim como os casos de teste)
-			arquivoVeiculoFP = fopen(arquivoVeiculoPath, "rb");
+			arquivoVeiculoFP = fopen(arquivoVeiculoPath, "wb");
 			if (arquivoVeiculoFP == NULL){
 				printf("Falha no processamento do arquivo.\n");
 				return 0;
